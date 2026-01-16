@@ -4,6 +4,7 @@
 #include "config.h"
 #include "lcd-driver.h"
 #include "screen-about.h"
+#include "screen-diagnostics.h"
 #include "screen-list.h"
 
 void setup() {
@@ -30,8 +31,19 @@ void loop() {
             break;
         case SCREEN_SETTINGS:
             break;
-        case SCREEN_DIAGNOSTICS:
+        case SCREEN_DIAGNOSTICS: {
+            static bool diagInitialized = false;
+            if (!diagInitialized) {
+                diagInitialized = true;
+                initScreenDiagnostics();
+            }
+            if (updateScreenDiagnostics()) {
+                currentScreen = SCREEN_LIST;
+                diagInitialized = false;
+                screenListRedraw();
+            }
             break;
+        }
         case SCREEN_ABOUT: {
             static bool aboutInitialized = false;
 

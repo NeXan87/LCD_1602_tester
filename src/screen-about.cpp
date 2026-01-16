@@ -64,8 +64,7 @@ bool updateAboutScreen() {
         drawAboutScreen();
     }
 
-    // Выход по SELECT или LEFT
-    if (clickSelectButton() || clickLeftButton()) {
+    if (clickLeftButton()) {
         clearLCD();
         return true;
     }
