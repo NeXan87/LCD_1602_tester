@@ -45,7 +45,7 @@ void lcdPrintf(const char* format, ...) {
 void lcdInit() {
     lcd.begin(LCD_COLS, LCD_ROWS);
     lcdSetCursor(0, 0);
-    lcdPrint("LCD1602 KEY TEST");
-    lcdSetCursor(0, 1);
-    lcdPrint("Press on Buttons");
+    lcdPrint("IR & ENC TESTER");
+    delay(1500);
+    lcdClear();
 }

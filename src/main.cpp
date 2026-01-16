@@ -24,23 +24,13 @@ void loop() {
 
     if (clickRightButton()) {
         setDataLcd("Right   ADC:", x);
-        Serial.print("Value A0 `Right` is  :");
-        Serial.println(x, DEC);
     } else if (clickUpButton()) {
         setDataLcd("Up      ADC:", x);
-        Serial.print("Value A0 `UP`’ is  :");
-        Serial.println(x, DEC);
     } else if (clickDownButton()) {
         setDataLcd("Down    ADC:", x);
-        Serial.print("Value A0‘`Down` is  :");
-        Serial.println(x, DEC);
     } else if (clickLeftButton()) {
         setDataLcd("Left    ADC:", x);
-        Serial.print("Value A0 `Left` is  :");
-        Serial.println(x, DEC);
     } else if (clickSelectButton()) {
         setDataLcd("Select  ADC:", x);
-        Serial.print("Value A0 `Select` is  :");
-        Serial.println(x, DEC);
     }
 }
