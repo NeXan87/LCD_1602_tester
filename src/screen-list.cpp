@@ -1,0 +1,89 @@
+#include "screen-list.h"
+
+#include <AnalogMultiButton.h>
+
+#include "buttons.h"
+#include "lcd-driver.h"
+
+static uint8_t selectedIndex = 0;
+static int topIndex = 0;
+static const char* const MENU_ITEMS[] = {
+    "IR test",
+    "Encoder test",
+    "Settings",
+    "Diagnostics",
+    "About"};
+static const uint8_t MENU_COUNT = sizeof(MENU_ITEMS) / sizeof(MENU_ITEMS[0]);
+
+// === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
+static void adjustTopIndex() {
+    // Ограничиваем topIndex диапазоном
+    if (selectedIndex < topIndex) {
+        topIndex = selectedIndex;
+        lcdClear();
+    } else if (selectedIndex >= topIndex + LCD_ROWS) {
+        topIndex = selectedIndex - (LCD_ROWS - 1);
+        lcdClear();
+    }
+    // Гарантируем, что не вышли за границы
+    if (topIndex > MENU_COUNT - LCD_ROWS) {
+        topIndex = (MENU_COUNT >= LCD_ROWS) ? MENU_COUNT - LCD_ROWS : 0;
+    }
+}
+
+static void drawMenu() {
+    adjustTopIndex();
+
+    for (uint8_t row = 0; row < LCD_ROWS && (topIndex + row) < MENU_COUNT; ++row) {
+        int itemIndex = topIndex + row;
+
+        lcdSetCursor(0, row);
+        if (itemIndex == selectedIndex) {
+            lcdWriteChar(126);
+        } else {
+            lcdPrint(" ");
+        }
+        lcdPrint(MENU_ITEMS[itemIndex]);
+    }
+}
+
+static ScreenId getSelectedScreen() {
+    switch (selectedIndex) {
+        case 0: return SCREEN_IR_TEST;
+        case 1: return SCREEN_ENCODER_TEST;
+        case 2: return SCREEN_SETTINGS;
+        case 3: return SCREEN_DIAGNOSTICS;
+        case 4: return SCREEN_ABOUT;
+    }
+    return SCREEN_LIST;
+}
+
+void screenListRedraw() {
+    drawMenu();
+}
+
+ScreenId screenListUpdate() {
+    if (clickUpButton()) {
+        if (selectedIndex > 0) {
+            selectedIndex--;
+            drawMenu();
+        }
+    }
+
+    if (clickDownButton()) {
+        if (selectedIndex < MENU_COUNT - 1) {
+            selectedIndex++;
+            drawMenu();
+        }
+    }
+
+    if (clickSelectButton()) {
+        ScreenId next = getSelectedScreen();
+        selectedIndex = 0;
+        topIndex = 0;
+        lcdClear();
+        return next;
+    }
+
+    return SCREEN_LIST;  // остаёмся в списке
+}

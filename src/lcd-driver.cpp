@@ -1,4 +1,4 @@
-#include "lcd_driver.h"
+#include "lcd-driver.h"
 
 #include <LiquidCrystal.h>
 #include <stdarg.h>
@@ -21,6 +21,10 @@ void lcdSetCursor(uint8_t col, uint8_t row) {
     if (col < LCD_COLS && row < LCD_ROWS) {
         lcd.setCursor(col, row);
     }
+}
+
+void lcdWriteChar(uint8_t c) {
+    lcd.write(c);
 }
 
 void lcdPrint(const char* str) {
