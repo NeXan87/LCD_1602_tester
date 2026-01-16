@@ -4,10 +4,10 @@
 
 #include "config.h"
 
-void lcdInit();
-void lcdClear();
-void lcdSetCursor(uint8_t col, uint8_t row);
-void lcdWriteChar(uint8_t c);
-void lcdPrint(const char* str);
-void lcdPrintInt(long value);
-void lcdPrintf(const char* format, ...);
+void initLCD();
+void clearLCD();
+void setCursorLCD(uint8_t col, uint8_t row);
+void writeCharLCD(uint8_t c);
+void printLCD(const char* str);
+void printIntLCD(long value);
+void printfLCD(const char* format, ...);

@@ -13,29 +13,29 @@ static LiquidCrystal lcd(
 
 static char lcdPrintfBuffer[32];
 
-void lcdClear() {
+void clearLCD() {
     lcd.clear();
 }
 
-void lcdSetCursor(uint8_t col, uint8_t row) {
+void setCursorLCD(uint8_t col, uint8_t row) {
     if (col < LCD_COLS && row < LCD_ROWS) {
         lcd.setCursor(col, row);
     }
 }
 
-void lcdWriteChar(uint8_t c) {
+void writeCharLCD(uint8_t c) {
     lcd.write(c);
 }
 
-void lcdPrint(const char* str) {
+void printLCD(const char* str) {
     lcd.print(str);
 }
 
-void lcdPrintInt(long value) {
+void printIntLCD(long value) {
     lcd.print(value);
 }
 
-void lcdPrintf(const char* format, ...) {
+void printfLCD(const char* format, ...) {
     va_list args;
     va_start(args, format);
     int written = vsnprintf(lcdPrintfBuffer, sizeof(lcdPrintfBuffer), format, args);
@@ -46,10 +46,12 @@ void lcdPrintf(const char* format, ...) {
     }
 }
 
-void lcdInit() {
+void initLCD() {
     lcd.begin(LCD_COLS, LCD_ROWS);
-    lcdSetCursor(0, 0);
-    lcdPrint("IR & ENC TESTER");
-    delay(1500);
-    lcdClear();
+    setCursorLCD(0, 0);
+    printLCD("UNIVERSAL TESTER");
+    setCursorLCD(0, 1);
+    printLCD("Starting...");
+    delay(DELAY_STARTUP_MS);
+    clearLCD();
 }

@@ -20,10 +20,10 @@ static void adjustTopIndex() {
     // Ограничиваем topIndex диапазоном
     if (selectedIndex < topIndex) {
         topIndex = selectedIndex;
-        lcdClear();
+        clearLCD();
     } else if (selectedIndex >= topIndex + LCD_ROWS) {
         topIndex = selectedIndex - (LCD_ROWS - 1);
-        lcdClear();
+        clearLCD();
     }
     // Гарантируем, что не вышли за границы
     if (topIndex > MENU_COUNT - LCD_ROWS) {
@@ -37,13 +37,13 @@ static void drawMenu() {
     for (uint8_t row = 0; row < LCD_ROWS && (topIndex + row) < MENU_COUNT; ++row) {
         int itemIndex = topIndex + row;
 
-        lcdSetCursor(0, row);
+        setCursorLCD(0, row);
         if (itemIndex == selectedIndex) {
-            lcdWriteChar(126);
+            writeCharLCD(126);
         } else {
-            lcdPrint(" ");
+            printLCD(" ");
         }
-        lcdPrint(MENU_ITEMS[itemIndex]);
+        printLCD(MENU_ITEMS[itemIndex]);
     }
 }
 
@@ -81,7 +81,7 @@ ScreenId screenListUpdate() {
         ScreenId next = getSelectedScreen();
         selectedIndex = 0;
         topIndex = 0;
-        lcdClear();
+        clearLCD();
         return next;
     }
 

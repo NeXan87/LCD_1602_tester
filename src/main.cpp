@@ -6,7 +6,7 @@
 #include "screen-list.h"
 
 void setup() {
-    lcdInit();
+    initLCD();
     screenListRedraw();
     Serial.begin(115200);
 }
