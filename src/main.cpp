@@ -3,6 +3,7 @@
 #include "buttons.h"
 #include "config.h"
 #include "lcd-driver.h"
+#include "screen-about.h"
 #include "screen-list.h"
 
 void setup() {
@@ -25,11 +26,28 @@ void loop() {
         }
         case SCREEN_IR_TEST:
             break;
+        case SCREEN_ENCODER_TEST:
+            break;
         case SCREEN_SETTINGS:
             break;
+        case SCREEN_DIAGNOSTICS:
+            break;
+        case SCREEN_ABOUT: {
+            static bool aboutInitialized = false;
 
+            if (!aboutInitialized) {
+                aboutInitialized = true;
+                initCharsAboutScreen();
+                initAboutScreen();
+            }
+            if (updateAboutScreen()) {
+                currentScreen = SCREEN_LIST;
+                aboutInitialized = false;
+                screenListRedraw();
+            }
+            break;
+        }
         default:
             currentScreen = SCREEN_LIST;
-            break;
     }
 }

@@ -12,7 +12,8 @@ static const char* const MENU_ITEMS[] = {
     "Encoder test",
     "Settings",
     "Diagnostics",
-    "About"};
+    "About",
+};
 static const uint8_t MENU_COUNT = sizeof(MENU_ITEMS) / sizeof(MENU_ITEMS[0]);
 
 // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
