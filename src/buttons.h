@@ -7,3 +7,4 @@ bool clickDownButton();
 bool clickLeftButton();
 bool clickSelectButton();
 bool isLeftButtonHeld();
+bool isSelectButtonHeld();

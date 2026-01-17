@@ -34,3 +34,7 @@ bool clickSelectButton() {
 bool isLeftButtonHeld() {
     return buttons.isPressedAfter(BUTTON_LEFT, BUTTONS_HOLD_MS);
 }
+
+bool isSelectButtonHeld() {
+    return buttons.isPressedAfter(BUTTON_SELECT, BUTTONS_HOLD_MS);
+}

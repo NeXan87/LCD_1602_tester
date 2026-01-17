@@ -6,6 +6,7 @@
 #include "screen-about.h"
 #include "screen-diagnostics.h"
 #include "screen-list.h"
+#include "screen-settings.h"
 
 void setup() {
     initLCD();
@@ -29,10 +30,23 @@ void loop() {
             break;
         case SCREEN_ENCODER_TEST:
             break;
-        case SCREEN_SETTINGS:
+        case SCREEN_SETTINGS: {
+            static bool settingsInitialized = false;
+
+            if (!settingsInitialized) {
+                settingsInitialized = true;
+                initScreenSettings();
+            }
+            if (updateScreenSettings()) {
+                currentScreen = SCREEN_LIST;
+                settingsInitialized = false;
+                screenListRedraw();
+            }
             break;
+        }
         case SCREEN_DIAGNOSTICS: {
             static bool diagInitialized = false;
+
             if (!diagInitialized) {
                 diagInitialized = true;
                 initScreenDiagnostics();
