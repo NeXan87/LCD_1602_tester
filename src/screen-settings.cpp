@@ -2,6 +2,7 @@
 
 #include "buttons.h"
 #include "config.h"
+#include "eeprom2.h"
 #include "lcd-driver.h"
 
 static const char* const SETTINGS_ITEMS[] = {
@@ -16,6 +17,11 @@ typedef enum {
 static SettingsState state = SETTINGS_STATE_MENU;
 static int menuSelectedIndex = 0;
 static int backlightPercent = 100;  // по умолчанию 100%
+
+void eepromInitBacklight() {
+    backlightPercent = eepromGetBacklightPercent();
+    analogWrite(BACKLIGHT_PIN, (backlightPercent * 255) / 100);
+}
 
 static int percentToPwm(int percent) {
     return (percent * 255) / 100;
@@ -56,8 +62,6 @@ static void drawBacklightEditor() {
 void initScreenSettings() {
     state = SETTINGS_STATE_MENU;
     menuSelectedIndex = 0;
-    // Загрузить текущее значение из EEPROM (опционально)
-    applyBacklight();
     drawSettingsMenu();
 }
 
@@ -100,9 +104,10 @@ bool updateScreenSettings() {
                 }
             }
             if (clickSelectButton()) {
-                // Сохранить в EEPROM (опционально)
-                state = SETTINGS_STATE_MENU;
+                eepromSetBacklightPercent(backlightPercent);
+                eepromSaveSettings();
                 drawSettingsMenu();
+                state = SETTINGS_STATE_MENU;
                 return false;
             }
             break;

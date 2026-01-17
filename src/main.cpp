@@ -2,6 +2,7 @@
 
 #include "buttons.h"
 #include "config.h"
+#include "eeprom2.h"
 #include "lcd-driver.h"
 #include "screen-about.h"
 #include "screen-diagnostics.h"
@@ -9,6 +10,8 @@
 #include "screen-settings.h"
 
 void setup() {
+    eepromInit();
+    eepromInitBacklight();
     initLCD();
     screenListRedraw();
     Serial.begin(115200);
