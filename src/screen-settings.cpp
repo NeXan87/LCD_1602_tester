@@ -5,6 +5,7 @@
 #include "eeprom2.h"
 #include "lcd-custom-chars.h"
 #include "lcd-driver.h"
+#include "lcd-helpers.h"
 
 static const char* const SETTINGS_ITEMS[] = {
     "Display bridge"};
@@ -34,18 +35,7 @@ void setBacklightPercent() {
 }
 
 static void drawSettingsMenu() {
-    clearLCD();
-    setCursorLCD(0, 0);
-    printLCD("Settings");
-    if (SETTINGS_COUNT > 0) {
-        setCursorLCD(0, 1);
-        if (menuSelectedIndex == 0) {
-            writeCharLCD(126);  // или LCD_CHAR_ARROW_RIGHT, если есть
-        } else {
-            printLCD(" ");
-        }
-        printLCD(SETTINGS_ITEMS[menuSelectedIndex]);
-    }
+    drawSubMenu("Settings", SETTINGS_ITEMS[menuSelectedIndex], menuSelectedIndex == 0);
 }
 
 static void drawBacklightEditor() {

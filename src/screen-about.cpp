@@ -3,6 +3,7 @@
 #include "buttons.h"
 #include "lcd-custom-chars.h"
 #include "lcd-driver.h"
+#include "lcd-helpers.h"
 
 static const char* const ABOUT_LINES[] = {
     TITLE,
@@ -25,16 +26,7 @@ static void drawAboutScreen() {
         printLCD(ABOUT_LINES[scrollOffset + row]);
     }
 
-    if (ABOUT_LINE_COUNT > LCD_ROWS) {
-        if (scrollOffset > 0) {
-            setCursorLCD(LCD_COLS - 1, 0);
-            writeCharLCD(LCD_CHAR_ARROW_UP);
-        }
-        if (scrollOffset < (int8_t)(ABOUT_LINE_COUNT - LCD_ROWS)) {
-            setCursorLCD(LCD_COLS - 1, LCD_ROWS - 1);
-            writeCharLCD(LCD_CHAR_ARROW_DOWN);
-        }
-    }
+    drawScrollIndicators(ABOUT_LINE_COUNT, LCD_ROWS, scrollOffset);
 }
 
 void initAboutScreen() {

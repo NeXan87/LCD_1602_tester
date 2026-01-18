@@ -2,6 +2,7 @@
 
 #include "buttons.h"
 #include "lcd-driver.h"
+#include "lcd-helpers.h"
 
 static const char* const DIAG_MENU_ITEMS[] = {
     "Buttons",
@@ -27,18 +28,7 @@ const char* getButtonName(int adcValue) {
 }
 
 static void drawDiagMenu() {
-    clearLCD();
-    setCursorLCD(0, 0);
-    printLCD("Diagnostics");
-    if (DIAG_MENU_COUNT > 0) {
-        setCursorLCD(0, 1);
-        if (menuSelectedIndex == 0) {
-            writeCharLCD(126);
-        } else {
-            printLCD(" ");
-        }
-        printLCD(DIAG_MENU_ITEMS[menuSelectedIndex]);
-    }
+    drawSubMenu("Diagnostics", DIAG_MENU_ITEMS[menuSelectedIndex], menuSelectedIndex == 0);
 }
 
 static void drawButtonsTest() {
@@ -108,6 +98,7 @@ bool updateScreenDiagnostics() {
     }
 
     if (state == DIAG_STATE_MENU && clickLeftButton()) {
+        clearLCD();
         return true;
     }
 

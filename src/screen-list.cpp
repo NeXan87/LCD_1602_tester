@@ -5,6 +5,7 @@
 #include "buttons.h"
 #include "lcd-custom-chars.h"
 #include "lcd-driver.h"
+#include "lcd-helpers.h"
 
 static uint8_t selectedIndex = 0;
 static int topIndex = 0;
@@ -36,26 +37,10 @@ static void drawMenu() {
 
     for (uint8_t row = 0; row < LCD_ROWS && (topIndex + row) < MENU_COUNT; ++row) {
         int itemIndex = topIndex + row;
-
-        setCursorLCD(0, row);
-        if (itemIndex == selectedIndex) {
-            writeCharLCD(126);
-        } else {
-            printLCD(" ");
-        }
-        printLCD(MENU_ITEMS[itemIndex]);
+        drawMenuItem(0, row, MENU_ITEMS[itemIndex], itemIndex == selectedIndex);
     }
 
-    if (MENU_COUNT > LCD_ROWS) {
-        if (topIndex > 0) {
-            setCursorLCD(LCD_COLS - 1, 0);
-            writeCharLCD(LCD_CHAR_ARROW_UP);
-        }
-        if (topIndex < (int)(MENU_COUNT - LCD_ROWS)) {
-            setCursorLCD(LCD_COLS - 1, LCD_ROWS - 1);
-            writeCharLCD(LCD_CHAR_ARROW_DOWN);
-        }
-    }
+    drawScrollIndicators(MENU_COUNT, LCD_ROWS, topIndex);
 }
 
 static ScreenId getSelectedScreen() {
