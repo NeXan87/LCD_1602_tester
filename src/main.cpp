@@ -24,9 +24,15 @@ void loop() {
 
     switch (currentScreen) {
         case SCREEN_LIST: {
+            static bool listInitialized = false;
+            if (!listInitialized) {
+                listInitialized = true;
+                initArrowsLCD();
+            }
             ScreenId next = screenListUpdate();
             if (next != SCREEN_LIST) {
                 currentScreen = next;
+                listInitialized = false;
             }
             break;
         }
@@ -40,6 +46,7 @@ void loop() {
             if (!settingsInitialized) {
                 settingsInitialized = true;
                 initScreenSettings();
+                initArrowsLCD();
             }
             if (updateScreenSettings()) {
                 currentScreen = SCREEN_LIST;

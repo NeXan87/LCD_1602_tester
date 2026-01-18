@@ -65,7 +65,6 @@ static void drawBacklightEditor() {
 void initScreenSettings() {
     state = SETTINGS_STATE_MENU;
     menuSelectedIndex = 0;
-    initArrowsLCD();
     drawSettingsMenu();
 }
 
@@ -128,6 +127,7 @@ bool updateScreenSettings() {
     }
 
     if (state == SETTINGS_STATE_MENU && clickLeftButton()) {
+        clearLCD();
         return true;
     }
 

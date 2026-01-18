@@ -3,6 +3,7 @@
 #include <AnalogMultiButton.h>
 
 #include "buttons.h"
+#include "lcd-custom-chars.h"  // ← обязательно для LCD_CHAR_ARROW_UP/DOWN
 #include "lcd-driver.h"
 
 static uint8_t selectedIndex = 0;
@@ -16,9 +17,7 @@ static const char* const MENU_ITEMS[] = {
 };
 static const uint8_t MENU_COUNT = sizeof(MENU_ITEMS) / sizeof(MENU_ITEMS[0]);
 
-// === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
 static void adjustTopIndex() {
-    // Ограничиваем topIndex диапазоном
     if (selectedIndex < topIndex) {
         topIndex = selectedIndex;
         clearLCD();
@@ -27,8 +26,8 @@ static void adjustTopIndex() {
         clearLCD();
     }
     // Гарантируем, что не вышли за границы
-    if (topIndex > MENU_COUNT - LCD_ROWS) {
-        topIndex = (MENU_COUNT >= LCD_ROWS) ? MENU_COUNT - LCD_ROWS : 0;
+    if (topIndex > (int)(MENU_COUNT - LCD_ROWS)) {
+        topIndex = (MENU_COUNT >= LCD_ROWS) ? (int)(MENU_COUNT - LCD_ROWS) : 0;
     }
 }
 
@@ -45,6 +44,17 @@ static void drawMenu() {
             printLCD(" ");
         }
         printLCD(MENU_ITEMS[itemIndex]);
+    }
+
+    if (MENU_COUNT > LCD_ROWS) {
+        if (topIndex > 0) {
+            setCursorLCD(LCD_COLS - 1, 0);
+            writeCharLCD(LCD_CHAR_ARROW_UP);
+        }
+        if (topIndex < (int)(MENU_COUNT - LCD_ROWS)) {
+            setCursorLCD(LCD_COLS - 1, LCD_ROWS - 1);
+            writeCharLCD(LCD_CHAR_ARROW_DOWN);
+        }
     }
 }
 
