@@ -17,7 +17,7 @@ void drawScrollIndicators(uint8_t totalItems, uint8_t visibleRows, int topIndex)
 
     // Стрелка вниз: есть скрытые пункты снизу
     if (topIndex < (int)(totalItems - visibleRows)) {
-        setCursorLCD(LCD_COLS - 1, visibleRows - (uint8_t)1);
+        setCursorLCD(LCD_COLS - 1, (uint8_t)(visibleRows - 1));
         writeCharLCD(LCD_CHAR_ARROW_DOWN);
     }
 }
