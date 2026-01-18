@@ -3,7 +3,7 @@
 #include <AnalogMultiButton.h>
 
 #include "buttons.h"
-#include "lcd-custom-chars.h"  // ← обязательно для LCD_CHAR_ARROW_UP/DOWN
+#include "lcd-custom-chars.h"
 #include "lcd-driver.h"
 
 static uint8_t selectedIndex = 0;
@@ -96,5 +96,5 @@ ScreenId screenListUpdate() {
         return next;
     }
 
-    return SCREEN_LIST;  // остаёмся в списке
+    return SCREEN_LIST;
 }
