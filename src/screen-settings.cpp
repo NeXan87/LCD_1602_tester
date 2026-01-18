@@ -41,8 +41,6 @@ static void drawSettingsMenu() {
 static void drawBacklightEditor() {
     char buffer[17];
     snprintf(buffer, sizeof(buffer), "Bridge:%3d%%", backlightPercent);
-    buffer[16] = '\0';
-    clearLCD();
     setCursorLCD(0, 0);
     printLCD(buffer);
     setCursorLCD(0, 1);
@@ -65,6 +63,8 @@ bool updateScreenSettings() {
                 drawSettingsMenu();
             }
             if (clickSelectButton()) {
+                clearLCD();
+
                 if (menuSelectedIndex == 0) {
                     originalBacklightPercent = eepromGetBacklightPercent();
                     backlightPercent = originalBacklightPercent;

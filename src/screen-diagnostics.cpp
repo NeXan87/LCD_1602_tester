@@ -62,6 +62,8 @@ bool updateScreenDiagnostics() {
                 drawDiagMenu();
             }
             if (clickSelectButton()) {
+                clearLCD();
+
                 if (menuSelectedIndex == 0) {
                     state = DIAG_STATE_BUTTONS_TEST;
                     drawButtonsTest();
