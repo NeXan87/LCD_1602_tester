@@ -16,7 +16,7 @@ typedef enum {
 } DiagState;
 
 static DiagState state = DIAG_STATE_MENU;
-static uint8_t menuSelectedIndex = 0;
+static int menuSelectedIndex = 0;
 
 const char* getButtonName(int adcValue) {
     if (adcValue < BUTTON_RIGHT_ADC + 50) return "Right";
@@ -58,17 +58,8 @@ void initScreenDiagnostics() {
 bool updateScreenDiagnostics() {
     switch (state) {
         case DIAG_STATE_MENU: {
-            if (clickUpButton()) {
-                if (menuSelectedIndex > 0) {
-                    menuSelectedIndex--;
-                    drawDiagMenu();
-                }
-            }
-            if (clickDownButton()) {
-                if (menuSelectedIndex < DIAG_MENU_COUNT - 1) {
-                    menuSelectedIndex++;
-                    drawDiagMenu();
-                }
+            if (updateMenuIndex(&menuSelectedIndex, DIAG_MENU_COUNT)) {
+                drawDiagMenu();
             }
             if (clickSelectButton()) {
                 if (menuSelectedIndex == 0) {

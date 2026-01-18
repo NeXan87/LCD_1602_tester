@@ -1,5 +1,6 @@
 #include "lcd-helpers.h"
 
+#include "buttons.h"
 #include "lcd-custom-chars.h"
 #include "lcd-driver.h"
 
@@ -31,10 +32,27 @@ void drawMenuItem(uint8_t col, uint8_t row, const char* text, bool isSelected) {
     printLCD(text);
 }
 
-void drawSubMenu(const char* title, const char* itemText, bool isSelected, uint8_t row = 1) {
+void drawSubMenu(const char* title, const char* itemText, bool isSelected, uint8_t row) {
     clearLCD();
     setCursorLCD(0, 0);
     printLCD(title);
 
     drawMenuItem(0, row, itemText, isSelected);
+}
+
+bool updateMenuIndex(int* currentIndex, uint8_t itemCount) {
+    bool isChanged = false;
+    if (clickUpButton()) {
+        if (*currentIndex > 0) {
+            (*currentIndex)--;
+            isChanged = true;
+        }
+    }
+    if (clickDownButton()) {
+        if (*currentIndex < (int)(itemCount - 1)) {
+            (*currentIndex)++;
+            isChanged = true;
+        }
+    }
+    return isChanged;
 }

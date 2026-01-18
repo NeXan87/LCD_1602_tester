@@ -61,17 +61,8 @@ void initScreenSettings() {
 bool updateScreenSettings() {
     switch (state) {
         case SETTINGS_STATE_MENU:
-            if (clickUpButton()) {
-                if (menuSelectedIndex > 0) {
-                    menuSelectedIndex--;
-                    drawSettingsMenu();
-                }
-            }
-            if (clickDownButton()) {
-                if (menuSelectedIndex < SETTINGS_COUNT - 1) {
-                    menuSelectedIndex++;
-                    drawSettingsMenu();
-                }
+            if (updateMenuIndex(&menuSelectedIndex, SETTINGS_COUNT)) {
+                drawSettingsMenu();
             }
             if (clickSelectButton()) {
                 if (menuSelectedIndex == 0) {

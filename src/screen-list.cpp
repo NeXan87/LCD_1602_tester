@@ -7,7 +7,7 @@
 #include "lcd-driver.h"
 #include "lcd-helpers.h"
 
-static uint8_t selectedIndex = 0;
+static int selectedIndex = 0;
 static int topIndex = 0;
 static const char* const MENU_ITEMS[] = {
     "IR test",
@@ -59,20 +59,9 @@ void screenListRedraw() {
 }
 
 ScreenId screenListUpdate() {
-    if (clickUpButton()) {
-        if (selectedIndex > 0) {
-            selectedIndex--;
-            drawMenu();
-        }
+    if (updateMenuIndex(&selectedIndex, MENU_COUNT)) {
+        drawMenu();
     }
-
-    if (clickDownButton()) {
-        if (selectedIndex < MENU_COUNT - 1) {
-            selectedIndex++;
-            drawMenu();
-        }
-    }
-
     if (clickSelectButton()) {
         ScreenId next = getSelectedScreen();
         selectedIndex = 0;
