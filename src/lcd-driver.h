@@ -4,7 +4,7 @@
 
 #include "config.h"
 
-void initCharsAboutScreen();
+void initArrowsLCD();
 void initLCD();
 void clearLCD();
 void setCursorLCD(uint8_t col, uint8_t row);

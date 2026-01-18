@@ -2,6 +2,6 @@
 
 #include "config.h"
 
-void eepromInitBacklight();
 void initScreenSettings();
+void setBacklightPercent();
 bool updateScreenSettings();

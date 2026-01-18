@@ -2,15 +2,14 @@
 
 #include <Arduino.h>
 
-// Инициализация EEPROM (вызывается один раз в setup)
+struct Settings {
+    uint32_t magic;        // сигнатура для проверки валидности
+    int backlightPercent;  // 0–100
+    // Добавьте другие поля по мере необходимости
+};
+
 void eepromInit();
-
-// Сохранение текущих настроек
 void eepromSaveSettings();
-
-// Загрузка настроек
 void eepromLoadSettings();
-
-// Получить/установить яркость подсветки (0–100%)
-uint8_t eepromGetBacklightPercent();
-void eepromSetBacklightPercent(uint8_t percent);
+int eepromGetBacklightPercent();
+void eepromSetBacklightPercent(int percent);

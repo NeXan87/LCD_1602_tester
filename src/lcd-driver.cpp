@@ -49,7 +49,7 @@ void printfLCD(const char* format, ...) {
     }
 }
 
-void initCharsAboutScreen() {
+void initArrowsLCD() {
     lcd.createChar(LCD_CHAR_ARROW_UP, (uint8_t*)arrowUp);
     lcd.createChar(LCD_CHAR_ARROW_DOWN, (uint8_t*)arrowDown);
 }

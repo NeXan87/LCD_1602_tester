@@ -3,6 +3,7 @@
 #include "buttons.h"
 #include "config.h"
 #include "eeprom2.h"
+#include "lcd-custom-chars.h"
 #include "lcd-driver.h"
 
 static const char* const SETTINGS_ITEMS[] = {
@@ -16,12 +17,8 @@ typedef enum {
 
 static SettingsState state = SETTINGS_STATE_MENU;
 static int menuSelectedIndex = 0;
-static int backlightPercent = 100;  // по умолчанию 100%
-
-void eepromInitBacklight() {
-    backlightPercent = eepromGetBacklightPercent();
-    analogWrite(BACKLIGHT_PIN, (backlightPercent * 255) / 100);
-}
+static int backlightPercent;          // текущее значение в редакторе
+static int originalBacklightPercent;  // исходное значение (для отмены)
 
 static int percentToPwm(int percent) {
     return (percent * 255) / 100;
@@ -31,6 +28,11 @@ static void applyBacklight() {
     analogWrite(BACKLIGHT_PIN, percentToPwm(backlightPercent));
 }
 
+void setBacklightPercent() {
+    backlightPercent = eepromGetBacklightPercent();
+    applyBacklight();
+}
+
 static void drawSettingsMenu() {
     clearLCD();
     setCursorLCD(0, 0);
@@ -38,7 +40,7 @@ static void drawSettingsMenu() {
     if (SETTINGS_COUNT > 0) {
         setCursorLCD(0, 1);
         if (menuSelectedIndex == 0) {
-            writeCharLCD(126);
+            writeCharLCD(126);  // или LCD_CHAR_ARROW_RIGHT, если есть
         } else {
             printLCD(" ");
         }
@@ -49,19 +51,21 @@ static void drawSettingsMenu() {
 static void drawBacklightEditor() {
     char buffer[17];
     snprintf(buffer, sizeof(buffer), "Bridge:%3d%%", backlightPercent);
+    buffer[16] = '\0';
     clearLCD();
     setCursorLCD(0, 0);
     printLCD(buffer);
     setCursorLCD(0, 1);
-    writeCharLCD(127);
+    writeCharLCD(LCD_CHAR_ARROW_UP);
     writeCharLCD(' ');
-    writeCharLCD(126);
+    writeCharLCD(LCD_CHAR_ARROW_DOWN);
     printLCD(" to adjust");
 }
 
 void initScreenSettings() {
     state = SETTINGS_STATE_MENU;
     menuSelectedIndex = 0;
+    initArrowsLCD();
     drawSettingsMenu();
 }
 
@@ -82,6 +86,9 @@ bool updateScreenSettings() {
             }
             if (clickSelectButton()) {
                 if (menuSelectedIndex == 0) {
+                    originalBacklightPercent = eepromGetBacklightPercent();
+                    backlightPercent = originalBacklightPercent;
+                    applyBacklight();
                     state = SETTINGS_STATE_EDIT_BACKLIGHT;
                     drawBacklightEditor();
                 }
@@ -89,19 +96,26 @@ bool updateScreenSettings() {
             break;
 
         case SETTINGS_STATE_EDIT_BACKLIGHT:
-            if (clickLeftButton()) {
+            if (clickDownButton()) {
                 if (backlightPercent >= 10) {
                     backlightPercent -= 10;
                     applyBacklight();
                     drawBacklightEditor();
                 }
             }
-            if (clickRightButton()) {
+            if (clickUpButton()) {
                 if (backlightPercent <= 90) {
                     backlightPercent += 10;
                     applyBacklight();
                     drawBacklightEditor();
                 }
+            }
+            if (clickLeftButton()) {
+                backlightPercent = originalBacklightPercent;
+                applyBacklight();
+                drawSettingsMenu();
+                state = SETTINGS_STATE_MENU;
+                return false;
             }
             if (clickSelectButton()) {
                 eepromSetBacklightPercent(backlightPercent);

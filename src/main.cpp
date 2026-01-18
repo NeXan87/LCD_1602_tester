@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <EEPROM.h>
 
 #include "buttons.h"
 #include "config.h"
@@ -11,7 +12,7 @@
 
 void setup() {
     eepromInit();
-    eepromInitBacklight();
+    setBacklightPercent();
     initLCD();
     screenListRedraw();
     Serial.begin(115200);
@@ -66,7 +67,7 @@ void loop() {
 
             if (!aboutInitialized) {
                 aboutInitialized = true;
-                initCharsAboutScreen();
+                initArrowsLCD();
                 initAboutScreen();
             }
             if (updateAboutScreen()) {
