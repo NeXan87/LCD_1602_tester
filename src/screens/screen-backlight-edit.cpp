@@ -11,7 +11,7 @@ static int currentBrightness;
 static int originalBrightness;
 
 static void drawEditor() {
-    drawNumericEditor("Bridge", currentBrightness, 3, "%");
+    drawNumericEditor("Bridge", currentBrightness, NUM_WIDTH_3, "%");
 }
 
 void initScreenBacklightEdit() {

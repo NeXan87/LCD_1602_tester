@@ -57,7 +57,7 @@ bool updateMenuIndex(int* currentIndex, uint8_t itemCount) {
     return isChanged;
 }
 
-void drawNumericEditor(const char* title, int value, uint8_t width, const char* suffix) {
+void drawNumericEditor(const char* title, int value, NumericWidth width, const char* suffix) {
     char buffer[17];
 
     if (width == 2) {
@@ -66,6 +66,8 @@ void drawNumericEditor(const char* title, int value, uint8_t width, const char* 
         snprintf(buffer, sizeof(buffer), "%s:%3d%s", title, value, suffix);
     } else if (width == 4) {
         snprintf(buffer, sizeof(buffer), "%s:%4d%s", title, value, suffix);
+    } else {
+        snprintf(buffer, sizeof(buffer), "%s:%d%s", title, value, suffix);
     }
 
     buffer[16] = '\0';
