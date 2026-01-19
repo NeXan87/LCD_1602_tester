@@ -30,25 +30,26 @@ static void readSettingsFromEeprom() {
 }
 
 // === ПУБЛИЧНЫЙ ИНТЕРФЕЙС ===
-void eepromInit() {
+void initEeprom() {
     readSettingsFromEeprom();
     if (settings.magic != EEPROM_MAGIC_VALUE) {
         // Первый запуск или повреждённые данные
         settings.magic = EEPROM_MAGIC_VALUE;
         settings.backlightPercent = 100;
-        eepromSaveSettings();
+        saveSettingsEeprom();
     }
 }
 
-void eepromSaveSettings() {
+void saveSettingsEeprom() {
     writeSettingsToEeprom();
 }
 
-int eepromGetBacklightPercent() {
+int getBacklightPercentEeprom() {
     return settings.backlightPercent;
 }
 
-void eepromSetBacklightPercent(int percent) {
+void setBacklightPercentEeprom(int percent) {
     if (percent > 100) percent = 100;
     settings.backlightPercent = percent;
+    saveSettingsEeprom();
 }

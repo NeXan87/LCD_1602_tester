@@ -68,7 +68,7 @@ void updateScreenManager() {
     if (nextScreen != currentScreen) {
         isInitScreen[currentScreen] = false;
         if (nextScreen == SCREEN_LIST) {
-            screenListRedraw();
+            redrawScreenList();
         }
         currentScreen = nextScreen;
     }

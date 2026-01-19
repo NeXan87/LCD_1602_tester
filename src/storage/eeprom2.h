@@ -8,8 +8,8 @@ struct Settings {
     // Добавьте другие поля по мере необходимости
 };
 
-void eepromInit();
-void eepromSaveSettings();
+void initEeprom();
+void saveSettingsEeprom();
 void eepromLoadSettings();
-int eepromGetBacklightPercent();
-void eepromSetBacklightPercent(int percent);
+int getBacklightPercentEeprom();
+void setBacklightPercentEeprom(int percent);

@@ -8,4 +8,4 @@
 ScreenId screenListUpdate();
 
 /// Принудительно обновить отображение (например, при возврате из другого экрана)
-void screenListRedraw();
+void redrawScreenList();

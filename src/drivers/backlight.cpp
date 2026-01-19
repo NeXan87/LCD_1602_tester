@@ -9,12 +9,12 @@ void initBacklight() {
     saveApplyBacklight();
 }
 
-void setPercentBacklight(int percent) {
+void setBacklightPercent(int percent) {
     if (percent > 100) percent = 100;
     analogWrite(BACKLIGHT_PIN, percentToPwm(percent));
 }
 
 void saveApplyBacklight() {
-    int saved = eepromGetBacklightPercent();
-    setPercentBacklight(saved);
+    int saved = getBacklightPercentEeprom();
+    setBacklightPercent(saved);
 }

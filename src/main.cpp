@@ -11,10 +11,10 @@
 #include "storage/eeprom2.h"
 
 void setup() {
-    eepromInit();
+    initEeprom();
     initBacklight();
     initLCD();
-    screenListRedraw();
+    redrawScreenList();
     Serial.begin(115200);
 }
 

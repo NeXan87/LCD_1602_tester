@@ -55,7 +55,7 @@ static ScreenId getSelectedScreen() {
     return SCREEN_LIST;
 }
 
-void screenListRedraw() {
+void redrawScreenList() {
     drawMenu();
 }
 

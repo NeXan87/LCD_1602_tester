@@ -6,7 +6,7 @@
 void initBacklight();
 
 /// Установка яркости (0–100%)
-void setPercentBacklight(int percent);
+void setBacklightPercent(int percent);
 
 /// Применение сохранённой яркости из EEPROM
 void saveApplyBacklight();

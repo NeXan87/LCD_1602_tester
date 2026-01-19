@@ -15,7 +15,7 @@ static void drawEditor() {
 }
 
 void initScreenBacklightEdit() {
-    originalBrightness = eepromGetBacklightPercent();
+    originalBrightness = getBacklightPercentEeprom();
     currentBrightness = originalBrightness;
     drawEditor();
 }
@@ -24,24 +24,23 @@ bool updateScreenBacklightEdit() {
     if (clickDownButton()) {
         if (currentBrightness >= 10) {
             currentBrightness -= 10;
-            setPercentBacklight(currentBrightness);
+            setBacklightPercent(currentBrightness);
             drawEditor();
         }
     }
     if (clickUpButton()) {
         if (currentBrightness <= 90) {
             currentBrightness += 10;
-            setPercentBacklight(currentBrightness);
+            setBacklightPercent(currentBrightness);
             drawEditor();
         }
     }
     if (clickLeftButton()) {
-        setPercentBacklight(originalBrightness);
+        setBacklightPercent(originalBrightness);
         return true;
     }
     if (clickSelectButton()) {
-        eepromSetBacklightPercent(currentBrightness);
-        eepromSaveSettings();
+        setBacklightPercentEeprom(currentBrightness);
         return true;
     }
     return false;
