@@ -7,11 +7,12 @@ static bool s_isDownHeld = false;
 static unsigned long holdStartTime = 0;
 static unsigned long lastStepTime = 0;
 
-void handleHoldNavigation(bool isUpHeld, bool isDownHeld, void (*onStep)(bool isUp), uint16_t stepIntervalMs) {
+bool handleHoldNavigation(bool isUpHeld, bool isDownHeld, bool (*onStep)(bool isUp), uint16_t stepIntervalMs) {
     static bool wasUp = false;
     static bool wasDown = false;
 
     unsigned long now = millis();
+    bool changed = false;
 
     // Обнаружение начала удержания
     if (isUpHeld && !wasUp) {
@@ -35,11 +36,17 @@ void handleHoldNavigation(bool isUpHeld, bool isDownHeld, void (*onStep)(bool is
     if ((s_isUpHeld || s_isDownHeld) && (now - holdStartTime) >= HOLD_THRESHOLD_MS) {
         if (now - lastStepTime >= stepIntervalMs) {
             lastStepTime = now;
-            if (s_isUpHeld) onStep(true);
-            if (s_isDownHeld) onStep(false);
+            if (s_isUpHeld) {
+                if (onStep(true)) changed = true;
+            }
+            if (s_isDownHeld) {
+                if (onStep(false)) changed = true;
+            }
         }
     }
 
     wasUp = isUpHeld;
     wasDown = isDownHeld;
+
+    return changed;
 }

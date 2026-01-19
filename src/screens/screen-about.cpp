@@ -3,6 +3,7 @@
 #include "drivers/buttons.h"
 #include "drivers/lcd-custom-chars.h"
 #include "drivers/lcd-driver.h"
+#include "utils/hold-navigate.h"
 #include "utils/lcd-helpers.h"
 
 static const char* const ABOUT_LINES[] = {
@@ -34,24 +35,44 @@ void initAboutScreen() {
     drawAboutScreen();
 }
 
+static bool moveDownStep() {
+    if (scrollOffset < (int8_t)(ABOUT_LINE_COUNT - LCD_ROWS)) {
+        scrollOffset++;
+        return true;
+    }
+    return false;
+}
+
+static bool moveUpStep() {
+    if (scrollOffset > 0) {
+        scrollOffset--;
+        return true;
+    }
+    return false;
+}
+
+static bool onNavigateStep(bool isUp) {
+    if (isUp) {
+        return moveUpStep();
+    } else {
+        return moveDownStep();
+    }
+}
+
 bool updateAboutScreen() {
     bool changed = false;
 
     if (clickUpButton()) {
-        if (scrollOffset > 0) {
-            scrollOffset--;
-            changed = true;
-        }
+        changed = moveUpStep();
     }
 
     if (clickDownButton()) {
-        if (scrollOffset < (int8_t)(ABOUT_LINE_COUNT - LCD_ROWS)) {
-            scrollOffset++;
-            changed = true;
-        }
+        changed = moveDownStep();
     }
 
-    if (changed) {
+    bool holdChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep, STEP_INTERVAL_FAST_MS);
+
+    if (changed || holdChanged) {
         clearLCD();
         drawAboutScreen();
     }

@@ -37,12 +37,13 @@ static void increaseBacklightByStep() {
     }
 }
 
-static void onNavigateStep(bool isUp) {
+static bool onNavigateStep(bool isUp) {
     if (isUp) {
         increaseBacklightByStep();
     } else {
         decreaseBacklightByStep();
     }
+    return true;
 }
 
 bool updateScreenBacklightEdit() {

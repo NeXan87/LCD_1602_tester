@@ -58,26 +58,29 @@ void redrawScreenList() {
     drawMenu();
 }
 
-static void onNavigateStep(bool isUp) {
+static bool onNavigateStep(bool isUp) {
     if (isUp) {
         if (selectedIndex > 0) {
             selectedIndex--;
-            drawMenu();
+            return true;
         }
     } else {
         if (selectedIndex < MENU_COUNT - 1) {
             selectedIndex++;
-            drawMenu();
+            return true;
         }
     }
+    return false;
 }
 
 ScreenId screenListUpdate() {
-    if (updateMenuIndex(&selectedIndex, MENU_COUNT)) {
+    bool changed = updateMenuIndex(&selectedIndex, MENU_COUNT);
+
+    bool holdChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep);
+
+    if (changed || holdChanged) {
         drawMenu();
     }
-
-    handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep);
 
     if (clickSelectButton()) {
         ScreenId next = getSelectedScreen();
