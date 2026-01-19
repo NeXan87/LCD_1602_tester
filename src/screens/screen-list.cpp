@@ -12,8 +12,8 @@
 static int selectedIndex = 0;
 static int topIndex = 0;
 static const char* const MENU_ITEMS[] = {
-    "IR test",
-    "Encoder test",
+    "IR tester",
+    "Enc tester",
     "Settings",
     "Diagnostics",
     "About",

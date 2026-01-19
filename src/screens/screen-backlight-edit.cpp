@@ -21,37 +21,37 @@ void initScreenBacklightEdit() {
     drawEditor();
 }
 
+static void decreaseBacklightByStep() {
+    if (currentBrightness >= 10) {
+        currentBrightness -= 10;
+        setBacklightPercent(currentBrightness);
+        drawEditor();
+    }
+}
+
+static void increaseBacklightByStep() {
+    if (currentBrightness <= 90) {
+        currentBrightness += 10;
+        setBacklightPercent(currentBrightness);
+        drawEditor();
+    }
+}
+
 static void onNavigateStep(bool isUp) {
     if (isUp) {
-        if (currentBrightness <= 90) {
-            currentBrightness += 10;
-            setBacklightPercent(currentBrightness);
-            drawEditor();
-        }
+        increaseBacklightByStep();
     } else {
-        if (currentBrightness >= 10) {
-            currentBrightness -= 10;
-            setBacklightPercent(currentBrightness);
-            drawEditor();
-        }
+        decreaseBacklightByStep();
     }
 }
 
 bool updateScreenBacklightEdit() {
     if (clickDownButton()) {
-        if (currentBrightness >= 10) {
-            currentBrightness -= 10;
-            setBacklightPercent(currentBrightness);
-            drawEditor();
-        }
+        decreaseBacklightByStep();
     }
 
     if (clickUpButton()) {
-        if (currentBrightness <= 90) {
-            currentBrightness += 10;
-            setBacklightPercent(currentBrightness);
-            drawEditor();
-        }
+        increaseBacklightByStep();
     }
 
     handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep, STEP_INTERVAL_FAST_MS);
