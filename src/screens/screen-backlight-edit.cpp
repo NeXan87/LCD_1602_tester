@@ -33,19 +33,19 @@ bool updateScreenBacklightEdit() {
     if (clickDownButton()) {
         if (currentBrightness >= 10) {
             currentBrightness -= 10;
-            backlightSetPercent(currentBrightness);
+            setPercentBacklight(currentBrightness);
             drawEditor();
         }
     }
     if (clickUpButton()) {
         if (currentBrightness <= 90) {
             currentBrightness += 10;
-            backlightSetPercent(currentBrightness);
+            setPercentBacklight(currentBrightness);
             drawEditor();
         }
     }
     if (clickLeftButton()) {
-        backlightSetPercent(originalBrightness);
+        setPercentBacklight(originalBrightness);
         return true;
     }
     if (clickSelectButton()) {

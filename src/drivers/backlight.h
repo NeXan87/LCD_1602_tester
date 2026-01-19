@@ -3,10 +3,10 @@
 #include <Arduino.h>
 
 /// Инициализация подсветки (вызывается один раз в setup)
-void backlightInit();
+void initBacklight();
 
 /// Установка яркости (0–100%)
-void backlightSetPercent(int percent);
+void setPercentBacklight(int percent);
 
 /// Применение сохранённой яркости из EEPROM
-void backlightApplySaved();
+void saveApplyBacklight();

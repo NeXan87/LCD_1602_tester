@@ -12,13 +12,13 @@
 
 void setup() {
     eepromInit();
-    backlightInit();
+    initBacklight();
     initLCD();
     screenListRedraw();
     Serial.begin(115200);
 }
 
 void loop() {
-    updateScreenManager();
     updateButtons();
+    updateScreenManager();
 }

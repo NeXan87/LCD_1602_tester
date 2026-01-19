@@ -4,20 +4,17 @@
 #include "storage/eeprom2.h"
 #include "utils/helpers.h"
 
-static int g_brightness = 100;
-
-void backlightInit() {
+void initBacklight() {
     pinMode(BACKLIGHT_PIN, OUTPUT);
-    backlightApplySaved();
+    saveApplyBacklight();
 }
 
-void backlightSetPercent(int percent) {
+void setPercentBacklight(int percent) {
     if (percent > 100) percent = 100;
-    g_brightness = percent;
-    analogWrite(BACKLIGHT_PIN, percentToPwm(g_brightness));
+    analogWrite(BACKLIGHT_PIN, percentToPwm(percent));
 }
 
-void backlightApplySaved() {
+void saveApplyBacklight() {
     int saved = eepromGetBacklightPercent();
-    backlightSetPercent(saved);
+    setPercentBacklight(saved);
 }
