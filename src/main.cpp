@@ -20,5 +20,6 @@ void setup() {
 
 void loop() {
     updateButtons();
+    updateBacklight();
     updateScreenManager();
 }

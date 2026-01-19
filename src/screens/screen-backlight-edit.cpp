@@ -57,7 +57,7 @@ bool updateScreenBacklightEdit() {
     handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep, STEP_INTERVAL_FAST_MS);
 
     if (clickLeftButton()) {
-        setBacklightPercent(originalBrightness);
+        setBacklightPercentSmooth(originalBrightness);
         return true;
     }
 
