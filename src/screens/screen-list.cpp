@@ -1,7 +1,5 @@
 #include "screens/screen-list.h"
 
-#include <AnalogMultiButton.h>
-
 #include "core/screen-manager.h"
 #include "drivers/buttons.h"
 #include "drivers/lcd-custom-chars.h"
