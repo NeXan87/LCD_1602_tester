@@ -6,6 +6,7 @@
 #include "drivers/buttons.h"
 #include "drivers/lcd-custom-chars.h"
 #include "drivers/lcd-driver.h"
+#include "utils/hold-navigate.h"
 #include "utils/lcd-helpers.h"
 
 static int selectedIndex = 0;
@@ -59,10 +60,27 @@ void redrawScreenList() {
     drawMenu();
 }
 
+static void onNavigateStep(bool isUp) {
+    if (isUp) {
+        if (selectedIndex > 0) {
+            selectedIndex--;
+            drawMenu();
+        }
+    } else {
+        if (selectedIndex < MENU_COUNT - 1) {
+            selectedIndex++;
+            drawMenu();
+        }
+    }
+}
+
 ScreenId screenListUpdate() {
     if (updateMenuIndex(&selectedIndex, MENU_COUNT)) {
         drawMenu();
     }
+
+    handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep);
+
     if (clickSelectButton()) {
         ScreenId next = getSelectedScreen();
         selectedIndex = 0;
