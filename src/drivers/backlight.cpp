@@ -17,10 +17,6 @@ void backlightSetPercent(int percent) {
     analogWrite(BACKLIGHT_PIN, percentToPwm(g_brightness));
 }
 
-int backlightGetPercent() {
-    return g_brightness;
-}
-
 void backlightApplySaved() {
     int saved = eepromGetBacklightPercent();
     backlightSetPercent(saved);

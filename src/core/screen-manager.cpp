@@ -4,75 +4,72 @@
 
 // Экраны
 #include "screens/screen-about.h"
+#include "screens/screen-backlight-edit.h"
 #include "screens/screen-diagnostics.h"
 #include "screens/screen-list.h"
 #include "screens/screen-settings.h"
 
-void screenManagerUpdate() {
+static bool isInitScreen[SCREEN_COUNT] = {false};
+
+static void initScreen(ScreenId id) {
+    if (isInitScreen[id]) return;
+
+    switch (id) {
+        case SCREEN_LIST:
+            initArrowsLCD();
+            break;
+        case SCREEN_SETTINGS:
+            initScreenSettings();
+            initArrowsLCD();
+            break;
+        case SCREEN_BACKLIGHT_EDIT:
+            initScreenBacklightEdit();
+            initArrowsLCD();
+            break;
+        case SCREEN_DIAGNOSTICS:
+            initScreenDiagnostics();
+            break;
+        case SCREEN_ABOUT:
+            initAboutScreen();
+            initArrowsLCD();
+            break;
+        default:
+            break;
+    }
+    isInitScreen[id] = true;
+}
+
+static ScreenId updateScreen(ScreenId id) {
+    switch (id) {
+        case SCREEN_LIST:
+            return screenListUpdate();
+        case SCREEN_SETTINGS:
+            return updateScreenSettings();
+        case SCREEN_BACKLIGHT_EDIT:
+            if (updateScreenBacklightEdit()) return SCREEN_SETTINGS;
+            return SCREEN_BACKLIGHT_EDIT;
+        case SCREEN_DIAGNOSTICS:
+            if (updateScreenDiagnostics()) return SCREEN_LIST;
+            return SCREEN_DIAGNOSTICS;
+        case SCREEN_ABOUT:
+            if (updateAboutScreen()) return SCREEN_LIST;
+            return SCREEN_ABOUT;
+        default:
+            return SCREEN_LIST;
+    }
+}
+
+void updateScreenManager() {
     static ScreenId currentScreen = SCREEN_LIST;
 
-    switch (currentScreen) {
-        case SCREEN_LIST: {
-            static bool listInitialized = false;
-            if (!listInitialized) {
-                listInitialized = true;
-                initArrowsLCD();
-            }
-            ScreenId next = screenListUpdate();
-            if (next != SCREEN_LIST) {
-                currentScreen = next;
-                listInitialized = false;
-            }
-            break;
-        }
-        case SCREEN_IR_TEST:
-            break;
-        case SCREEN_ENCODER_TEST:
-            break;
-        case SCREEN_SETTINGS: {
-            static bool settingsInitialized = false;
-            if (!settingsInitialized) {
-                settingsInitialized = true;
-                initScreenSettings();
-                initArrowsLCD();
-            }
-            if (updateScreenSettings()) {
-                currentScreen = SCREEN_LIST;
-                settingsInitialized = false;
-                screenListRedraw();
-            }
-            break;
-        }
-        case SCREEN_DIAGNOSTICS: {
-            static bool diagInitialized = false;
+    initScreen(currentScreen);
+    ScreenId nextScreen = updateScreen(currentScreen);
 
-            if (!diagInitialized) {
-                diagInitialized = true;
-                initScreenDiagnostics();
-            }
-            if (updateScreenDiagnostics()) {
-                currentScreen = SCREEN_LIST;
-                diagInitialized = false;
-                screenListRedraw();
-            }
-            break;
+    if (nextScreen != currentScreen) {
+        isInitScreen[currentScreen] = false;
+        if (nextScreen == SCREEN_LIST) {
+            screenListRedraw();
         }
-        case SCREEN_ABOUT: {
-            static bool aboutInitialized = false;
-
-            if (!aboutInitialized) {
-                aboutInitialized = true;
-                initArrowsLCD();
-                initAboutScreen();
-            }
-            if (updateAboutScreen()) {
-                currentScreen = SCREEN_LIST;
-                aboutInitialized = false;
-                screenListRedraw();
-            }
-            break;
-        }
-        default:
-            currentScreen = SCREEN_LIST;
+        currentScreen = nextScreen;
     }
 }
