@@ -28,7 +28,7 @@ const char* getButtonName(int adcValue) {
 }
 
 static void drawDiagMenu() {
-    drawSubMenu("Diagnostics", DIAG_MENU_ITEMS[menuSelectedIndex], menuSelectedIndex == 0);
+    drawSubMenu("Diagnostics", DIAG_MENU_ITEMS[menuSelectedIndex], true);
 }
 
 static void drawButtonsTest() {

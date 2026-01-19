@@ -5,6 +5,7 @@
 #include "drivers/lcd-custom-chars.h"
 #include "drivers/lcd-driver.h"
 #include "storage/eeprom2.h"
+#include "utils/hold-navigate.h"
 #include "utils/lcd-helpers.h"
 
 static int currentBrightness;
@@ -20,6 +21,22 @@ void initScreenBacklightEdit() {
     drawEditor();
 }
 
+static void onNavigateStep(bool isUp) {
+    if (isUp) {
+        if (currentBrightness <= 90) {
+            currentBrightness += 10;
+            setBacklightPercent(currentBrightness);
+            drawEditor();
+        }
+    } else {
+        if (currentBrightness >= 10) {
+            currentBrightness -= 10;
+            setBacklightPercent(currentBrightness);
+            drawEditor();
+        }
+    }
+}
+
 bool updateScreenBacklightEdit() {
     if (clickDownButton()) {
         if (currentBrightness >= 10) {
@@ -28,6 +45,7 @@ bool updateScreenBacklightEdit() {
             drawEditor();
         }
     }
+
     if (clickUpButton()) {
         if (currentBrightness <= 90) {
             currentBrightness += 10;
@@ -35,13 +53,18 @@ bool updateScreenBacklightEdit() {
             drawEditor();
         }
     }
+
+    handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep, STEP_INTERVAL_FAST_MS);
+
     if (clickLeftButton()) {
         setBacklightPercent(originalBrightness);
         return true;
     }
+
     if (clickSelectButton()) {
         setBacklightPercentEeprom(currentBrightness);
         return true;
     }
+
     return false;
 }

@@ -7,12 +7,13 @@
 #include "utils/lcd-helpers.h"
 
 static const char* const SETTINGS_ITEMS[] = {
-    "Display bridge"};
+    "Display bridge",
+};
 static const uint8_t SETTINGS_COUNT = sizeof(SETTINGS_ITEMS) / sizeof(SETTINGS_ITEMS[0]);
 static int menuSelectedIndex = 0;
 
 static void drawSettingsMenu() {
-    drawSubMenu("Settings", SETTINGS_ITEMS[menuSelectedIndex], menuSelectedIndex == 0);
+    drawSubMenu("Settings", SETTINGS_ITEMS[menuSelectedIndex], true);
 }
 
 void initScreenSettings() {
