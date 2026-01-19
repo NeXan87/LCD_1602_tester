@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config.h"
+#include "core/screen-id.h"
 
 /// Обновляет состояние списка (обработка кнопок, перерисовка)
 /// @return ScreenId выбранного экрана, если был подтверждён SELECT; иначе SCREEN_LIST

@@ -1,5 +1,14 @@
 #pragma once
 
+// Идентификаторы кнопок (enum для читаемости)
+enum ButtonId {
+    BUTTON_RIGHT,
+    BUTTON_UP,
+    BUTTON_DOWN,
+    BUTTON_LEFT,
+    BUTTON_SELECT
+};
+
 void updateButtons();
 bool clickRightButton();
 bool clickUpButton();

@@ -1,11 +1,12 @@
-#include "screen-settings.h"
+#include "screens/screen-settings.h"
 
-#include "buttons.h"
 #include "config.h"
-#include "eeprom2.h"
-#include "lcd-custom-chars.h"
-#include "lcd-driver.h"
-#include "lcd-helpers.h"
+#include "drivers/backlight.h"
+#include "drivers/buttons.h"
+#include "drivers/lcd-custom-chars.h"
+#include "drivers/lcd-driver.h"
+#include "storage/eeprom2.h"
+#include "utils/lcd-helpers.h"
 
 static const char* const SETTINGS_ITEMS[] = {
     "Display bridge"};
@@ -20,19 +21,6 @@ static SettingsState state = SETTINGS_STATE_MENU;
 static int menuSelectedIndex = 0;
 static int backlightPercent;          // текущее значение в редакторе
 static int originalBacklightPercent;  // исходное значение (для отмены)
-
-static int percentToPwm(int percent) {
-    return (percent * 255) / 100;
-}
-
-static void applyBacklight() {
-    analogWrite(BACKLIGHT_PIN, percentToPwm(backlightPercent));
-}
-
-void setBacklightPercent() {
-    backlightPercent = eepromGetBacklightPercent();
-    applyBacklight();
-}
 
 static void drawSettingsMenu() {
     drawSubMenu("Settings", SETTINGS_ITEMS[menuSelectedIndex], menuSelectedIndex == 0);
@@ -68,7 +56,7 @@ bool updateScreenSettings() {
                 if (menuSelectedIndex == 0) {
                     originalBacklightPercent = eepromGetBacklightPercent();
                     backlightPercent = originalBacklightPercent;
-                    applyBacklight();
+                    backlightSetPercent(backlightPercent);
                     state = SETTINGS_STATE_EDIT_BACKLIGHT;
                     drawBacklightEditor();
                 }
@@ -79,20 +67,20 @@ bool updateScreenSettings() {
             if (clickDownButton()) {
                 if (backlightPercent >= 10) {
                     backlightPercent -= 10;
-                    applyBacklight();
+                    backlightSetPercent(backlightPercent);
                     drawBacklightEditor();
                 }
             }
             if (clickUpButton()) {
                 if (backlightPercent <= 90) {
                     backlightPercent += 10;
-                    applyBacklight();
+                    backlightSetPercent(backlightPercent);
                     drawBacklightEditor();
                 }
             }
             if (clickLeftButton()) {
                 backlightPercent = originalBacklightPercent;
-                applyBacklight();
+                backlightSetPercent(backlightPercent);
                 drawSettingsMenu();
                 state = SETTINGS_STATE_MENU;
                 return false;

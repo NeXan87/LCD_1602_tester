@@ -1,10 +1,10 @@
-#include "lcd-driver.h"
+#include "drivers/lcd-driver.h"
 
 #include <LiquidCrystal.h>
 #include <stdarg.h>
 
-#include "lcd-custom-chars.h"
-#include "screen-about.h"
+#include "drivers/lcd-custom-chars.h"
+#include "screens/screen-about.h"
 
 static LiquidCrystal lcd(
     LCD_RS_PIN,

@@ -1,8 +1,8 @@
-#include "lcd-helpers.h"
+#include "utils/lcd-helpers.h"
 
-#include "buttons.h"
-#include "lcd-custom-chars.h"
-#include "lcd-driver.h"
+#include "drivers/buttons.h"
+#include "drivers/lcd-custom-chars.h"
+#include "drivers/lcd-driver.h"
 
 void drawScrollIndicators(uint8_t totalItems, uint8_t visibleRows, int topIndex) {
     if (totalItems <= visibleRows) {

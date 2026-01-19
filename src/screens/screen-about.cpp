@@ -1,9 +1,9 @@
-#include "screen-about.h"
+#include "screens/screen-about.h"
 
-#include "buttons.h"
-#include "lcd-custom-chars.h"
-#include "lcd-driver.h"
-#include "lcd-helpers.h"
+#include "drivers/buttons.h"
+#include "drivers/lcd-custom-chars.h"
+#include "drivers/lcd-driver.h"
+#include "utils/lcd-helpers.h"
 
 static const char* const ABOUT_LINES[] = {
     TITLE,

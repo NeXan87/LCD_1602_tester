@@ -1,11 +1,12 @@
-#include "screen-list.h"
+#include "screens/screen-list.h"
 
 #include <AnalogMultiButton.h>
 
-#include "buttons.h"
-#include "lcd-custom-chars.h"
-#include "lcd-driver.h"
-#include "lcd-helpers.h"
+#include "core/screen-manager.h"
+#include "drivers/buttons.h"
+#include "drivers/lcd-custom-chars.h"
+#include "drivers/lcd-driver.h"
+#include "utils/lcd-helpers.h"
 
 static int selectedIndex = 0;
 static int topIndex = 0;

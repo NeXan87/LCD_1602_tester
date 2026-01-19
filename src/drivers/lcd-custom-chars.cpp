@@ -1,4 +1,4 @@
-#include "lcd-custom-chars.h"
+#include "drivers/lcd-custom-chars.h"
 
 const uint8_t arrowUp[8] = {
     B00000,

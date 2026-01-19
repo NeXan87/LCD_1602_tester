@@ -1,8 +1,8 @@
-#include "screen-diagnostics.h"
+#include "screens/screen-diagnostics.h"
 
-#include "buttons.h"
-#include "lcd-driver.h"
-#include "lcd-helpers.h"
+#include "drivers/buttons.h"
+#include "drivers/lcd-driver.h"
+#include "utils/lcd-helpers.h"
 
 static const char* const DIAG_MENU_ITEMS[] = {
     "Buttons",

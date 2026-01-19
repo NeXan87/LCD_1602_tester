@@ -1,4 +1,4 @@
-#include "eeprom2.h"
+#include "storage/eeprom2.h"
 
 #include <EEPROM.h>
 
