@@ -26,6 +26,7 @@ ScreenId updateScreenSettings() {
     }
     if (clickSelectButton()) {
         if (menuSelectedIndex == 0) {
+            clearLCD();
             return SCREEN_BACKLIGHT_EDIT;
         }
     }

@@ -13,7 +13,6 @@ static int originalBrightness;
 static void drawEditor() {
     char buffer[17];
     snprintf(buffer, sizeof(buffer), "Bridge:%3d%%", currentBrightness);
-    clearLCD();
     setCursorLCD(0, 0);
     printLCD(buffer);
     setCursorLCD(0, 1);
