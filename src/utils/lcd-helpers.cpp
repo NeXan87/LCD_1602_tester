@@ -56,3 +56,26 @@ bool updateMenuIndex(int* currentIndex, uint8_t itemCount) {
     }
     return isChanged;
 }
+
+void drawNumericEditor(const char* title, int value, uint8_t width, const char* suffix) {
+    char buffer[17];
+
+    if (width == 2) {
+        snprintf(buffer, sizeof(buffer), "%s:%2d%s", title, value, suffix);
+    } else if (width == 3) {
+        snprintf(buffer, sizeof(buffer), "%s:%3d%s", title, value, suffix);
+    } else if (width == 4) {
+        snprintf(buffer, sizeof(buffer), "%s:%4d%s", title, value, suffix);
+    }
+
+    buffer[16] = '\0';
+
+    setCursorLCD(0, 0);
+    printLCD(buffer);
+
+    setCursorLCD(0, 1);
+    writeCharLCD(LCD_CHAR_ARROW_UP);
+    writeCharLCD(' ');
+    writeCharLCD(LCD_CHAR_ARROW_DOWN);
+    printLCD(" to adjust");
+}

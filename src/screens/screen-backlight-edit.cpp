@@ -11,15 +11,7 @@ static int currentBrightness;
 static int originalBrightness;
 
 static void drawEditor() {
-    char buffer[17];
-    snprintf(buffer, sizeof(buffer), "Bridge:%3d%%", currentBrightness);
-    setCursorLCD(0, 0);
-    printLCD(buffer);
-    setCursorLCD(0, 1);
-    writeCharLCD(LCD_CHAR_ARROW_UP);
-    writeCharLCD(' ');
-    writeCharLCD(LCD_CHAR_ARROW_DOWN);
-    printLCD(" to adjust");
+    drawNumericEditor("Bridge", currentBrightness, 3, "%");
 }
 
 void initScreenBacklightEdit() {

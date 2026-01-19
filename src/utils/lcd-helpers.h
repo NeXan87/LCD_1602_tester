@@ -29,3 +29,10 @@ void drawSubMenu(const char* title, const char* itemText, bool isSelected, uint8
 /// @param itemCount — количество пунктов
 /// @return true, если индекс изменился
 bool updateMenuIndex(int* currentIndex, uint8_t itemCount);
+
+/// Отображает редактор числового параметра с заданной шириной числа
+/// @param title — заголовок (например, "Bridge")
+/// @param value — текущее значение
+/// @param width — ширина числового поля (2, 3, 4...)
+/// @param suffix — суффикс (например, "%", "s", "")
+void drawNumericEditor(const char* title, int value, uint8_t width, const char* suffix);
