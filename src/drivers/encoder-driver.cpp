@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#include "config.h"
+
 // Пины энкодера
 static uint8_t pinA, pinB, pinR;
 static EncoderState* encoderState;
@@ -46,20 +48,16 @@ void encoderBInterrupt() {
     encoderAInterrupt();
 }
 
-void initEncoder(uint8_t pA, uint8_t pB, uint8_t pR, EncoderState* state) {
-    pinA = pA;
-    pinB = pB;
-    pinR = pR;
+void initEncoder(EncoderState* state) {
     encoderState = state;
 
-    pinMode(pinA, INPUT);
-    pinMode(pinB, INPUT);
-    pinMode(pinR, INPUT);
+    pinMode(ENCODER_PIN_A, INPUT);
+    pinMode(ENCODER_PIN_B, INPUT);
+    pinMode(ENCODER_PIN_C_R, INPUT);
 
     // Прерывания на rising/falling для A и B
-    attachInterrupt(digitalPinToInterrupt(pinA), encoderAInterrupt, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(pinB), encoderBInterrupt, CHANGE);
-
+    attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A), encoderAInterrupt, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B), encoderBInterrupt, CHANGE);
     resetEncoder(state);
 }
 
@@ -71,7 +69,7 @@ void updateEncoder(EncoderState* state) {
     static unsigned long lastPosTime = 0;
     static long lastPos = 0;
     unsigned long now = millis();
-    if (now - lastPosTime >= 1000) {  // Каждую секунду
+    if (now - lastPosTime >= ENCODER_SPEED_TIME_MS) {
         long deltaPos = abs(state->position - lastPos);
         state->speed = deltaPos;
         lastPos = state->position;
@@ -79,7 +77,7 @@ void updateEncoder(EncoderState* state) {
     }
 
     // Если долго нет изменений, direction = 0
-    if (millis() - state->lastTime > 100) {
+    if (millis() - state->lastTime > ENCODER_NO_CHANGE_TIME_MS) {
         state->direction = 0;
     }
 }

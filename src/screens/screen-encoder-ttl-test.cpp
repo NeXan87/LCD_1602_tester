@@ -6,7 +6,7 @@
 #include "utils/lcd-helpers.h"
 
 static EncoderState encoderState;
-static uint8_t displayMode = 0;  // 0 - диагностика, 1 - позиция/скорость
+static EncoderDisplayMode displayMode = ENCODER_DISPLAY_DIAGNOSTICS;
 static unsigned long lastDrawTime = 0;
 
 static void drawEncoderTestScreen() {
@@ -15,7 +15,7 @@ static void drawEncoderTestScreen() {
 
     char buf[16];
 
-    if (displayMode == 0) {
+    if (displayMode == ENCODER_DISPLAY_DIAGNOSTICS) {
         // A:OK B:OK R:✓
         // ERR:0
         printLCD("A:");
@@ -29,7 +29,7 @@ static void drawEncoderTestScreen() {
         printLCD("ERR:");
         sprintf(buf, "%lu", encoderState.errors);
         printLCD(buf);
-    } else {
+    } else if (displayMode == ENCODER_DISPLAY_POSITION_SPEED) {
         // Pos:12345
         // Dir:▶ S:100 i/s
         printLCD("Pos:");
@@ -39,9 +39,9 @@ static void drawEncoderTestScreen() {
         setCursorLCD(0, 1);
         printLCD("Dir:");
         if (encoderState.direction == 1) {
-            printLCD("\x03");  // right arrow
+            writeCharLCD(126);  // right arrow
         } else if (encoderState.direction == -1) {
-            printLCD("\x04");  // left arrow
+            writeCharLCD(127);  // left arrow
         } else {
             printLCD("-");
         }
@@ -53,13 +53,11 @@ static void drawEncoderTestScreen() {
 }
 
 void initScreenEncoderTTLTest() {
-    initArrowsLCD();
-
-    displayMode = 0;
-    drawEncoderTestScreen();
+    displayMode = ENCODER_DISPLAY_DIAGNOSTICS;
     lastDrawTime = millis();
-    // Пины: A D2, B D3, R D4
-    initEncoder(2, 3, 11, &encoderState);
+    initArrowsLCD();
+    drawEncoderTestScreen();
+    initEncoder(&encoderState);
 }
 
 ScreenId updateScreenEncoderTTLTest() {
@@ -67,20 +65,20 @@ ScreenId updateScreenEncoderTTLTest() {
 
     // Перерисовка экрана каждые 500 мс для отображения актуальных данных
     unsigned long now = millis();
-    if (now - lastDrawTime > 500) {
+    if (now - lastDrawTime > ENCODER_DRAW_INTERVAL_MS) {
         drawEncoderTestScreen();
         lastDrawTime = now;
     }
 
     // Переключение режима Up/Down
     if (clickUpButton()) {
-        displayMode = (displayMode == 0) ? 1 : 0;
+        displayMode = (displayMode == ENCODER_DISPLAY_DIAGNOSTICS ? ENCODER_DISPLAY_POSITION_SPEED : ENCODER_DISPLAY_DIAGNOSTICS);
         Serial.println(displayMode);
         drawEncoderTestScreen();
         lastDrawTime = millis();
     }
     if (clickDownButton()) {
-        displayMode = (displayMode == 0) ? 1 : 0;
+        displayMode = (displayMode == ENCODER_DISPLAY_DIAGNOSTICS ? ENCODER_DISPLAY_POSITION_SPEED : ENCODER_DISPLAY_DIAGNOSTICS);
         Serial.println(displayMode);
         drawEncoderTestScreen();
         lastDrawTime = millis();

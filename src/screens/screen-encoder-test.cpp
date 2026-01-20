@@ -30,7 +30,7 @@ ScreenId updateScreenEncoderTest() {
         clearLCD();
 
         if (menuSelectedIndex == 0) {
-            return SCREEN_ENCODER_TEST_TTL;  // Нужно добавить этот ID
+            return SCREEN_ENCODER_TEST_TTL;
         }
     }
 
