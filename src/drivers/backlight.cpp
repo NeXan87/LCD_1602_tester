@@ -11,11 +11,6 @@ static int fadeTargetPercent;
 static unsigned long fadeStartTime;
 static unsigned long fadeDuration;
 
-void initBacklight() {
-    pinMode(BACKLIGHT_PIN, OUTPUT);
-    saveApplyBacklight();
-}
-
 void setBacklightPercent(int percent) {
     percent = clamp(percent, MIN_PERCENT, MAX_PERCENT);
     analogWrite(BACKLIGHT_PIN, percentToPwm(percent));
@@ -51,4 +46,9 @@ void updateBacklight() {
 void saveApplyBacklight() {
     int saved = getBacklightPercentEeprom();
     setBacklightPercent(saved);
+}
+
+void initBacklight() {
+    pinMode(BACKLIGHT_PIN, OUTPUT);
+    saveApplyBacklight();
 }
