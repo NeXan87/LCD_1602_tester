@@ -39,6 +39,18 @@ bool isDownButtonPressed() {
     return buttons.isPressed(BUTTON_DOWN);
 }
 
+bool isRightButtonPressed() {
+    return buttons.isPressed(BUTTON_RIGHT);
+}
+
+bool isLeftButtonPressed() {
+    return buttons.isPressed(BUTTON_LEFT);
+}
+
+bool isSelectButtonPressed() {
+    return buttons.isPressed(BUTTON_SELECT);
+}
+
 bool isLeftButtonHeld() {
     return buttons.isPressedAfter(BUTTON_LEFT, BUTTONS_HOLD_MS);
 }

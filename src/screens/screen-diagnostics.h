@@ -1,9 +1,10 @@
 #pragma once
 
 #include "config.h"
+#include "core/screen-id.h"
 
 void initScreenDiagnostics();
 
 /// Обновление экрана (навигация по подменю и режимам)
-/// @return true, если пользователь вышел (LEFT)
-bool updateScreenDiagnostics();
+/// @return идентификатор следующего экрана
+ScreenId updateScreenDiagnostics();

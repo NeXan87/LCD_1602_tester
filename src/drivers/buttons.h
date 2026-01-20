@@ -17,5 +17,8 @@ bool clickLeftButton();
 bool clickSelectButton();
 bool isUpButtonPressed();
 bool isDownButtonPressed();
+bool isRightButtonPressed();
+bool isLeftButtonPressed();
+bool isSelectButtonPressed();
 bool isLeftButtonHeld();
 bool isSelectButtonHeld();

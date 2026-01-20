@@ -25,15 +25,19 @@ ScreenId updateScreenSettings() {
     if (updateMenuIndex(&menuSelectedIndex, SETTINGS_COUNT)) {
         drawSettingsMenu();
     }
+
     if (clickSelectButton()) {
+        clearLCD();
+
         if (menuSelectedIndex == 0) {
-            clearLCD();
             return SCREEN_BACKLIGHT_EDIT;
         }
     }
+
     if (clickLeftButton()) {
         clearLCD();
         return SCREEN_LIST;
     }
+
     return SCREEN_SETTINGS;
 }

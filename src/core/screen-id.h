@@ -11,6 +11,7 @@ typedef enum {
     SCREEN_SETTINGS,        // Меню настроек
     SCREEN_BACKLIGHT_EDIT,  // Меню редактирования яркости дисплея
     SCREEN_DIAGNOSTICS,     // Диагностическая информация
+    SCREEN_BUTTONS_TEST,    // Диагностика кнопок
     SCREEN_ABOUT,           // Информация о системе
     SCREEN_COUNT            // Количество экранов (не использовать как экран)
 } ScreenId;

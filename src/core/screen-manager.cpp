@@ -5,6 +5,7 @@
 // Экраны
 #include "screens/screen-about.h"
 #include "screens/screen-backlight-edit.h"
+#include "screens/screen-buttons-test.h"
 #include "screens/screen-diagnostics.h"
 #include "screens/screen-list.h"
 #include "screens/screen-settings.h"
@@ -29,6 +30,9 @@ static void initScreen(ScreenId id) {
         case SCREEN_DIAGNOSTICS:
             initScreenDiagnostics();
             break;
+        case SCREEN_BUTTONS_TEST:
+            initScreenButtonsTest();
+            break;
         case SCREEN_ABOUT:
             initAboutScreen();
             initArrowsLCD();
@@ -49,8 +53,10 @@ static ScreenId updateScreen(ScreenId id) {
             if (updateScreenBacklightEdit()) return SCREEN_SETTINGS;
             return SCREEN_BACKLIGHT_EDIT;
         case SCREEN_DIAGNOSTICS:
-            if (updateScreenDiagnostics()) return SCREEN_LIST;
-            return SCREEN_DIAGNOSTICS;
+            return updateScreenDiagnostics();
+        case SCREEN_BUTTONS_TEST:
+            if (updateScreenButtonsTest()) return SCREEN_DIAGNOSTICS;
+            return SCREEN_BUTTONS_TEST;
         case SCREEN_ABOUT:
             if (updateAboutScreen()) return SCREEN_LIST;
             return SCREEN_ABOUT;
