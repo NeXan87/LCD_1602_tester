@@ -4,8 +4,8 @@
 
 // Экраны
 #include "screens/screen-about.h"
-#include "screens/screen-backlight-edit.h"
-#include "screens/screen-buttons-test.h"
+#include "screens/settings/screen-backlight-edit.h"
+#include "screens/diagnostics/screen-buttons-test.h"
 #include "screens/screen-diagnostics.h"
 #include "screens/screen-list.h"
 #include "screens/screen-settings.h"
