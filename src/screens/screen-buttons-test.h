@@ -1,4 +1,6 @@
 #pragma once
 
+#include "core/screen-id.h"
+
 void initScreenButtonsTest();
-bool updateScreenButtonsTest();
+ScreenId updateScreenButtonsTest();

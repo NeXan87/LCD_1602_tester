@@ -46,7 +46,7 @@ static bool onNavigateStep(bool isUp) {
     return true;
 }
 
-bool updateScreenBacklightEdit() {
+ScreenId updateScreenBacklightEdit() {
     if (clickDownButton()) {
         decreaseBacklightByStep();
     }
@@ -59,13 +59,13 @@ bool updateScreenBacklightEdit() {
 
     if (clickLeftButton()) {
         setBacklightPercentSmooth(originalBrightness);
-        return true;
+        return SCREEN_SETTINGS;
     }
 
     if (clickSelectButton()) {
         setBacklightPercentEeprom(currentBrightness);
-        return true;
+        return SCREEN_SETTINGS;
     }
 
-    return false;
+    return SCREEN_BACKLIGHT_EDIT;
 }

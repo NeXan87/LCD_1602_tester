@@ -46,20 +46,17 @@ static void initScreen(ScreenId id) {
 static ScreenId updateScreen(ScreenId id) {
     switch (id) {
         case SCREEN_LIST:
-            return screenListUpdate();
+            return updateScreenList();
         case SCREEN_SETTINGS:
             return updateScreenSettings();
         case SCREEN_BACKLIGHT_EDIT:
-            if (updateScreenBacklightEdit()) return SCREEN_SETTINGS;
-            return SCREEN_BACKLIGHT_EDIT;
+            return updateScreenBacklightEdit();
         case SCREEN_DIAGNOSTICS:
             return updateScreenDiagnostics();
         case SCREEN_BUTTONS_TEST:
-            if (updateScreenButtonsTest()) return SCREEN_DIAGNOSTICS;
-            return SCREEN_BUTTONS_TEST;
+            return updateScreenButtonsTest();
         case SCREEN_ABOUT:
-            if (updateAboutScreen()) return SCREEN_LIST;
-            return SCREEN_ABOUT;
+            return updateAboutScreen();
         default:
             return SCREEN_LIST;
     }

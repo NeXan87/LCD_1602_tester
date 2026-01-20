@@ -59,7 +59,7 @@ static bool onNavigateStep(bool isUp) {
     }
 }
 
-bool updateAboutScreen() {
+ScreenId updateAboutScreen() {
     bool changed = false;
 
     if (clickUpButton()) {
@@ -79,8 +79,8 @@ bool updateAboutScreen() {
 
     if (clickLeftButton()) {
         clearLCD();
-        return true;
+        return SCREEN_LIST;
     }
 
-    return false;
+    return SCREEN_ABOUT;
 }

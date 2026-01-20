@@ -37,7 +37,7 @@ void initScreenButtonsTest() {
     drawButtonsTest();
 }
 
-bool updateScreenButtonsTest() {
+ScreenId updateScreenButtonsTest() {
     static uint32_t lastUpdate = 0;
     if (millis() - lastUpdate > DIAG_BUTTONS_UPDATE_MS) {
         lastUpdate = millis();
@@ -47,8 +47,8 @@ bool updateScreenButtonsTest() {
     if (isLeftButtonHeld()) {
         isInitButtonsTest = false;
         lastUpdate = 0;
-        return true;
+        return SCREEN_DIAGNOSTICS;
     }
 
-    return false;
+    return SCREEN_BUTTONS_TEST;
 }

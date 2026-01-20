@@ -1,9 +1,10 @@
 #pragma once
 
 #include "config.h"
+#include "core/screen-id.h"
 
 void initAboutScreen();
 
 /// Обновляет экран с учётом навигации
-/// @return true, если пользователь вышел (например, нажал SELECT или LEFT)
-bool updateAboutScreen();
+/// @return ScreenId выбранного экрана
+ScreenId updateAboutScreen();

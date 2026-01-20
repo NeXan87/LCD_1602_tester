@@ -73,7 +73,7 @@ static bool onNavigateStep(bool isUp) {
     return false;
 }
 
-ScreenId screenListUpdate() {
+ScreenId updateScreenList() {
     bool changed = updateMenuIndex(&selectedIndex, MENU_COUNT);
 
     bool holdChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep);
