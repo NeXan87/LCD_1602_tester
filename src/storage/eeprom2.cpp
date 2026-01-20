@@ -3,14 +3,12 @@
 #include <EEPROM.h>
 
 #include "config.h"
+#include "utils/helpers.h"
 
 static Settings settings = {
     .magic = 0,
-    .backlightPercent = 100,
+    .backlightPercent = MAX_PERCENT,
 };
-
-static const uint8_t EEPROM_ADDR_MAGIC = 0;             // Адрес сигнатуры валидности
-static const uint32_t EEPROM_MAGIC_VALUE = 0x54534554;  // 'TEST' в ASCII
 
 // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
 static void writeSettingsToEeprom() {
@@ -35,7 +33,7 @@ void initEeprom() {
     if (settings.magic != EEPROM_MAGIC_VALUE) {
         // Первый запуск или повреждённые данные
         settings.magic = EEPROM_MAGIC_VALUE;
-        settings.backlightPercent = 100;
+        settings.backlightPercent = MAX_PERCENT;
         saveSettingsEeprom();
     }
 }
@@ -49,7 +47,7 @@ int getBacklightPercentEeprom() {
 }
 
 void setBacklightPercentEeprom(int percent) {
-    if (percent > 100) percent = 100;
+    percent = clamp(percent, MIN_PERCENT, MAX_PERCENT);
     settings.backlightPercent = percent;
     saveSettingsEeprom();
 }

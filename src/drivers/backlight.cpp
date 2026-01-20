@@ -3,7 +3,7 @@
 #include "storage/eeprom2.h"
 #include "utils/helpers.h"
 
-static int currentBacklightPercent = 100;
+static int currentBacklightPercent = MAX_PERCENT;
 
 static bool isFading = false;
 static int fadeStartPercent;
@@ -17,16 +17,14 @@ void initBacklight() {
 }
 
 void setBacklightPercent(int percent) {
-    if (percent > 100) percent = 100;
-    if (percent < 0) percent = 0;
+    percent = clamp(percent, MIN_PERCENT, MAX_PERCENT);
     analogWrite(BACKLIGHT_PIN, percentToPwm(percent));
     currentBacklightPercent = percent;
     isFading = false;  // Остановить плавное изменение, если оно было
 }
 
 void setBacklightPercentSmooth(int targetPercent, unsigned long durationMs) {
-    if (targetPercent > 100) targetPercent = 100;
-    if (targetPercent < 0) targetPercent = 0;
+    targetPercent = clamp(targetPercent, MIN_PERCENT, MAX_PERCENT);
     fadeStartPercent = currentBacklightPercent;
     fadeTargetPercent = targetPercent;
     fadeStartTime = millis();
@@ -43,9 +41,9 @@ void updateBacklight() {
             int diff = fadeTargetPercent - fadeStartPercent;
             float progress = (float)elapsed / (float)fadeDuration;
             int current = fadeStartPercent + (int)(diff * progress);
-            if (current < 0) current = 0;
-            if (current > 100) current = 100;
+            current = clamp(current, MIN_PERCENT, MAX_PERCENT);
             analogWrite(BACKLIGHT_PIN, percentToPwm(current));
+            currentBacklightPercent = current;
         }
     }
 }
