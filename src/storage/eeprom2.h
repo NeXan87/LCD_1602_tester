@@ -3,9 +3,9 @@
 #include <Arduino.h>
 
 struct Settings {
-    uint32_t magic;        // сигнатура для проверки валидности
-    int backlightPercent;  // 0–100
-    bool batteryEnabled;   // Включена ли поддержка батареи
+    uint32_t magic;          // сигнатура для проверки валидности
+    int backlightPercent;    // 0–100
+    uint8_t batteryEnabled;  // Включена ли поддержка батареи
     // Добавьте другие поля по мере необходимости
 };
 

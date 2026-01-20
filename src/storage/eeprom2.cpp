@@ -8,7 +8,7 @@
 static Settings settings = {
     .magic = 0,
     .backlightPercent = MAX_PERCENT,
-    .batteryEnabled = false,
+    .batteryEnabled = 0,
 };
 
 // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
@@ -35,7 +35,7 @@ void initEeprom() {
         // Первый запуск или повреждённые данные
         settings.magic = EEPROM_MAGIC_VALUE;
         settings.backlightPercent = MAX_PERCENT;
-        settings.batteryEnabled = false;
+        settings.batteryEnabled = 0;
         saveSettingsEeprom();
     }
 }
