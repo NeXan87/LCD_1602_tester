@@ -7,6 +7,7 @@
 static int currentBacklightPercent = MAX_PERCENT;
 
 static bool isFading = false;
+static bool wasDimming = false;
 static int fadeStartPercent;
 static int fadeTargetPercent;
 static unsigned long fadeStartTime;
@@ -29,6 +30,16 @@ void setBacklightPercentSmooth(int targetPercent, unsigned long durationMs) {
 }
 
 void updateBacklight() {
+    bool shouldDim = getBatteryEnabledEeprom() && shouldDimBacklight();
+
+    if (shouldDim && !wasDimming) {
+        setBacklightPercentSmooth(BATTERY_LOW_BRIGHTNESS);
+    } else if (!shouldDim && wasDimming) {
+        int saved = getBacklightPercentEeprom();
+        setBacklightPercentSmooth(saved);
+    }
+    wasDimming = shouldDim;
+
     if (isFading) {
         unsigned long elapsed = millis() - fadeStartTime;
         if (elapsed >= fadeDuration) {
@@ -41,15 +52,6 @@ void updateBacklight() {
             analogWrite(BACKLIGHT_PIN, percentToPwm(current));
             currentBacklightPercent = current;
         }
-    }
-
-    if (getBatteryEnabledEeprom() && shouldDimBacklight()) {
-        int lowBrightness = BATTERY_LOW_BRIGHTNESS;
-        if (currentBacklightPercent > lowBrightness) {
-            setBacklightPercent(lowBrightness);
-        }
-    } else if (getBatteryEnabledEeprom() && currentBacklightPercent == BATTERY_LOW_BRIGHTNESS) {
-        saveApplyBacklight();
     }
 }
 
