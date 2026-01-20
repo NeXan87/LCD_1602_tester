@@ -56,6 +56,10 @@ void initArrowsLCD() {
     lcd.createChar(LCD_CHAR_ARROW_DOWN, (uint8_t*)arrowDown);
 }
 
+void offLCD() {
+    lcd.noDisplay();
+}
+
 void initLCD() {
     lcd.begin(LCD_COLS, LCD_ROWS);
     setCursorLCD(0, 0);

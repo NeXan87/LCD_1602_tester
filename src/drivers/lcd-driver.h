@@ -12,3 +12,4 @@ void writeCharLCD(uint8_t c);
 void printLCD(const char* str);
 void printIntLCD(long value);
 void printfLCD(const char* format, ...);
+void offLCD();

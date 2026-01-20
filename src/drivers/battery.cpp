@@ -1,6 +1,10 @@
 #include "battery.h"
 
+#include <avr/sleep.h>
+
 #include "config.h"
+#include "drivers/backlight.h"
+#include "drivers/lcd-driver.h"
 #include "storage/eeprom2.h"
 
 static float batteryVoltage = 0.0f;
@@ -44,17 +48,21 @@ void updateBattery() {
         batteryVoltage = getBatteryVoltage();
         lastBatteryUpdate = millis();
 
-        // if (getBatteryEnabledEeprom() && isBatteryLow()) {
-        //     clearLCD();
-        //     setCursorLCD(0, 0);
-        //     printfLCD("Vbat=%.1fV", getBatteryVoltage());
-        //     setCursorLCD(0, 1);
-        //     printLCD("Low Vbat!!!");
-        //     delay(2000);  // Показать на 2 секунды
-        //     // Остановить устройство, например, войти в бесконечный цикл или сон
-        //     while (true) {
-        //         // Ничего не делать
-        //     }
-        // }
+        if (getBatteryEnabledEeprom() && isBatteryLow()) {
+            char vbuf[6];
+            dtostrf(batteryVoltage, 4, 1, vbuf);
+
+            clearLCD();
+            setCursorLCD(0, 0);
+            printfLCD("Vbat=%sV", vbuf);
+            setCursorLCD(0, 1);
+            printLCD("Low Vbat!!!");
+            delay(2000);
+            setBacklightPercent(0);
+            offLCD();
+            set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+            sleep_enable();
+            sleep_cpu();
+        }
     }
 }
