@@ -54,6 +54,9 @@ void printfLCD(const char* format, ...) {
 void initArrowsLCD() {
     lcd.createChar(LCD_CHAR_ARROW_UP, (uint8_t*)arrowUp);
     lcd.createChar(LCD_CHAR_ARROW_DOWN, (uint8_t*)arrowDown);
+    lcd.createChar(LCD_CHAR_CHECKMARK, (uint8_t*)checkmark);
+    lcd.createChar(LCD_CHAR_RIGHT_ARROW, (uint8_t*)rightArrow);
+    lcd.createChar(LCD_CHAR_LEFT_ARROW, (uint8_t*)leftArrow);
 }
 
 void offLCD() {

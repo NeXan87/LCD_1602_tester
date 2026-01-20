@@ -7,6 +7,8 @@
 #include "screens/diagnostics/screen-buttons-test.h"
 #include "screens/screen-about.h"
 #include "screens/screen-diagnostics.h"
+#include "screens/screen-encoder-test.h"
+#include "screens/screen-encoder-ttl-test.h"
 #include "screens/screen-list.h"
 #include "screens/screen-settings.h"
 #include "screens/settings/screen-backlight-edit.h"
@@ -20,6 +22,13 @@ static void initScreen(ScreenId id) {
     switch (id) {
         case SCREEN_LIST:
             initArrowsLCD();
+            break;
+        case SCREEN_ENCODER_TEST:
+            initScreenEncoderTest();
+            initArrowsLCD();
+            break;
+        case SCREEN_ENCODER_TEST_TTL:
+            initScreenEncoderTTLTest();
             break;
         case SCREEN_SETTINGS:
             initScreenSettings();
@@ -55,6 +64,10 @@ static ScreenId updateScreen(ScreenId id) {
     switch (id) {
         case SCREEN_LIST:
             return updateScreenList();
+        case SCREEN_ENCODER_TEST:
+            return updateScreenEncoderTest();
+        case SCREEN_ENCODER_TEST_TTL:
+            return updateScreenEncoderTTLTest();
         case SCREEN_SETTINGS:
             return updateScreenSettings();
         case SCREEN_BACKLIGHT_EDIT:
