@@ -6,37 +6,30 @@
 #include "utils/hold-navigate.h"
 #include "utils/lcd-helpers.h"
 
-static uint8_t currentEnabled;
-static uint8_t originalEnabled;
-
-static void drawEditor() {
-    clearLCD();
-    setCursorLCD(0, 0);
-    printLCD("Battery support:");
-    setCursorLCD(0, 1);
-    printLCD(currentEnabled ? "Enabled" : "Disabled");
-}
+static IsEnableId currentEnabled;
+static IsEnableId originalEnabled;
 
 void initScreenBatteryEdit() {
     originalEnabled = getBatteryEnabledEeprom();
-    Serial.println(getBatteryEnabledEeprom());
     currentEnabled = originalEnabled;
-    drawEditor();
+    drawOnOff(currentEnabled, "Battery support:");
 }
 
 ScreenId updateScreenBatteryEdit() {
     if (clickUpButton() || clickDownButton()) {
-        currentEnabled = currentEnabled ? 0 : 1;
-        drawEditor();
+        currentEnabled = currentEnabled ? OFF : ON;
+        drawOnOff(currentEnabled);
     }
 
     if (clickLeftButton()) {
         setBatteryEnabledEeprom(originalEnabled);
+        clearLCD();
         return SCREEN_SETTINGS;
     }
 
     if (clickSelectButton()) {
         setBatteryEnabledEeprom(currentEnabled);
+        clearLCD();
         return SCREEN_SETTINGS;
     }
 

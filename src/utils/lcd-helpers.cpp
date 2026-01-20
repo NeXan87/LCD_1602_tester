@@ -32,6 +32,16 @@ void drawMenuItem(uint8_t col, uint8_t row, const char* text, bool isSelected) {
     printLCD(text);
 }
 
+void drawOnOff(IsEnableId isEnabled, const char* title) {
+    if (title) {
+        setCursorLCD(0, 0);
+        printLCD(title);
+    }
+
+    setCursorLCD(0, 1);
+    printfLCD("%-3s", isEnabled ? "ON" : "OFF");
+}
+
 void drawSubMenu(const char* title, const char* itemText, bool isSelected, uint8_t row) {
     clearLCD();
     setCursorLCD(0, 0);

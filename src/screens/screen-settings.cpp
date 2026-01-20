@@ -10,7 +10,7 @@
 
 static const char* const SETTINGS_ITEMS[] = {
     "Display bridge",
-    "Battery supp.",
+    "Battery support",
 };
 static const uint8_t SETTINGS_COUNT = sizeof(SETTINGS_ITEMS) / sizeof(SETTINGS_ITEMS[0]);
 static int menuSelectedIndex = 0;

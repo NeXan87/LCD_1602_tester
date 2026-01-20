@@ -44,3 +44,8 @@ bool updateMenuIndex(int* currentIndex, uint8_t itemCount);
 /// @param width — ширина числового поля (1, 2, 3, 4...)
 /// @param suffix — суффикс (например, "%", "s", "")
 void drawNumericEditor(const char* title, int value, NumericWidth width, const char* suffix);
+
+/// Отображает состояние ВКЛ/ВЫКЛ
+/// @param isEnabled — состояние (ON/OFF)
+/// @param title — заголовок (например, "Battery")
+void drawOnOff(IsEnableId isEnabled, const char* title = "");

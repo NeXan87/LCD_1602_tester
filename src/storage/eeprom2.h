@@ -2,10 +2,12 @@
 
 #include <Arduino.h>
 
+#include "config.h"
+
 struct Settings {
-    uint32_t magic;          // сигнатура для проверки валидности
-    int backlightPercent;    // 0–100
-    uint8_t batteryEnabled;  // Включена ли поддержка батареи
+    uint32_t magic;             // сигнатура для проверки валидности
+    int backlightPercent;       // 0–100
+    IsEnableId batteryEnabled;  // Включена ли поддержка батареи
     // Добавьте другие поля по мере необходимости
 };
 
@@ -14,5 +16,5 @@ void saveSettingsEeprom();
 void eepromLoadSettings();
 int getBacklightPercentEeprom();
 void setBacklightPercentEeprom(int percent);
-bool getBatteryEnabledEeprom();
-void setBatteryEnabledEeprom(bool enabled);
+IsEnableId getBatteryEnabledEeprom();
+void setBatteryEnabledEeprom(IsEnableId enabled);
