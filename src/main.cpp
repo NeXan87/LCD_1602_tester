@@ -14,9 +14,9 @@
 void setup() {
     Serial.begin(115200);
     initEeprom();
-    initBattery();
     initBacklight();
     initLCD();
+    initBattery();
     redrawScreenList();
 }
 
