@@ -7,11 +7,11 @@
 static bool isInitButtonsTest = false;
 
 const char* getButtonName(int adcValue) {
-    if (adcValue < BUTTON_RIGHT_ADC + 50) return "Right";
-    if (adcValue < BUTTON_UP_ADC + 50) return "Up";
-    if (adcValue < BUTTON_DOWN_ADC + 100) return "Down";
-    if (adcValue < BUTTON_LEFT_ADC + 100) return "Left";
-    if (adcValue < BUTTON_SELECT_ADC + 100) return "Select";
+    if (isRightButtonPressed()) return "Right";
+    if (isUpButtonPressed()) return "Up";
+    if (isDownButtonPressed()) return "Down";
+    if (isLeftButtonPressed()) return "Left";
+    if (isSelectButtonPressed()) return "Select";
     return "None";
 }
 
