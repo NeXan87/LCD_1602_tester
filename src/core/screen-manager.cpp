@@ -3,12 +3,14 @@
 #include "drivers/lcd-driver.h"
 
 // Экраны
-#include "screens/screen-about.h"
-#include "screens/settings/screen-backlight-edit.h"
+#include "screens/diagnostics/screen-battery-test.h"
 #include "screens/diagnostics/screen-buttons-test.h"
+#include "screens/screen-about.h"
 #include "screens/screen-diagnostics.h"
 #include "screens/screen-list.h"
 #include "screens/screen-settings.h"
+#include "screens/settings/screen-backlight-edit.h"
+#include "screens/settings/screen-battery-edit.h"
 
 static bool isInitScreen[SCREEN_COUNT] = {false};
 
@@ -27,11 +29,17 @@ static void initScreen(ScreenId id) {
             initScreenBacklightEdit();
             initArrowsLCD();
             break;
+        case SCREEN_BATTERY_EDIT:
+            initScreenBatteryEdit();
+            break;
         case SCREEN_DIAGNOSTICS:
             initScreenDiagnostics();
             break;
         case SCREEN_BUTTONS_TEST:
             initScreenButtonsTest();
+            break;
+        case SCREEN_BATTERY_TEST:
+            initScreenBatteryTest();
             break;
         case SCREEN_ABOUT:
             initAboutScreen();
@@ -51,10 +59,14 @@ static ScreenId updateScreen(ScreenId id) {
             return updateScreenSettings();
         case SCREEN_BACKLIGHT_EDIT:
             return updateScreenBacklightEdit();
+        case SCREEN_BATTERY_EDIT:
+            return updateScreenBatteryEdit();
         case SCREEN_DIAGNOSTICS:
             return updateScreenDiagnostics();
         case SCREEN_BUTTONS_TEST:
             return updateScreenButtonsTest();
+        case SCREEN_BATTERY_TEST:
+            return updateScreenBatteryTest();
         case SCREEN_ABOUT:
             return updateAboutScreen();
         default:

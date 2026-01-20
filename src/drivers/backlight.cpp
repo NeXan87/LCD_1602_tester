@@ -1,5 +1,6 @@
 #include "backlight.h"
 
+#include "drivers/battery.h"
 #include "storage/eeprom2.h"
 #include "utils/helpers.h"
 
@@ -40,6 +41,15 @@ void updateBacklight() {
             analogWrite(BACKLIGHT_PIN, percentToPwm(current));
             currentBacklightPercent = current;
         }
+    }
+
+    if (getBatteryEnabledEeprom() && shouldDimBacklight()) {
+        int lowBrightness = BATTERY_LOW_BRIGHTNESS;
+        if (currentBacklightPercent > lowBrightness) {
+            setBacklightPercent(lowBrightness);
+        }
+    } else if (getBatteryEnabledEeprom() && currentBacklightPercent == BATTERY_LOW_BRIGHTNESS) {
+        saveApplyBacklight();
     }
 }
 

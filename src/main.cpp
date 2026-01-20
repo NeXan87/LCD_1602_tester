@@ -4,6 +4,7 @@
 #include "config.h"
 #include "core/screen-manager.h"
 #include "drivers/backlight.h"
+#include "drivers/battery.h"
 #include "drivers/buttons.h"
 #include "drivers/lcd-driver.h"
 #include "screens/screen-list.h"
@@ -13,6 +14,7 @@
 void setup() {
     Serial.begin(115200);
     initEeprom();
+    initBattery();
     initBacklight();
     initLCD();
     redrawScreenList();
@@ -20,6 +22,7 @@ void setup() {
 
 void loop() {
     updateButtons();
+    updateBattery();
     updateBacklight();
     updateScreenManager();
 }

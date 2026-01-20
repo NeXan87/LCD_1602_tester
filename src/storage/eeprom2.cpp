@@ -8,6 +8,7 @@
 static Settings settings = {
     .magic = 0,
     .backlightPercent = MAX_PERCENT,
+    .batteryEnabled = false,
 };
 
 // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
@@ -34,6 +35,7 @@ void initEeprom() {
         // Первый запуск или повреждённые данные
         settings.magic = EEPROM_MAGIC_VALUE;
         settings.backlightPercent = MAX_PERCENT;
+        settings.batteryEnabled = false;
         saveSettingsEeprom();
     }
 }
@@ -49,5 +51,15 @@ int getBacklightPercentEeprom() {
 void setBacklightPercentEeprom(int percent) {
     percent = clamp(percent, MIN_PERCENT, MAX_PERCENT);
     settings.backlightPercent = percent;
+    settings.batteryEnabled = false;
+    saveSettingsEeprom();
+}
+
+bool getBatteryEnabledEeprom() {
+    return settings.batteryEnabled;
+}
+
+void setBatteryEnabledEeprom(bool enabled) {
+    settings.batteryEnabled = enabled;
     saveSettingsEeprom();
 }

@@ -5,6 +5,7 @@
 struct Settings {
     uint32_t magic;        // сигнатура для проверки валидности
     int backlightPercent;  // 0–100
+    bool batteryEnabled;   // Включена ли поддержка батареи
     // Добавьте другие поля по мере необходимости
 };
 
@@ -13,3 +14,5 @@ void saveSettingsEeprom();
 void eepromLoadSettings();
 int getBacklightPercentEeprom();
 void setBacklightPercentEeprom(int percent);
+bool getBatteryEnabledEeprom();
+void setBatteryEnabledEeprom(bool enabled);

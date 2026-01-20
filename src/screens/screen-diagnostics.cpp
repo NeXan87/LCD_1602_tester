@@ -2,10 +2,13 @@
 
 #include "drivers/buttons.h"
 #include "drivers/lcd-driver.h"
+#include "screens/diagnostics/screen-buttons-test.h"
+#include "screens/diagnostics/screen-battery-test.h"
 #include "utils/lcd-helpers.h"
 
 static const char* const DIAG_MENU_ITEMS[] = {
     "Buttons",
+    "Battery",
 };
 static const uint8_t DIAG_MENU_COUNT = sizeof(DIAG_MENU_ITEMS) / sizeof(DIAG_MENU_ITEMS[0]);
 static int menuSelectedIndex = 0;
@@ -29,6 +32,8 @@ ScreenId updateScreenDiagnostics() {
 
         if (menuSelectedIndex == 0) {
             return SCREEN_BUTTONS_TEST;
+        } else if (menuSelectedIndex == 1) {
+            return SCREEN_BATTERY_TEST;
         }
     }
 

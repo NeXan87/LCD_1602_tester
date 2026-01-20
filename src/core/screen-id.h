@@ -10,8 +10,10 @@ typedef enum {
     SCREEN_ENCODER_TEST,    // Тест энкодеров
     SCREEN_SETTINGS,        // Меню настроек
     SCREEN_BACKLIGHT_EDIT,  // Меню редактирования яркости дисплея
+    SCREEN_BATTERY_EDIT,    // Меню редактирования поддержки батареи
     SCREEN_DIAGNOSTICS,     // Диагностическая информация
     SCREEN_BUTTONS_TEST,    // Диагностика кнопок
+    SCREEN_BATTERY_TEST,    // Диагностика батареи
     SCREEN_ABOUT,           // Информация о системе
     SCREEN_COUNT            // Количество экранов (не использовать как экран)
 } ScreenId;

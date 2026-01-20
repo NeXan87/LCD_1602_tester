@@ -4,6 +4,8 @@
 #include <stdarg.h>
 
 #include "drivers/lcd-custom-chars.h"
+#include "drivers/battery.h"
+#include "storage/eeprom2.h"
 #include "screens/screen-about.h"
 
 static LiquidCrystal lcd(
@@ -59,7 +61,15 @@ void initLCD() {
     setCursorLCD(0, 0);
     printLCD(TITLE);
     setCursorLCD(0, 1);
-    printLCD("Starting...");
+    if (getBatteryEnabledEeprom()) {
+        updateBattery();
+        float voltage = getBatteryVoltage();
+        char buf[10];
+        dtostrf(voltage, 4, 1, buf);
+        printfLCD("Vbat=%sV", buf);
+    } else {
+        printLCD("Vbat=0.0V");
+    }
     delay(DELAY_STARTUP_MS);
     clearLCD();
 }
