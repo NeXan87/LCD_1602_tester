@@ -32,6 +32,7 @@ void initScreenBatteryEdit() {
 ScreenId updateScreenBatteryEdit() {
     if (clickUpButton() || clickDownButton()) {
         currentEnabled = !currentEnabled;
+        Serial.print(currentEnabled);
         drawEditor();
     }
 

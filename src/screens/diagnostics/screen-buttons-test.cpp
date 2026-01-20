@@ -17,7 +17,6 @@ const char* getButtonName(int adcValue) {
 
 static void drawButtonsTest() {
     if (!isInitButtonsTest) {
-        clearLCD();
         setCursorLCD(0, 0);
         printLCD("Press buttons:");
         isInitButtonsTest = true;
@@ -45,6 +44,7 @@ ScreenId updateScreenButtonsTest() {
     }
 
     if (isLeftButtonHeld()) {
+        clearLCD();
         isInitButtonsTest = false;
         lastUpdate = 0;
         return SCREEN_DIAGNOSTICS;

@@ -10,7 +10,6 @@ static bool isInitBatteryTest = false;
 
 static void drawBatteryTest() {
     if (!isInitBatteryTest) {
-        clearLCD();
         setCursorLCD(0, 0);
         printLCD("Battery Test:");
         isInitBatteryTest = true;
@@ -49,6 +48,7 @@ ScreenId updateScreenBatteryTest() {
     }
 
     if (clickLeftButton()) {
+        clearLCD();
         isInitBatteryTest = false;
         lastUpdate = 0;
         return SCREEN_DIAGNOSTICS;
