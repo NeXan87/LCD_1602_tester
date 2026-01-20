@@ -33,7 +33,7 @@
 #define ARDUINO_VOLTAGE_REF 5.0f   // Опорное напряжение Arduino (В)
 #define BATTERY_VOLTAGE_MIN 3.0f   // Минимальное напряжение Li-ion (В)
 #define BATTERY_VOLTAGE_MAX 4.2f   // Максимальное напряжение Li-ion (В)
-#define BATTERY_LOW_PERCENT 20     // Процент, ниже которого затемнять подсветку
+#define BATTERY_LOW_PERCENT 30     // Процент, ниже которого затемнять подсветку
 #define BATTERY_LOW_BRIGHTNESS 10  // Яркость подсветки при низком заряде (%)
 
 // =============================================================================

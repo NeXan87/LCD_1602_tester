@@ -12,6 +12,8 @@ void initBattery() {
 }
 
 float getBatteryVoltage() {
+    batteryAdc = analogRead(BATTERY_PIN);
+    batteryVoltage = (ARDUINO_VOLTAGE_REF / 1023.0f) * batteryAdc;
     return batteryVoltage;
 }
 
@@ -39,8 +41,7 @@ void updateBattery() {
     static unsigned long lastBatteryUpdate = 0;
 
     if (millis() - lastBatteryUpdate >= BATTERY_UPDATE_MS) {
-        batteryAdc = analogRead(BATTERY_PIN);
-        batteryVoltage = (ARDUINO_VOLTAGE_REF / 1023.0f) * batteryAdc;
+        batteryVoltage = getBatteryVoltage();
         lastBatteryUpdate = millis();
 
         // if (getBatteryEnabledEeprom() && isBatteryLow()) {
