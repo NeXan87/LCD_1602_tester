@@ -30,6 +30,7 @@ void disableDevice() {
 }
 
 void initBattery() {
+    if (!getBatteryEnabledEeprom()) return;
     pinMode(BATTERY_PIN, INPUT_PULLUP);
     updateBattery();
     disableDevice();
