@@ -12,26 +12,15 @@ typedef struct {
     uint8_t lineCount;
     int16_t scrollOffset;
     ScreenId screenId;
-    bool initialized;
+    bool isInitialized;
     TextViewerInitFunc initFunc;
 } TextViewer;
-
-// Callback для шага навигации
-typedef bool (*TextViewStepCallback)(bool isUp, void* userData);
 
 /// @brief Универсальный обновлятор текстового просмотрщика
 /// @param viewer Указатель на структуру TextViewer с данными (строки, смещение и т.д.)
 /// @param exitScreen ScreenId экрана, на который перейти по нажатию LEFT
-/// @param stepCallback Опциональная функция для кастомной логики прокрутки.
-///        Если NULL, используется встроенная логика (textViewMoveUp/Down).
-/// @param userData Указатель на пользовательские данные, передаваемые в stepCallback.
-///        Игнорируется, если stepCallback == NULL.
 /// @return ScreenId следующего экрана (обычно viewer->screenId или exitScreen)
-ScreenId updateTextViewer(
-    TextViewer* viewer,
-    ScreenId exitScreen,
-    TextViewStepCallback stepCallback,
-    void* userData);
+ScreenId updateTextViewer(TextViewer* viewer, ScreenId exitScreen);
 
 /// @brief Отображает содержимое текстового просмотрщика на LCD
 /// @param viewer Указатель на структуру TextViewer с данными (массив строк, текущее смещение и т.д.)

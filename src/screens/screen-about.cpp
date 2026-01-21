@@ -18,10 +18,10 @@ static TextViewer g_aboutViewer = {
     .lineCount = COUNT_OF(ABOUT_LINES),
     .scrollOffset = 0,
     .screenId = SCREEN_ABOUT,
-    .initialized = false,
+    .isInitialized = false,
     .initFunc = initArrowsLCD,
 };
 
 ScreenId updateAboutScreen() {
-    return updateTextViewer(&g_aboutViewer, SCREEN_LIST, nullptr, nullptr);
+    return updateTextViewer(&g_aboutViewer, SCREEN_LIST);
 }

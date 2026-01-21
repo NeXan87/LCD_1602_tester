@@ -12,7 +12,7 @@ typedef struct {
     uint8_t count;
     int selectedIndex;
     ScreenId screenId;
-    bool initialized;
+    bool isInitialized;
     SubMenuInitFunc initFunc;
 } ScreenSubMenu;
 

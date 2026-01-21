@@ -23,7 +23,7 @@ static ScreenSubMenu g_encoderMenu = {
     .count = COUNT_OF(ENCODER_ITEMS),
     .selectedIndex = 0,
     .screenId = SCREEN_ENCODER_TEST,
-    .initialized = false,
+    .isInitialized = false,
     .initFunc = initArrowsLCD,
 };
 

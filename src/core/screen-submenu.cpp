@@ -5,7 +5,7 @@
 #include "utils/lcd-helpers.h"
 
 ScreenId updateSubMenu(ScreenSubMenu* menu, SubMenuScreenMapper mapper) {
-    if (!menu->initialized) {
+    if (!menu->isInitialized) {
         menu->selectedIndex = 0;
 
         if (menu->initFunc != nullptr) {
@@ -13,7 +13,7 @@ ScreenId updateSubMenu(ScreenSubMenu* menu, SubMenuScreenMapper mapper) {
         }
 
         drawSubMenu(menu->title, menu->items[menu->selectedIndex], true);
-        menu->initialized = true;
+        menu->isInitialized = true;
     }
 
     if (updateMenuIndex(&menu->selectedIndex, menu->count)) {
@@ -22,13 +22,13 @@ ScreenId updateSubMenu(ScreenSubMenu* menu, SubMenuScreenMapper mapper) {
 
     if (clickSelectButton()) {
         clearLCD();
-        menu->initialized = false;
+        menu->isInitialized = false;
         return mapper(menu->selectedIndex);
     }
 
     if (clickLeftButton()) {
         clearLCD();
-        menu->initialized = false;
+        menu->isInitialized = false;
         return SCREEN_LIST;
     }
 

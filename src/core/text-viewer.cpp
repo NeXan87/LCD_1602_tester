@@ -5,21 +5,24 @@
 #include "utils/hold-navigate.h"
 #include "utils/lcd-helpers.h"
 
-void drawTextViewer(TextViewer* viewer, uint8_t lcdRows) {
-    if (viewer->scrollOffset < 0) viewer->scrollOffset = 0;
-    if (viewer->scrollOffset > (int8_t)(viewer->lineCount - lcdRows)) {
-        viewer->scrollOffset = (viewer->lineCount > lcdRows) ? (viewer->lineCount - lcdRows) : 0;
+void drawTextViewer(TextViewer* viewer) {
+    const int16_t maxScrollOffset = (viewer->lineCount > LCD_ROWS) ? (int16_t)(viewer->lineCount - LCD_ROWS) : 0;
+
+    if (viewer->scrollOffset < 0) {
+        viewer->scrollOffset = 0;
+    } else if (viewer->scrollOffset > maxScrollOffset) {
+        viewer->scrollOffset = maxScrollOffset;
     }
 
-    for (uint8_t row = 0; row < lcdRows && (viewer->scrollOffset + row) < viewer->lineCount; ++row) {
+    for (uint8_t row = 0; row < LCD_ROWS && (viewer->scrollOffset + row) < viewer->lineCount; ++row) {
         setCursorLCD(0, row);
         printLCD(viewer->lines[viewer->scrollOffset + row]);
     }
 
-    drawScrollIndicators(viewer->lineCount, lcdRows, viewer->scrollOffset);
+    drawScrollIndicators(viewer->lineCount, LCD_ROWS, viewer->scrollOffset);
 }
 
-bool textViewMoveUp(TextViewer* viewer, uint8_t lcdRows) {
+bool isTextViewMoveUp(TextViewer* viewer) {
     if (viewer->scrollOffset > 0) {
         viewer->scrollOffset--;
         return true;
@@ -27,55 +30,51 @@ bool textViewMoveUp(TextViewer* viewer, uint8_t lcdRows) {
     return false;
 }
 
-bool textViewMoveDown(TextViewer* viewer, uint8_t lcdRows) {
-    if (viewer->scrollOffset < (int8_t)(viewer->lineCount - lcdRows)) {
+bool isTextViewMoveDown(TextViewer* viewer) {
+    if (viewer->scrollOffset < (int8_t)(viewer->lineCount - LCD_ROWS)) {
         viewer->scrollOffset++;
         return true;
     }
     return false;
 }
 
-static bool defaultStepCallback(bool isUp, void* userData) {
+static bool isDefaultStepCallback(bool isUp, void* userData) {
     TextViewer* viewer = (TextViewer*)userData;
-    if (isUp) return textViewMoveUp(viewer, LCD_ROWS);
-    else return textViewMoveDown(viewer, LCD_ROWS);
+    if (isUp) return isTextViewMoveUp(viewer);
+    else return isTextViewMoveDown(viewer);
 }
 
-ScreenId updateTextViewer(
-    TextViewer* viewer,
-    ScreenId exitScreen,
-    TextViewStepCallback stepCallback,
-    void* userData) {
-    if (!viewer->initialized) {
+ScreenId updateTextViewer(TextViewer* viewer, ScreenId exitScreen) {
+    if (!viewer->isInitialized) {
         viewer->scrollOffset = 0;
-        viewer->initialized = true;
+        viewer->isInitialized = true;
 
         if (viewer->initFunc) {
             viewer->initFunc();
         }
 
-        drawTextViewer(viewer, LCD_ROWS);
+        drawTextViewer(viewer);
     }
 
-    bool changed = false;
+    bool isChanged = false;
 
     if (clickUpButton()) {
-        changed = textViewMoveUp(viewer, LCD_ROWS);
+        isChanged = isTextViewMoveUp(viewer);
     }
     if (clickDownButton()) {
-        changed = textViewMoveDown(viewer, LCD_ROWS);
+        isChanged = isTextViewMoveDown(viewer);
     }
 
-    bool holdChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), defaultStepCallback, viewer, STEP_INTERVAL_FAST_MS);
+    bool isHoldChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), isDefaultStepCallback, viewer, STEP_INTERVAL_FAST_MS);
 
-    if (changed || holdChanged) {
+    if (isChanged || isHoldChanged) {
         clearLCD();
-        drawTextViewer(viewer, LCD_ROWS);
+        drawTextViewer(viewer);
     }
 
     if (clickLeftButton()) {
         clearLCD();
-        viewer->initialized = false;
+        viewer->isInitialized = false;
         return exitScreen;
     }
 

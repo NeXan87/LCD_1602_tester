@@ -16,7 +16,7 @@ static ScreenSubMenu g_diagMenu = {
     .count = COUNT_OF(DIAG_ITEMS),
     .selectedIndex = 0,
     .screenId = SCREEN_DIAGNOSTICS,
-    .initialized = false,
+    .isInitialized = false,
     .initFunc = nullptr,
 };
 
