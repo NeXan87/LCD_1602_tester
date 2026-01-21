@@ -1,48 +1,34 @@
-#include "screens/screen-settings.h"
+#include "screen-settings.h"
 
-#include "config.h"
-#include "drivers/buttons.h"
-#include "drivers/lcd-custom-chars.h"
+#include "core/screen-submenu.h"
 #include "drivers/lcd-driver.h"
 #include "screens/settings/screen-backlight-edit.h"
 #include "screens/settings/screen-battery-edit.h"
-#include "utils/lcd-helpers.h"
+#include "utils/helpers.h"
 
 static const char* const SETTINGS_ITEMS[] = {
     "Display bridge",
     "Battery support",
 };
-static const uint8_t SETTINGS_COUNT = sizeof(SETTINGS_ITEMS) / sizeof(SETTINGS_ITEMS[0]);
-static int menuSelectedIndex = 0;
 
-static void drawSettingsMenu() {
-    drawSubMenu("Settings", SETTINGS_ITEMS[menuSelectedIndex], true);
-}
+static ScreenSubMenu g_settingsMenu = {
+    .title = "Settings",
+    .items = SETTINGS_ITEMS,
+    .count = COUNT_OF(SETTINGS_ITEMS),
+    .selectedIndex = 0,
+    .screenId = SCREEN_SETTINGS,
+    .initialized = false,
+    .initFunc = initArrowsLCD,
+};
 
-void initScreenSettings() {
-    menuSelectedIndex = 0;
-    drawSettingsMenu();
+static ScreenId getSettingsItemScreen(int index) {
+    switch (index) {
+        case 0: return SCREEN_BACKLIGHT_EDIT;
+        case 1: return SCREEN_BATTERY_EDIT;
+        default: return SCREEN_SETTINGS;
+    }
 }
 
 ScreenId updateScreenSettings() {
-    if (updateMenuIndex(&menuSelectedIndex, SETTINGS_COUNT)) {
-        drawSettingsMenu();
-    }
-
-    if (clickSelectButton()) {
-        clearLCD();
-
-        if (menuSelectedIndex == 0) {
-            return SCREEN_BACKLIGHT_EDIT;
-        } else if (menuSelectedIndex == 1) {
-            return SCREEN_BATTERY_EDIT;
-        }
-    }
-
-    if (clickLeftButton()) {
-        clearLCD();
-        return SCREEN_LIST;
-    }
-
-    return SCREEN_SETTINGS;
+    return updateSubMenu(&g_settingsMenu, getSettingsItemScreen);
 }

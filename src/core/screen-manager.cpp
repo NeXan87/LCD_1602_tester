@@ -1,6 +1,7 @@
 #include "screen-manager.h"
 
 #include "drivers/lcd-driver.h"
+#include "utils/helpers.h"
 
 // Экраны
 #include "screens/diagnostics/screen-battery-test.h"
@@ -23,16 +24,8 @@ static void initScreen(ScreenId id) {
         case SCREEN_LIST:
             initArrowsLCD();
             break;
-        case SCREEN_ENCODER_TEST:
-            initScreenEncoderTest();
-            initArrowsLCD();
-            break;
         case SCREEN_ENCODER_TEST_TTL:
             initScreenEncoderTTLTest();
-            break;
-        case SCREEN_SETTINGS:
-            initScreenSettings();
-            initArrowsLCD();
             break;
         case SCREEN_BACKLIGHT_EDIT:
             initScreenBacklightEdit();
@@ -40,9 +33,6 @@ static void initScreen(ScreenId id) {
             break;
         case SCREEN_BATTERY_EDIT:
             initScreenBatteryEdit();
-            break;
-        case SCREEN_DIAGNOSTICS:
-            initScreenDiagnostics();
             break;
         case SCREEN_BUTTONS_TEST:
             initScreenButtonsTest();

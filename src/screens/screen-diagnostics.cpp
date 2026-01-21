@@ -1,46 +1,33 @@
-#include "screens/screen-diagnostics.h"
+#include "screen-diagnostics.h"
 
-#include "drivers/buttons.h"
-#include "drivers/lcd-driver.h"
-#include "screens/diagnostics/screen-buttons-test.h"
+#include "core/screen-submenu.h"
 #include "screens/diagnostics/screen-battery-test.h"
-#include "utils/lcd-helpers.h"
+#include "screens/diagnostics/screen-buttons-test.h"
+#include "utils/helpers.h"
 
-static const char* const DIAG_MENU_ITEMS[] = {
+static const char* const DIAG_ITEMS[] = {
     "Buttons",
     "Battery",
 };
-static const uint8_t DIAG_MENU_COUNT = sizeof(DIAG_MENU_ITEMS) / sizeof(DIAG_MENU_ITEMS[0]);
-static int menuSelectedIndex = 0;
 
-static void drawDiagMenu() {
-    drawSubMenu("Diagnostics", DIAG_MENU_ITEMS[menuSelectedIndex], true);
-}
+static ScreenSubMenu g_diagMenu = {
+    .title = "Diagnostics",
+    .items = DIAG_ITEMS,
+    .count = COUNT_OF(DIAG_ITEMS),
+    .selectedIndex = 0,
+    .screenId = SCREEN_DIAGNOSTICS,
+    .initialized = false,
+    .initFunc = nullptr,
+};
 
-void initScreenDiagnostics() {
-    menuSelectedIndex = 0;
-    drawDiagMenu();
+static ScreenId getDiagItemScreen(int index) {
+    switch (index) {
+        case 0: return SCREEN_BUTTONS_TEST;
+        case 1: return SCREEN_BATTERY_TEST;
+        default: return SCREEN_DIAGNOSTICS;
+    }
 }
 
 ScreenId updateScreenDiagnostics() {
-    if (updateMenuIndex(&menuSelectedIndex, DIAG_MENU_COUNT)) {
-        drawDiagMenu();
-    }
-
-    if (clickSelectButton()) {
-        clearLCD();
-
-        if (menuSelectedIndex == 0) {
-            return SCREEN_BUTTONS_TEST;
-        } else if (menuSelectedIndex == 1) {
-            return SCREEN_BATTERY_TEST;
-        }
-    }
-
-    if (clickLeftButton()) {
-        clearLCD();
-        return SCREEN_LIST;
-    }
-
-    return SCREEN_DIAGNOSTICS;
+    return updateSubMenu(&g_diagMenu, getDiagItemScreen);
 }
