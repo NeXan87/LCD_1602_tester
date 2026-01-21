@@ -58,7 +58,9 @@ void redrawScreenList() {
     drawMenu();
 }
 
-static bool onNavigateStep(bool isUp) {
+static bool onNavigateStep(bool isUp, void* userData) {
+    (void)userData;
+
     if (isUp) {
         if (selectedIndex > 0) {
             selectedIndex--;
@@ -76,7 +78,7 @@ static bool onNavigateStep(bool isUp) {
 ScreenId updateScreenList() {
     bool changed = updateMenuIndex(&selectedIndex, MENU_COUNT);
 
-    bool holdChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep);
+    bool holdChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep, nullptr);
 
     if (changed || holdChanged) {
         drawMenu();

@@ -40,10 +40,6 @@ static void initScreen(ScreenId id) {
         case SCREEN_BATTERY_TEST:
             initScreenBatteryTest();
             break;
-        case SCREEN_ABOUT:
-            initAboutScreen();
-            initArrowsLCD();
-            break;
         default:
             break;
     }

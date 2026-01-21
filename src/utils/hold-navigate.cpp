@@ -7,7 +7,7 @@ static bool s_isDownHeld = false;
 static unsigned long holdStartTime = 0;
 static unsigned long lastStepTime = 0;
 
-bool handleHoldNavigation(bool isUpHeld, bool isDownHeld, bool (*onStep)(bool isUp), uint16_t stepIntervalMs) {
+bool handleHoldNavigation(bool isInc, bool isDec, HoldNavigateCallback onStep, void* userData, uint16_t stepIntervalMs) {
     static bool wasUp = false;
     static bool wasDown = false;
 
@@ -15,18 +15,18 @@ bool handleHoldNavigation(bool isUpHeld, bool isDownHeld, bool (*onStep)(bool is
     bool changed = false;
 
     // Обнаружение начала удержания
-    if (isUpHeld && !wasUp) {
+    if (isInc && !wasUp) {
         holdStartTime = now;
         s_isUpHeld = true;
         s_isDownHeld = false;
-    } else if (isDownHeld && !wasDown) {
+    } else if (isDec && !wasDown) {
         holdStartTime = now;
         s_isDownHeld = true;
         s_isUpHeld = false;
     }
 
     // Сброс при отпускании
-    if (!isUpHeld && !isDownHeld) {
+    if (!isInc && !isDec) {
         s_isUpHeld = false;
         s_isDownHeld = false;
         lastStepTime = 0;
@@ -37,16 +37,16 @@ bool handleHoldNavigation(bool isUpHeld, bool isDownHeld, bool (*onStep)(bool is
         if (now - lastStepTime >= stepIntervalMs) {
             lastStepTime = now;
             if (s_isUpHeld) {
-                if (onStep(true)) changed = true;
+                if (onStep(true, userData)) changed = true;
             }
             if (s_isDownHeld) {
-                if (onStep(false)) changed = true;
+                if (onStep(false, userData)) changed = true;
             }
         }
     }
 
-    wasUp = isUpHeld;
-    wasDown = isDownHeld;
+    wasUp = isInc;
+    wasDown = isDec;
 
     return changed;
 }

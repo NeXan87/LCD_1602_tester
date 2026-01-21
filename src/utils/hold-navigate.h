@@ -5,10 +5,20 @@
 #include "config.h"
 #include "drivers/buttons.h"
 
-/// Управление авто прокруткой при удержании кнопки
-/// @param isUpHeld — результат clickUpButton() ИЛИ isUpHeld()
-/// @param isDownHeld — результат clickDownButton() ИЛИ isDownHeld()
-/// @param onStep — callback, вызываемый при каждом шаге прокрутки, возвращает true если произошло изменение
-/// @param stepIntervalMs — интервал между шагами после удержания (например, 200 мс)
-/// @return true если произошло изменение
-bool handleHoldNavigation(bool isUpHeld, bool isDownHeld, bool (*onStep)(bool isUp), uint16_t stepIntervalMs = STEP_INTERVAL_DEFAULT_MS);
+typedef bool (*HoldNavigateCallback)(bool isUp, void* userData);
+
+/// @brief Управление автопрокруткой при удержании кнопок навигации
+/// @param isInc true, если удерживается кнопка увеличения(должна возвращать true всё время удержания)
+/// @param isDec true, если удерживается кнопка уменьшения(должна возвращать true всё время удержания)
+/// @param onStep callback-функция, вызываемая при каждом шаге автопрокрутки.
+///        Принимает направление (true = вверх) и указатель на пользовательские данные.
+///        Должна вернуть true, если состояние изменилось и требуется перерисовка.
+/// @param userData указатель на контекст (например, структуру состояния экрана), передаётся в onStep
+/// @param stepIntervalMs интервал между шагами после начала автопрокрутки (по умолчанию STEP_INTERVAL_DEFAULT_MS)
+/// @return true, если в результате автопрокрутки произошло изменение (onStep вернул true)
+bool handleHoldNavigation(
+    bool isInc,
+    bool isDec,
+    HoldNavigateCallback onStep,
+    void* userData,
+    uint16_t stepIntervalMs = STEP_INTERVAL_DEFAULT_MS);

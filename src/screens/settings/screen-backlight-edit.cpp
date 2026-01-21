@@ -37,7 +37,9 @@ static void increaseBacklightByStep() {
     }
 }
 
-static bool onNavigateStep(bool isUp) {
+static bool onNavigateStep(bool isUp, void* userData) {
+    (void)userData;
+
     if (isUp) {
         increaseBacklightByStep();
     } else {
@@ -55,7 +57,7 @@ ScreenId updateScreenBacklightEdit() {
         increaseBacklightByStep();
     }
 
-    handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep, STEP_INTERVAL_FAST_MS);
+    handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), onNavigateStep, nullptr, STEP_INTERVAL_FAST_MS);
 
     if (clickLeftButton()) {
         setBacklightPercentSmooth(originalBrightness);
