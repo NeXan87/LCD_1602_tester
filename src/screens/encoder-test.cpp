@@ -26,8 +26,9 @@ static ScreenSubMenu g_encoderMenu = {
     .exitScreen = SCREEN_LIST,
     .isInitialized = false,
     .initFunc = initArrowsLCD,
+    .mapper = encoderItemToScreen,
 };
 
 ScreenId updateScreenEncoderTest(void) {
-    return updateSubMenu(&g_encoderMenu, encoderItemToScreen);
+    return updateSubMenu(&g_encoderMenu);
 }

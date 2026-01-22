@@ -47,7 +47,7 @@ static bool isDefaultStepCallback(bool isUp, void* userData) {
     else return isScreenMenuMoveDown(menu, LCD_ROWS);
 }
 
-ScreenId updateScreenMenu(ScreenMenu* menu, MenuScreenMapper mapper) {
+ScreenId updateScreenMenu(ScreenMenu* menu) {
     if (!menu->isInitialized) {
         menu->selectedIndex = 0;
         menu->topIndex = 0;
@@ -79,7 +79,7 @@ ScreenId updateScreenMenu(ScreenMenu* menu, MenuScreenMapper mapper) {
     if (clickSelectButton()) {
         clearLCD();
         menu->isInitialized = false;
-        return mapper(menu->selectedIndex);
+        return menu->mapper(menu->selectedIndex);
     }
 
     if (menu->exitScreen != SCREEN_NONE && clickLeftButton()) {

@@ -10,6 +10,14 @@ static const char* const DIAG_ITEMS[] = {
     "Battery",
 };
 
+static ScreenId getDiagItemScreen(int index) {
+    switch (index) {
+        case 0: return SCREEN_BUTTONS_TEST;
+        case 1: return SCREEN_BATTERY_TEST;
+        default: return SCREEN_DIAGNOSTICS;
+    }
+}
+
 static ScreenSubMenu g_diagMenu = {
     .title = "Diagnostics",
     .items = DIAG_ITEMS,
@@ -19,16 +27,9 @@ static ScreenSubMenu g_diagMenu = {
     .exitScreen = SCREEN_LIST,
     .isInitialized = false,
     .initFunc = nullptr,
+    .mapper = getDiagItemScreen,
 };
 
-static ScreenId getDiagItemScreen(int index) {
-    switch (index) {
-        case 0: return SCREEN_BUTTONS_TEST;
-        case 1: return SCREEN_BATTERY_TEST;
-        default: return SCREEN_DIAGNOSTICS;
-    }
-}
-
 ScreenId updateScreenDiagnostics() {
-    return updateSubMenu(&g_diagMenu, getDiagItemScreen);
+    return updateSubMenu(&g_diagMenu);
 }

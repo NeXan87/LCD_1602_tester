@@ -19,10 +19,11 @@ typedef struct {
     ScreenId exitScreen;
     bool isInitialized;
     SubMenuInitFunc initFunc;
+    MenuScreenMapper mapper;
 } ScreenMenu;
 
 // Основной обновлятор
-ScreenId updateScreenMenu(ScreenMenu* menu, MenuScreenMapper mapper);
+ScreenId updateScreenMenu(ScreenMenu* menu);
 
 // Вспомогательные функции
 void drawMenu(ScreenMenu* menu, uint8_t lcdRows);

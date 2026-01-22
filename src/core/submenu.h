@@ -6,6 +6,9 @@
 
 typedef void (*SubMenuInitFunc)(void);
 
+// Callback: преобразует индекс пункта → ScreenId
+typedef ScreenId (*SubMenuScreenMapper)(int index);
+
 typedef struct {
     const char* title;
     const char* const* items;
@@ -15,10 +18,8 @@ typedef struct {
     ScreenId exitScreen;
     bool isInitialized;
     SubMenuInitFunc initFunc;
+    SubMenuScreenMapper mapper;
 } ScreenSubMenu;
 
-// Callback: преобразует индекс пункта → ScreenId
-typedef ScreenId (*SubMenuScreenMapper)(int index);
-
 // Универсальный обновлятор
-ScreenId updateSubMenu(ScreenSubMenu* menu, SubMenuScreenMapper mapper);
+ScreenId updateSubMenu(ScreenSubMenu* menu);

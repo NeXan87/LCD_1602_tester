@@ -11,6 +11,14 @@ static const char* const SETTINGS_ITEMS[] = {
     "Battery support",
 };
 
+static ScreenId getSettingsItemScreen(int index) {
+    switch (index) {
+        case 0: return SCREEN_BACKLIGHT_EDIT;
+        case 1: return SCREEN_BATTERY_EDIT;
+        default: return SCREEN_SETTINGS;
+    }
+}
+
 static ScreenSubMenu g_settingsMenu = {
     .title = "Settings",
     .items = SETTINGS_ITEMS,
@@ -20,16 +28,9 @@ static ScreenSubMenu g_settingsMenu = {
     .exitScreen = SCREEN_LIST,
     .isInitialized = false,
     .initFunc = initArrowsLCD,
+    .mapper = getSettingsItemScreen,
 };
 
-static ScreenId getSettingsItemScreen(int index) {
-    switch (index) {
-        case 0: return SCREEN_BACKLIGHT_EDIT;
-        case 1: return SCREEN_BATTERY_EDIT;
-        default: return SCREEN_SETTINGS;
-    }
-}
-
 ScreenId updateScreenSettings() {
-    return updateSubMenu(&g_settingsMenu, getSettingsItemScreen);
+    return updateSubMenu(&g_settingsMenu);
 }

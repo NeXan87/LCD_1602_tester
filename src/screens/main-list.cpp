@@ -34,6 +34,7 @@ static ScreenMenu g_mainMenu = {
     .exitScreen = SCREEN_NONE,
     .isInitialized = false,
     .initFunc = initArrowsLCD,
+    .mapper = menuIndexToScreen,
 };
 
 void redrawScreenList() {
@@ -44,5 +45,5 @@ void redrawScreenList() {
 }
 
 ScreenId updateMainList() {
-    return updateScreenMenu(&g_mainMenu, menuIndexToScreen);
+    return updateScreenMenu(&g_mainMenu);
 }
