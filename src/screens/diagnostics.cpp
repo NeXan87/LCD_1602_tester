@@ -1,8 +1,8 @@
-#include "screen-diagnostics.h"
+#include "diagnostics.h"
 
-#include "core/screen-submenu.h"
-#include "screens/diagnostics/screen-battery-test.h"
-#include "screens/diagnostics/screen-buttons-test.h"
+#include "core/submenu.h"
+#include "screens/diagnostics/battery-test.h"
+#include "screens/diagnostics/buttons-test.h"
 #include "utils/helpers.h"
 
 static const char* const DIAG_ITEMS[] = {

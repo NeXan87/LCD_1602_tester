@@ -1,6 +1,6 @@
-#include "screen-list.h"
+#include "main-list.h"
 
-#include "core/screen-menu.h"
+#include "core/menu.h"
 #include "drivers/lcd-driver.h"
 #include "utils/helpers.h"
 
@@ -43,6 +43,6 @@ void redrawScreenList() {
     }
 }
 
-ScreenId updateScreenList() {
+ScreenId updateMainList() {
     return updateScreenMenu(&g_mainMenu, menuIndexToScreen);
 }

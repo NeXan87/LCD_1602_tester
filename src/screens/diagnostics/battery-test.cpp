@@ -1,4 +1,4 @@
-#include "screen-battery-test.h"
+#include "battery-test.h"
 
 #include "drivers/battery.h"
 #include "drivers/buttons.h"

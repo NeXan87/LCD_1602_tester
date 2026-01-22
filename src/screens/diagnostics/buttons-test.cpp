@@ -1,4 +1,4 @@
-#include "screen-buttons-test.h"
+#include "buttons-test.h"
 
 #include "drivers/buttons.h"
 #include "drivers/lcd-driver.h"

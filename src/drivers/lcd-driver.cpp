@@ -5,7 +5,7 @@
 
 #include "drivers/battery.h"
 #include "drivers/lcd-custom-chars.h"
-#include "screens/screen-about.h"
+#include "screens/about.h"
 #include "storage/eeprom2.h"
 
 static LiquidCrystal lcd(

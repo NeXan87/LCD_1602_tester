@@ -1,4 +1,4 @@
-#include "screen-submenu.h"
+#include "submenu.h"
 
 #include "drivers/buttons.h"
 #include "drivers/lcd-driver.h"

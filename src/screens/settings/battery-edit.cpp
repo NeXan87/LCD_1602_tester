@@ -1,4 +1,4 @@
-#include "screen-battery-edit.h"
+#include "battery-edit.h"
 
 #include "drivers/buttons.h"
 #include "drivers/lcd-driver.h"

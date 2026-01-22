@@ -1,4 +1,4 @@
-#include "screen-backlight-edit.h"
+#include "backlight-edit.h"
 
 #include "drivers/backlight.h"
 #include "drivers/buttons.h"

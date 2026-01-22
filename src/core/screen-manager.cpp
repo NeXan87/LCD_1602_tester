@@ -4,16 +4,16 @@
 #include "utils/helpers.h"
 
 // Экраны
-#include "screens/diagnostics/screen-battery-test.h"
-#include "screens/diagnostics/screen-buttons-test.h"
-#include "screens/screen-about.h"
-#include "screens/screen-diagnostics.h"
-#include "screens/screen-encoder-test.h"
-#include "screens/screen-encoder-ttl-test.h"
-#include "screens/screen-list.h"
-#include "screens/screen-settings.h"
-#include "screens/settings/screen-backlight-edit.h"
-#include "screens/settings/screen-battery-edit.h"
+#include "screens/about.h"
+#include "screens/diagnostics.h"
+#include "screens/diagnostics/battery-test.h"
+#include "screens/diagnostics/buttons-test.h"
+#include "screens/encoder-test.h"
+#include "screens/encoder-ttl-test.h"
+#include "screens/main-list.h"
+#include "screens/settings.h"
+#include "screens/settings/backlight-edit.h"
+#include "screens/settings/battery-edit.h"
 
 static bool isInitScreen[SCREEN_COUNT] = {false};
 
@@ -46,7 +46,7 @@ static void initScreen(ScreenId id) {
 static ScreenId updateScreen(ScreenId id) {
     switch (id) {
         case SCREEN_LIST:
-            return updateScreenList();
+            return updateMainList();
         case SCREEN_ENCODER_TEST:
             return updateScreenEncoderTest();
         case SCREEN_ENCODER_TEST_TTL:

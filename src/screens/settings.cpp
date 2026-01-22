@@ -1,9 +1,9 @@
-#include "screen-settings.h"
+#include "settings.h"
 
-#include "core/screen-submenu.h"
+#include "core/submenu.h"
 #include "drivers/lcd-driver.h"
-#include "screens/settings/screen-backlight-edit.h"
-#include "screens/settings/screen-battery-edit.h"
+#include "screens/settings/backlight-edit.h"
+#include "screens/settings/battery-edit.h"
 #include "utils/helpers.h"
 
 static const char* const SETTINGS_ITEMS[] = {

@@ -1,4 +1,4 @@
-#include "screen-about.h"
+#include "about.h"
 
 #include "config.h"
 #include "core/text-viewer.h"

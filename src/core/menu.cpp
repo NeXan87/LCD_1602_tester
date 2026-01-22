@@ -1,4 +1,4 @@
-#include "screen-menu.h"
+#include "menu.h"
 
 #include "config.h"
 #include "drivers/buttons.h"

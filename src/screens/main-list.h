@@ -5,7 +5,7 @@
 
 /// Обновляет состояние списка (обработка кнопок, перерисовка)
 /// @return ScreenId выбранного экрана, если был подтверждён; иначе SCREEN_LIST
-ScreenId updateScreenList();
+ScreenId updateMainList();
 
 /// Принудительно обновить отображение (например, при возврате из другого экрана)
 void redrawScreenList();
