@@ -17,6 +17,7 @@ static ScreenSubMenu g_settingsMenu = {
     .count = COUNT_OF(SETTINGS_ITEMS),
     .selectedIndex = 0,
     .screenId = SCREEN_SETTINGS,
+    .exitScreen = SCREEN_LIST,
     .isInitialized = false,
     .initFunc = initArrowsLCD,
 };

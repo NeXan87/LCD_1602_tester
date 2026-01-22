@@ -6,8 +6,7 @@
 #include "utils/hold-navigate.h"
 #include "utils/lcd-helpers.h"
 
-void drawScreenMenu(ScreenMenu* menu, uint8_t lcdRows) {
-    // Ограничиваем topIndex
+void drawMenu(ScreenMenu* menu, uint8_t lcdRows) {
     if (menu->topIndex < 0) menu->topIndex = 0;
     const int maxTop = (menu->itemCount > lcdRows) ? (int)(menu->itemCount - lcdRows) : 0;
     if (menu->topIndex > maxTop) menu->topIndex = maxTop;
@@ -42,13 +41,13 @@ bool isScreenMenuMoveDown(ScreenMenu* menu, uint8_t lcdRows) {
     return false;
 }
 
-static bool defaultStepCallback(bool isUp, void* userData) {
+static bool isDefaultStepCallback(bool isUp, void* userData) {
     ScreenMenu* menu = (ScreenMenu*)userData;
     if (isUp) return isScreenMenuMoveUp(menu, LCD_ROWS);
     else return isScreenMenuMoveDown(menu, LCD_ROWS);
 }
 
-ScreenId updateScreenMenu(ScreenMenu* menu, MenuScreenMapper mapper, ScreenId exitScreen) {
+ScreenId updateScreenMenu(ScreenMenu* menu, MenuScreenMapper mapper) {
     if (!menu->isInitialized) {
         menu->selectedIndex = 0;
         menu->topIndex = 0;
@@ -58,7 +57,7 @@ ScreenId updateScreenMenu(ScreenMenu* menu, MenuScreenMapper mapper, ScreenId ex
             menu->initFunc();
         }
 
-        drawScreenMenu(menu, LCD_ROWS);
+        drawMenu(menu, LCD_ROWS);
     }
 
     bool isChanged = false;
@@ -70,24 +69,23 @@ ScreenId updateScreenMenu(ScreenMenu* menu, MenuScreenMapper mapper, ScreenId ex
         isChanged = isScreenMenuMoveDown(menu, LCD_ROWS);
     }
 
-    bool isHoldChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), defaultStepCallback, menu);
+    bool isHoldChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), isDefaultStepCallback, menu);
 
     if (isChanged || isHoldChanged) {
         clearLCD();
-        drawScreenMenu(menu, LCD_ROWS);
+        drawMenu(menu, LCD_ROWS);
     }
 
     if (clickSelectButton()) {
-        ScreenId next = mapper(menu->selectedIndex);
-        menu->isInitialized = false;
         clearLCD();
-        return next;
+        menu->isInitialized = false;
+        return mapper(menu->selectedIndex);
     }
 
-    if (exitScreen != SCREEN_NONE && clickLeftButton()) {
-        menu->isInitialized = false;
+    if (menu->exitScreen != SCREEN_NONE && clickLeftButton()) {
         clearLCD();
-        return exitScreen;
+        menu->isInitialized = false;
+        return menu->exitScreen;
     }
 
     return menu->screenId;

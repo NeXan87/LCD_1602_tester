@@ -31,6 +31,7 @@ static ScreenMenu g_mainMenu = {
     .selectedIndex = 0,
     .topIndex = 0,
     .screenId = SCREEN_LIST,
+    .exitScreen = SCREEN_NONE,
     .isInitialized = false,
     .initFunc = initArrowsLCD,
 };
@@ -38,10 +39,10 @@ static ScreenMenu g_mainMenu = {
 void redrawScreenList() {
     if (g_mainMenu.isInitialized) {
         clearLCD();
-        drawScreenMenu(&g_mainMenu, LCD_ROWS);
+        drawMenu(&g_mainMenu, LCD_ROWS);
     }
 }
 
 ScreenId updateScreenList() {
-    return updateScreenMenu(&g_mainMenu, menuIndexToScreen, SCREEN_NONE);
+    return updateScreenMenu(&g_mainMenu, menuIndexToScreen);
 }

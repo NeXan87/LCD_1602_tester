@@ -16,18 +16,15 @@ typedef struct {
     int selectedIndex;
     int topIndex;
     ScreenId screenId;
+    ScreenId exitScreen;
     bool isInitialized;
     SubMenuInitFunc initFunc;
 } ScreenMenu;
 
 // Основной обновлятор
-ScreenId updateScreenMenu(
-    ScreenMenu* menu,
-    MenuScreenMapper mapper,
-    ScreenId resetScreen  // экран для сброса при входе в подменю
-);
+ScreenId updateScreenMenu(ScreenMenu* menu, MenuScreenMapper mapper);
 
 // Вспомогательные функции
-void drawScreenMenu(ScreenMenu* menu, uint8_t lcdRows);
-bool screenMenuMoveUp(ScreenMenu* menu, uint8_t lcdRows);
-bool screenMenuMoveDown(ScreenMenu* menu, uint8_t lcdRows);
+void drawMenu(ScreenMenu* menu, uint8_t lcdRows);
+bool isScreenMenuMoveUp(ScreenMenu* menu, uint8_t lcdRows);
+bool isScreenMenuMoveDown(ScreenMenu* menu, uint8_t lcdRows);

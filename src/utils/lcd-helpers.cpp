@@ -42,31 +42,6 @@ void drawOnOff(IsEnableId isEnabled, const char* title) {
     printfLCD("%-3s", isEnabled ? "ON" : "OFF");
 }
 
-void drawSubMenu(const char* title, const char* itemText, bool isSelected, uint8_t row) {
-    clearLCD();
-    setCursorLCD(0, 0);
-    printLCD(title);
-
-    drawMenuItem(0, row, itemText, isSelected);
-}
-
-bool updateMenuIndex(int* currentIndex, uint8_t itemCount) {
-    bool isChanged = false;
-    if (clickUpButton()) {
-        if (*currentIndex > 0) {
-            (*currentIndex)--;
-            isChanged = true;
-        }
-    }
-    if (clickDownButton()) {
-        if (*currentIndex < (int)(itemCount - 1)) {
-            (*currentIndex)++;
-            isChanged = true;
-        }
-    }
-    return isChanged;
-}
-
 void drawNumericEditor(const char* title, int value, NumericWidth width, const char* suffix) {
     char buffer[17];
 

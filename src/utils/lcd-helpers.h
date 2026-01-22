@@ -25,19 +25,6 @@ void drawScrollIndicators(uint8_t totalItems, uint8_t visibleRows, int topIndex)
 /// @param isSelected — true, если пункт выбран
 void drawMenuItem(uint8_t col, uint8_t row, const char* text, bool isSelected);
 
-/// Отображает двухстрочное подменю с заголовком и одним пунктом
-/// @param title — заголовок (например, "Settings")
-/// @param itemText — текст пункта меню
-/// @param isSelected — true, если пункт выбран
-/// @param row — номер строки на дисплее (0 или 1)
-void drawSubMenu(const char* title, const char* itemText, bool isSelected, uint8_t row = 1);
-
-/// Обновляет индекс меню на основе нажатий кнопок
-/// @param currentIndex — текущий индекс
-/// @param itemCount — количество пунктов
-/// @return true, если индекс изменился
-bool updateMenuIndex(int* currentIndex, uint8_t itemCount);
-
 /// Отображает редактор числового параметра с заданной шириной числа
 /// @param title — заголовок (например, "Bridge")
 /// @param value — текущее значение
