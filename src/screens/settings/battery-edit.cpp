@@ -1,37 +1,42 @@
 #include "battery-edit.h"
 
-#include "drivers/buttons.h"
-#include "drivers/lcd-driver.h"
+#include "core/param-editor.h"
 #include "storage/eeprom2.h"
-#include "utils/hold-navigate.h"
 #include "utils/lcd-helpers.h"
 
-static IsEnableId currentEnabled;
-static IsEnableId originalEnabled;
-
-void initScreenBatteryEdit() {
-    originalEnabled = getBatteryEnabledEeprom();
-    currentEnabled = originalEnabled;
-    drawOnOff(currentEnabled, "Battery support:");
+static void getBatteryEnabled(void* out) {
+    *(IsEnableId*)out = getBatteryEnabledEeprom();  // возвращает IsEnableId
+}
+static void saveBatteryEnabled(const void* value) {
+    setBatteryEnabledEeprom(*(const IsEnableId*)value);
+}
+static bool stepBattery(void* value, bool isUp, const void* ctx) {
+    IsEnableId* val = (IsEnableId*)value;
+    *val = (*val == ON) ? OFF : ON;  // переключение
+    return true;
+}
+static void drawBattery(const void* value, const char* title) {
+    drawOnOff(*(const IsEnableId*)value, title);
 }
 
+static IsEnableId g_currentEnabled;
+static IsEnableId g_originalEnabled;
+
+static ParamEditor g_batteryEditor = {
+    .title = "Battery support:",
+    .exitScreen = SCREEN_SETTINGS,
+    .currentValue = &g_currentEnabled,
+    .originalValue = &g_originalEnabled,
+    .valueSize = sizeof(IsEnableId),  // ← важно!
+    .getFromStorage = getBatteryEnabled,
+    .saveToStorage = saveBatteryEnabled,
+    .stepHandler = stepBattery,
+    .drawHandler = drawBattery,
+    .initFunc = nullptr,
+    .stepContext = nullptr,
+    .isInitialized = false,
+};
+
 ScreenId updateScreenBatteryEdit() {
-    if (clickUpButton() || clickDownButton()) {
-        currentEnabled = currentEnabled ? OFF : ON;
-        drawOnOff(currentEnabled);
-    }
-
-    if (clickLeftButton()) {
-        setBatteryEnabledEeprom(originalEnabled);
-        clearLCD();
-        return SCREEN_SETTINGS;
-    }
-
-    if (clickSelectButton()) {
-        setBatteryEnabledEeprom(currentEnabled);
-        clearLCD();
-        return SCREEN_SETTINGS;
-    }
-
-    return SCREEN_BATTERY_EDIT;
+    return updateParamEditor(&g_batteryEditor);
 }

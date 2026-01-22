@@ -24,13 +24,6 @@ static void initScreen(ScreenId id) {
         case SCREEN_ENCODER_TEST_TTL:
             initScreenEncoderTTLTest();
             break;
-        case SCREEN_BACKLIGHT_EDIT:
-            initScreenBacklightEdit();
-            initArrowsLCD();
-            break;
-        case SCREEN_BATTERY_EDIT:
-            initScreenBatteryEdit();
-            break;
         case SCREEN_BUTTONS_TEST:
             initScreenButtonsTest();
             break;
