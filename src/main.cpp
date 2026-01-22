@@ -7,7 +7,7 @@
 #include "drivers/battery.h"
 #include "drivers/buttons.h"
 #include "drivers/lcd-driver.h"
-#include "screens/main-list.h"
+#include "screens/main-menu.h"
 #include "screens/settings.h"
 #include "storage/eeprom2.h"
 
@@ -17,7 +17,7 @@ void setup() {
     initBacklight();
     initLCD();
     initBattery();
-    redrawScreenList();
+    redrawMainMenu();
 }
 
 void loop() {

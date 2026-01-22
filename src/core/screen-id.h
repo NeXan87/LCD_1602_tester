@@ -6,7 +6,7 @@
 // =============================================================================ыW
 typedef enum {
     SCREEN_NONE = -1,         // Нет экрана
-    SCREEN_LIST,              // Главный экран
+    SCREEN_MAIN_MENU,         // Главный экран
     SCREEN_IR_TEST,           // Тест ИК-передатчиков
     SCREEN_ENCODER_TEST,      // Меню тестера энкодеров
     SCREEN_ENCODER_TEST_TTL,  // Тест TTL энкодера

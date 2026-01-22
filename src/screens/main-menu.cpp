@@ -1,4 +1,4 @@
-#include "main-list.h"
+#include "main-menu.h"
 
 #include "core/menu.h"
 #include "drivers/lcd-driver.h"
@@ -20,7 +20,7 @@ static ScreenId menuIndexToScreen(int index) {
         case 2: return SCREEN_SETTINGS;
         case 3: return SCREEN_DIAGNOSTICS;
         case 4: return SCREEN_ABOUT;
-        default: return SCREEN_LIST;
+        default: return SCREEN_MAIN_MENU;
     }
 }
 
@@ -30,20 +30,20 @@ static ScreenMenu g_mainMenu = {
     .itemCount = COUNT_OF(MENU_ITEMS),
     .selectedIndex = 0,
     .topIndex = 0,
-    .screenId = SCREEN_LIST,
+    .screenId = SCREEN_MAIN_MENU,
     .exitScreen = SCREEN_NONE,
     .isInitialized = false,
     .initFunc = initArrowsLCD,
     .mapper = menuIndexToScreen,
 };
 
-void redrawScreenList() {
+void redrawMainMenu() {
     if (g_mainMenu.isInitialized) {
         clearLCD();
         drawMenu(&g_mainMenu, LCD_ROWS);
     }
 }
 
-ScreenId updateMainList() {
+ScreenId updateMainMenu() {
     return updateScreenMenu(&g_mainMenu);
 }

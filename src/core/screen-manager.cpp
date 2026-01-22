@@ -10,7 +10,7 @@
 #include "screens/diagnostics/buttons-test.h"
 #include "screens/encoder-test.h"
 #include "screens/encoder-ttl-test.h"
-#include "screens/main-list.h"
+#include "screens/main-menu.h"
 #include "screens/settings.h"
 #include "screens/settings/backlight-edit.h"
 #include "screens/settings/battery-edit.h"
@@ -45,8 +45,8 @@ static void initScreen(ScreenId id) {
 
 static ScreenId updateScreen(ScreenId id) {
     switch (id) {
-        case SCREEN_LIST:
-            return updateMainList();
+        case SCREEN_MAIN_MENU:
+            return updateMainMenu();
         case SCREEN_ENCODER_TEST:
             return updateScreenEncoderTest();
         case SCREEN_ENCODER_TEST_TTL:
@@ -66,20 +66,20 @@ static ScreenId updateScreen(ScreenId id) {
         case SCREEN_ABOUT:
             return updateAboutScreen();
         default:
-            return SCREEN_LIST;
+            return SCREEN_MAIN_MENU;
     }
 }
 
 void updateScreenManager() {
-    static ScreenId currentScreen = SCREEN_LIST;
+    static ScreenId currentScreen = SCREEN_MAIN_MENU;
 
     initScreen(currentScreen);
     ScreenId nextScreen = updateScreen(currentScreen);
 
     if (nextScreen != currentScreen) {
         isInitScreen[currentScreen] = false;
-        if (nextScreen == SCREEN_LIST) {
-            redrawScreenList();
+        if (nextScreen == SCREEN_MAIN_MENU) {
+            redrawMainMenu();
         }
         currentScreen = nextScreen;
     }

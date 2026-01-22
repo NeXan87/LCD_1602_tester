@@ -23,5 +23,5 @@ static TextViewer g_aboutViewer = {
 };
 
 ScreenId updateAboutScreen() {
-    return updateTextViewer(&g_aboutViewer, SCREEN_LIST);
+    return updateTextViewer(&g_aboutViewer, SCREEN_MAIN_MENU);
 }

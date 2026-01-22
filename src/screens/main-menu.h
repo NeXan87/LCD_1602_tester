@@ -4,8 +4,8 @@
 #include "core/screen-id.h"
 
 /// Обновляет состояние списка (обработка кнопок, перерисовка)
-/// @return ScreenId выбранного экрана, если был подтверждён; иначе SCREEN_LIST
-ScreenId updateMainList();
+/// @return ScreenId выбранного экрана, если был подтверждён; иначе SCREEN_MAIN_MENU
+ScreenId updateMainMenu();
 
 /// Принудительно обновить отображение (например, при возврате из другого экрана)
-void redrawScreenList();
+void redrawMainMenu();
