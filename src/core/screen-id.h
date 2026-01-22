@@ -5,16 +5,17 @@
 // Используются для переключения между режимами отображения
 // =============================================================================ыW
 typedef enum {
-    SCREEN_LIST,            // Главный экран
-    SCREEN_IR_TEST,         // Тест ИК-передатчиков
-    SCREEN_ENCODER_TEST,    // Меню тестера энкодеров
-    SCREEN_ENCODER_TEST_TTL,// Тест TTL энкодера
-    SCREEN_SETTINGS,        // Меню настроек
-    SCREEN_BACKLIGHT_EDIT,  // Меню редактирования яркости дисплея
-    SCREEN_BATTERY_EDIT,    // Меню редактирования поддержки батареи
-    SCREEN_DIAGNOSTICS,     // Диагностическая информация
-    SCREEN_BUTTONS_TEST,    // Диагностика кнопок
-    SCREEN_BATTERY_TEST,    // Диагностика батареи
-    SCREEN_ABOUT,           // Информация о системе
-    SCREEN_COUNT            // Количество экранов (не использовать как экран)
+    SCREEN_NONE = -1,         // Нет экрана
+    SCREEN_LIST,              // Главный экран
+    SCREEN_IR_TEST,           // Тест ИК-передатчиков
+    SCREEN_ENCODER_TEST,      // Меню тестера энкодеров
+    SCREEN_ENCODER_TEST_TTL,  // Тест TTL энкодера
+    SCREEN_SETTINGS,          // Меню настроек
+    SCREEN_BACKLIGHT_EDIT,    // Меню редактирования яркости дисплея
+    SCREEN_BATTERY_EDIT,      // Меню редактирования поддержки батареи
+    SCREEN_DIAGNOSTICS,       // Диагностическая информация
+    SCREEN_BUTTONS_TEST,      // Диагностика кнопок
+    SCREEN_BATTERY_TEST,      // Диагностика батареи
+    SCREEN_ABOUT,             // Информация о системе
+    SCREEN_COUNT              // Количество экранов (не использовать как экран)
 } ScreenId;

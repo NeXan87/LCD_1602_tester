@@ -21,9 +21,6 @@ static void initScreen(ScreenId id) {
     if (isInitScreen[id]) return;
 
     switch (id) {
-        case SCREEN_LIST:
-            initArrowsLCD();
-            break;
         case SCREEN_ENCODER_TEST_TTL:
             initScreenEncoderTTLTest();
             break;
