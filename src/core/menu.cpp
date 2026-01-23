@@ -51,8 +51,6 @@ static bool isDefaultStepCallback(bool isUp, void* userData) {
 
 ScreenId updateScreenMenu(ScreenMenu* menu) {
     if (!menu->isInitialized) {
-        menu->selectedIndex = 0;
-        menu->topIndex = 0;
         menu->isInitialized = true;
 
         if (menu->initFunc != nullptr) {
@@ -83,9 +81,11 @@ ScreenId updateScreenMenu(ScreenMenu* menu) {
         return menu->mapper(menu->selectedIndex);
     }
 
-    if (menu->exitScreen != SCREEN_NONE && clickLeftButton()) {
+    if (clickLeftButton()) {
         clearLCD();
         menu->isInitialized = false;
+        menu->selectedIndex = 0;
+        menu->topIndex = 0;
         return menu->exitScreen;
     }
 

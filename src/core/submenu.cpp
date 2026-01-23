@@ -27,7 +27,6 @@ static bool isSubMenuStepCallback(bool isUp, void* userData) {
 
 ScreenId updateSubMenu(ScreenSubMenu* menu) {
     if (!menu->isInitialized) {
-        menu->selectedIndex = 0;
         menu->isInitialized = true;
 
         if (menu->initFunc != nullptr) {
@@ -66,6 +65,7 @@ ScreenId updateSubMenu(ScreenSubMenu* menu) {
 
     if (menu->exitScreen != SCREEN_NONE && clickLeftButton()) {
         clearLCD();
+        menu->selectedIndex = 0;
         menu->isInitialized = false;
         return menu->exitScreen;
     }
