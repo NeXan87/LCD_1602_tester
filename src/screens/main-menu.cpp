@@ -10,7 +10,8 @@ static const char* const MENU_ITEMS[] = {
     "Enc tester",
     "Settings",
     "Diagnostics",
-    "About"};
+    "About",
+};
 
 // Маппинг
 static ScreenId menuIndexToScreen(int index) {
