@@ -6,13 +6,13 @@
 #include "storage/eeprom2.h"
 #include "utils/lcd-helpers.h"
 
-static bool isInitBatteryTest = false;
+static bool isInitialized = false;
 
 static void drawBatteryTest() {
-    if (!isInitBatteryTest) {
+    if (!isInitialized) {
         setCursorLCD(0, 0);
         printLCD("Battery Test:");
-        isInitBatteryTest = true;
+        isInitialized = true;
     }
 
     if (!getBatteryEnabledEeprom()) {
@@ -36,11 +36,11 @@ static void drawBatteryTest() {
     printfLCD("ADC: %-4d", adc);
 }
 
-void initScreenBatteryDiag() {
-    drawBatteryTest();
-}
-
 ScreenId updateScreenBatteryDiag() {
+    if (!isInitialized) {
+        drawBatteryTest();
+    }
+
     static uint32_t lastUpdate = 0;
     if (millis() - lastUpdate > BATTERY_TEST_UPDATE_MS) {
         lastUpdate = millis();
@@ -49,7 +49,7 @@ ScreenId updateScreenBatteryDiag() {
 
     if (clickLeftButton()) {
         clearLCD();
-        isInitBatteryTest = false;
+        isInitialized = false;
         lastUpdate = 0;
         return SCREEN_DIAGNOSTICS;
     }

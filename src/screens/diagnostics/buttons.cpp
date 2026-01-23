@@ -4,7 +4,7 @@
 #include "drivers/lcd-driver.h"
 #include "utils/lcd-helpers.h"
 
-static bool isInitButtonsTest = false;
+static bool isInitialized = false;
 
 const char* getButtonName(int adcValue) {
     if (isRightButtonPressed()) return "Right";
@@ -16,10 +16,10 @@ const char* getButtonName(int adcValue) {
 }
 
 static void drawButtonsTest() {
-    if (!isInitButtonsTest) {
+    if (!isInitialized) {
         setCursorLCD(0, 0);
         printLCD("Press buttons:");
-        isInitButtonsTest = true;
+        isInitialized = true;
     }
 
     int adcVal = analogRead(BUTTONS_PIN);
@@ -32,11 +32,11 @@ static void drawButtonsTest() {
     printLCD(line);
 }
 
-void initScreenButtonsDiag() {
-    drawButtonsTest();
-}
-
 ScreenId updateScreenButtonsDiag() {
+    if (!isInitialized) {
+        drawButtonsTest();
+    }
+
     static uint32_t lastUpdate = 0;
     if (millis() - lastUpdate > DIAG_BUTTONS_UPDATE_MS) {
         lastUpdate = millis();
@@ -45,7 +45,7 @@ ScreenId updateScreenButtonsDiag() {
 
     if (isLeftButtonHeld()) {
         clearLCD();
-        isInitButtonsTest = false;
+        isInitialized = false;
         lastUpdate = 0;
         return SCREEN_DIAGNOSTICS;
     }

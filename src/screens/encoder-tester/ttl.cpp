@@ -8,6 +8,7 @@
 static EncoderState encoderState;
 static EncoderDisplayMode displayMode = ENCODER_DISPLAY_DIAGNOSTICS;
 static unsigned long lastDrawTime = 0;
+static bool isInitialized = false;
 
 static void drawEncoderTestScreen() {
     clearLCD();
@@ -55,15 +56,19 @@ static void drawEncoderTestScreen() {
 void initScreenEncoderTTLTest() {
     displayMode = ENCODER_DISPLAY_DIAGNOSTICS;
     lastDrawTime = millis();
+    isInitialized = true;
     initArrowsLCD();
     drawEncoderTestScreen();
     initEncoder(&encoderState);
 }
 
 ScreenId updateScreenEncoderTTLTest() {
+    if (!isInitialized) {
+        initScreenEncoderTTLTest();
+    }
+
     updateEncoder(&encoderState);
 
-    // Перерисовка экрана каждые 500 мс для отображения актуальных данных
     unsigned long now = millis();
     if (now - lastDrawTime > ENCODER_DRAW_INTERVAL_MS) {
         drawEncoderTestScreen();
@@ -86,6 +91,7 @@ ScreenId updateScreenEncoderTTLTest() {
 
     // Select для сброса
     if (clickSelectButton()) {
+        isInitialized = false;
         resetEncoder(&encoderState);
         drawEncoderTestScreen();
         lastDrawTime = millis();
@@ -94,6 +100,7 @@ ScreenId updateScreenEncoderTTLTest() {
     // Left для выхода
     if (clickLeftButton()) {
         clearLCD();
+        isInitialized = false;
         return SCREEN_ENCODER_TEST;
     }
 

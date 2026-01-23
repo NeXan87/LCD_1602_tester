@@ -15,27 +15,6 @@
 #include "screens/settings/backlight.h"
 #include "screens/settings/battery.h"
 
-static bool isInitScreen[SCREEN_COUNT] = {false};
-
-static void initScreen(ScreenId id) {
-    if (isInitScreen[id]) return;
-
-    switch (id) {
-        case SCREEN_ENCODER_TEST_TTL:
-            initScreenEncoderTTLTest();
-            break;
-        case SCREEN_BUTTONS_DIAG:
-            initScreenButtonsDiag();
-            break;
-        case SCREEN_BATTERY_DIAG:
-            initScreenBatteryDiag();
-            break;
-        default:
-            break;
-    }
-    isInitScreen[id] = true;
-}
-
 static ScreenId updateScreen(ScreenId id) {
     switch (id) {
         case SCREEN_MAIN_MENU:
@@ -65,12 +44,9 @@ static ScreenId updateScreen(ScreenId id) {
 
 void updateScreenManager() {
     static ScreenId currentScreen = SCREEN_MAIN_MENU;
-
-    initScreen(currentScreen);
     ScreenId nextScreen = updateScreen(currentScreen);
 
     if (nextScreen != currentScreen) {
-        isInitScreen[currentScreen] = false;
         if (nextScreen == SCREEN_MAIN_MENU) {
             redrawMainMenu();
         }
