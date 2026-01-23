@@ -25,11 +25,8 @@ static void drawButtonsTest() {
     int adcVal = analogRead(BUTTONS_PIN);
     const char* btnName = getButtonName(adcVal);
 
-    char line[17];
-
-    snprintf(line, sizeof(line), "%-7s ADC:%-4d", btnName, adcVal);
     setCursorLCD(0, 1);
-    printLCD(line);
+    printfLCD("%-7s ADC:%-4d", btnName, adcVal);
 }
 
 ScreenId updateScreenButtonsDiag() {

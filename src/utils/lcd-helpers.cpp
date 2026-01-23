@@ -43,26 +43,20 @@ void drawOnOff(IsEnableId isEnabled, const char* title) {
 }
 
 void drawNumericEditor(const char* title, int value, NumericWidth width, const char* suffix) {
-    char buffer[17];
-
-    if (width == 2) {
-        snprintf(buffer, sizeof(buffer), "%s:%2d%s", title, value, suffix);
-    } else if (width == 3) {
-        snprintf(buffer, sizeof(buffer), "%s:%3d%s", title, value, suffix);
-    } else if (width == 4) {
-        snprintf(buffer, sizeof(buffer), "%s:%4d%s", title, value, suffix);
-    } else {
-        snprintf(buffer, sizeof(buffer), "%s:%d%s", title, value, suffix);
+    if (title) {
+        setCursorLCD(0, 0);
+        printLCD(title);
     }
 
-    buffer[16] = '\0';
-
-    setCursorLCD(0, 0);
-    printLCD(buffer);
-
     setCursorLCD(0, 1);
-    writeCharLCD(LCD_CHAR_ARROW_UP);
-    writeCharLCD(' ');
-    writeCharLCD(LCD_CHAR_ARROW_DOWN);
-    printLCD(" to adjust");
+
+    if (width == NUM_WIDTH_2) {
+        printfLCD("%2d%s", value, suffix);
+    } else if (width == NUM_WIDTH_3) {
+        printfLCD("%3d%s", value, suffix);
+    } else if (width == NUM_WIDTH_4) {
+        printfLCD("%4d%s", value, suffix);
+    } else {
+        printfLCD("%d%s", value, suffix);
+    }
 }

@@ -1,4 +1,5 @@
 #include "backlight.h"
+
 #include "core/param-editor.h"
 #include "drivers/backlight.h"
 #include "drivers/lcd-driver.h"
@@ -45,7 +46,7 @@ static int g_currentBrightness;
 static int g_originalBrightness;
 
 static ParamEditor g_brightnessEditor = {
-    .title = "Bridge",
+    .title = "Display bridge:",
     .screenId = SCREEN_BACKLIGHT_EDIT,
     .exitScreen = SCREEN_SETTINGS,
     .currentValue = &g_currentBrightness,
@@ -56,7 +57,7 @@ static ParamEditor g_brightnessEditor = {
     .stepHandler = stepBrightness,
     .drawHandler = drawBrightness,
     .applyFunc = applyBrightness,
-    .initFunc = initArrowsLCD,
+    .initFunc = nullptr,
     .stepContext = &BRIGHTNESS_STEP,
     .isInitialized = false,
 };
