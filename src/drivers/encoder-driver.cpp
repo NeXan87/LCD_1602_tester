@@ -57,7 +57,13 @@ void initEncoder(EncoderState* state) {
 
 void updateEncoder(EncoderState* state) {
     // Проверка R
+    uint8_t a = digitalRead(ENCODER_PIN_A);
+    uint8_t b = digitalRead(ENCODER_PIN_B);
     state->rPresent = digitalRead(ENCODER_PIN_C_R) == HIGH;
+
+    state->historyA[state->historyIndex] = a;
+    state->historyB[state->historyIndex] = b;
+    state->historyIndex = (state->historyIndex + 1) % WAVEFORM_HISTORY_SIZE;
 
     // Расчёт скорости (имп/сек)
     static unsigned long lastPosTime = 0;
