@@ -34,10 +34,10 @@ bool handleHoldNavigation(HoldNavigateCallback onStep, void* userData, uint16_t 
         if (now - lastStepTime >= stepIntervalMs) {
             lastStepTime = now;
             if (s_isUpHeld) {
-                if (onStep(true, userData)) isChanged = true;
+                if (onStep(s_isUpHeld, userData)) isChanged = true;
             }
             if (s_isDownHeld) {
-                if (onStep(false, userData)) isChanged = true;
+                if (onStep(!s_isDownHeld, userData)) isChanged = true;
             }
         }
     }
