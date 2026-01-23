@@ -11,10 +11,12 @@ typedef void (*ParamSetFunc)(const void* value);
 typedef bool (*ParamStepFunc)(void* value, bool isUp, const void* context);
 typedef void (*ParamDrawFunc)(const void* value, const char* title);
 typedef void (*EditorInitFunc)(void);
+typedef void (*ParamApplyFunc)(const void* value);
 
 // Контекст редактора
 typedef struct {
     const char* title;
+    ScreenId screenId;
     ScreenId exitScreen;
     void* currentValue;
     void* originalValue;
@@ -23,6 +25,7 @@ typedef struct {
     ParamSetFunc saveToStorage;   // сохранение в EEPROM
     ParamStepFunc stepHandler;    // изменение значения (up/down)
     ParamDrawFunc drawHandler;    // отрисовка
+    ParamApplyFunc applyFunc;     // сохранение значения
     EditorInitFunc initFunc;
 
     // Доп. контекст для stepHandler (например, min/max)

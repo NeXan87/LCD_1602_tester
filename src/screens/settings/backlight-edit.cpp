@@ -14,8 +14,9 @@ static void saveBrightness(const void* value) {
     setBacklightPercentEeprom(*(const int*)value);
 }
 static void applyBrightness(const void* value) {
-    setBacklightPercent(*(const int*)value);
+    setBacklightPercentSmooth(*(const int*)value);
 }
+
 static bool stepBrightness(void* value, bool isUp, const void* ctx) {
     int* val = (int*)value;
     int step = *(const int*)ctx;
@@ -47,6 +48,7 @@ static int g_originalBrightness;
 
 static ParamEditor g_brightnessEditor = {
     .title = "Bridge",
+    .screenId = SCREEN_BACKLIGHT_EDIT,
     .exitScreen = SCREEN_SETTINGS,
     .currentValue = &g_currentBrightness,
     .originalValue = &g_originalBrightness,
@@ -55,6 +57,7 @@ static ParamEditor g_brightnessEditor = {
     .saveToStorage = saveBrightness,
     .stepHandler = stepBrightness,
     .drawHandler = drawBrightness,
+    .applyFunc = applyBrightness,
     .initFunc = initArrowsLCD,
     .stepContext = &BRIGHTNESS_STEP,
     .isInitialized = false,

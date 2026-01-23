@@ -1,6 +1,6 @@
 #include "param-editor.h"
 
-#include <string.h>  // для memcpy
+#include <string.h>
 
 #include "drivers/buttons.h"
 #include "utils/hold-navigate.h"
@@ -9,64 +9,58 @@ static void applyOriginalValue(ParamEditor* editor) {
     memcpy(editor->currentValue, editor->originalValue, editor->valueSize);
 }
 
+static bool paramEditorStepCallback(bool isUp, void* userData) {
+    ParamEditor* editor = (ParamEditor*)userData;
+    bool res = editor->stepHandler(editor->currentValue, isUp, editor->stepContext);
+    if (res) {
+        editor->drawHandler(editor->currentValue, editor->title);
+    }
+    return res;
+}
+
 ScreenId updateParamEditor(ParamEditor* editor) {
     if (!editor->isInitialized) {
-        // Загружаем оригинальное значение из хранилища
         editor->getFromStorage(editor->originalValue);
-        editor->isInitialized = true;
-        editor->drawHandler(editor->currentValue, editor->title);
+        applyOriginalValue(editor);
 
         if (editor->initFunc != nullptr) {
             editor->initFunc();
         }
 
-        applyOriginalValue(editor);
+        editor->drawHandler(editor->currentValue, editor->title);
+        editor->isInitialized = true;
     }
-
-    bool changed = false;
 
     if (clickUpButton()) {
         if (editor->stepHandler(editor->currentValue, true, editor->stepContext)) {
             editor->drawHandler(editor->currentValue, editor->title);
-            changed = true;
         }
     }
     if (clickDownButton()) {
         if (editor->stepHandler(editor->currentValue, false, editor->stepContext)) {
             editor->drawHandler(editor->currentValue, editor->title);
-            changed = true;
         }
     }
 
-    // Автопрокрутка
-    handleHoldNavigation(
-        isUpButtonPressed(),
-        isDownButtonPressed(),
-        [](bool isUp, void* userData) -> bool {
-            ParamEditor* ed = (ParamEditor*)userData;
-            bool res = ed->stepHandler(ed->currentValue, isUp, ed->stepContext);
-            if (res) {
-                ed->drawHandler(ed->currentValue, ed->title);
-            }
-            return res;
-        },
-        editor,
-        STEP_INTERVAL_FAST_MS);
+    handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), paramEditorStepCallback, editor, STEP_INTERVAL_FAST_MS);
 
     if (clickLeftButton()) {
-        // Отмена — восстанавливаем оригинальное значение
         applyOriginalValue(editor);
-        editor->saveToStorage(editor->originalValue);  // или setBacklightPercent(original)
+
+        if (editor->applyFunc != nullptr) {
+            editor->applyFunc(editor->originalValue);
+        }
+
+        editor->saveToStorage(editor->originalValue);
         editor->isInitialized = false;
         return editor->exitScreen;
     }
 
     if (clickSelectButton()) {
-        // Подтверждение — сохраняем
         editor->saveToStorage(editor->currentValue);
         editor->isInitialized = false;
         return editor->exitScreen;
     }
 
-    return SCREEN_NONE;  // должен быть определён как -1
+    return editor->screenId;
 }

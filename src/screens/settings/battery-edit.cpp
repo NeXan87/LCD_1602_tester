@@ -24,14 +24,16 @@ static IsEnableId g_originalEnabled;
 
 static ParamEditor g_batteryEditor = {
     .title = "Battery support:",
+    .screenId = SCREEN_BATTERY_EDIT,
     .exitScreen = SCREEN_SETTINGS,
     .currentValue = &g_currentEnabled,
     .originalValue = &g_originalEnabled,
-    .valueSize = sizeof(IsEnableId),  // ← важно!
+    .valueSize = sizeof(IsEnableId),
     .getFromStorage = getBatteryEnabled,
     .saveToStorage = saveBatteryEnabled,
     .stepHandler = stepBattery,
     .drawHandler = drawBattery,
+    .applyFunc = nullptr,
     .initFunc = nullptr,
     .stepContext = nullptr,
     .isInitialized = false,
