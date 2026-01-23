@@ -1,8 +1,8 @@
 #include "diagnostics.h"
 
 #include "core/submenu.h"
-#include "screens/diagnostics/battery-test.h"
-#include "screens/diagnostics/buttons-test.h"
+#include "screens/diagnostics/battery.h"
+#include "screens/diagnostics/buttons.h"
 #include "utils/helpers.h"
 
 static const char* const DIAG_ITEMS[] = {
@@ -12,8 +12,8 @@ static const char* const DIAG_ITEMS[] = {
 
 static ScreenId getDiagItemScreen(int index) {
     switch (index) {
-        case 0: return SCREEN_BUTTONS_TEST;
-        case 1: return SCREEN_BATTERY_TEST;
+        case 0: return SCREEN_BUTTONS_DIAG;
+        case 1: return SCREEN_BATTERY_DIAG;
         default: return SCREEN_DIAGNOSTICS;
     }
 }

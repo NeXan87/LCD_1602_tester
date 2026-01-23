@@ -1,5 +1,4 @@
-#include "backlight-edit.h"
-
+#include "backlight.h"
 #include "core/param-editor.h"
 #include "drivers/backlight.h"
 #include "drivers/lcd-driver.h"

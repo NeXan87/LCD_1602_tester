@@ -1,4 +1,4 @@
-#include "buttons-test.h"
+#include "buttons.h"
 
 #include "drivers/buttons.h"
 #include "drivers/lcd-driver.h"
@@ -32,11 +32,11 @@ static void drawButtonsTest() {
     printLCD(line);
 }
 
-void initScreenButtonsTest() {
+void initScreenButtonsDiag() {
     drawButtonsTest();
 }
 
-ScreenId updateScreenButtonsTest() {
+ScreenId updateScreenButtonsDiag() {
     static uint32_t lastUpdate = 0;
     if (millis() - lastUpdate > DIAG_BUTTONS_UPDATE_MS) {
         lastUpdate = millis();
@@ -50,5 +50,5 @@ ScreenId updateScreenButtonsTest() {
         return SCREEN_DIAGNOSTICS;
     }
 
-    return SCREEN_BUTTONS_TEST;
+    return SCREEN_BUTTONS_DIAG;
 }

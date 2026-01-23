@@ -1,5 +1,4 @@
-#include "battery-edit.h"
-
+#include "battery.h"
 #include "core/param-editor.h"
 #include "storage/eeprom2.h"
 #include "utils/lcd-helpers.h"

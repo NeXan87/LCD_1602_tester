@@ -1,4 +1,4 @@
-#include "battery-test.h"
+#include "battery.h"
 
 #include "drivers/battery.h"
 #include "drivers/buttons.h"
@@ -36,11 +36,11 @@ static void drawBatteryTest() {
     printfLCD("ADC: %-4d", adc);
 }
 
-void initScreenBatteryTest() {
+void initScreenBatteryDiag() {
     drawBatteryTest();
 }
 
-ScreenId updateScreenBatteryTest() {
+ScreenId updateScreenBatteryDiag() {
     static uint32_t lastUpdate = 0;
     if (millis() - lastUpdate > BATTERY_TEST_UPDATE_MS) {
         lastUpdate = millis();
@@ -54,5 +54,5 @@ ScreenId updateScreenBatteryTest() {
         return SCREEN_DIAGNOSTICS;
     }
 
-    return SCREEN_BATTERY_TEST;
+    return SCREEN_BATTERY_DIAG;
 }

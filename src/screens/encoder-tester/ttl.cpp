@@ -1,4 +1,4 @@
-#include "screens/encoder-ttl-test.h"
+#include "screens/encoder-tester/ttl.h"
 
 #include "drivers/buttons.h"
 #include "drivers/encoder-driver.h"

@@ -1,9 +1,9 @@
-// screens/screen-encoder-test.cpp
-#include "encoder-test.h"
+// screens/screen-encoder-tester.cpp
+#include "encoder-tester.h"
 
 #include "core/submenu.h"
 #include "drivers/lcd-driver.h"
-#include "screens/encoder-ttl-test.h"
+#include "screens/encoder-tester/ttl.h"
 #include "utils/helpers.h"
 
 static const char* const ENCODER_ITEMS[] = {

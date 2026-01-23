@@ -6,14 +6,14 @@
 // Экраны
 #include "screens/about.h"
 #include "screens/diagnostics.h"
-#include "screens/diagnostics/battery-test.h"
-#include "screens/diagnostics/buttons-test.h"
-#include "screens/encoder-test.h"
-#include "screens/encoder-ttl-test.h"
+#include "screens/diagnostics/battery.h"
+#include "screens/diagnostics/buttons.h"
+#include "screens/encoder-tester.h"
+#include "screens/encoder-tester/ttl.h"
 #include "screens/main-menu.h"
 #include "screens/settings.h"
-#include "screens/settings/backlight-edit.h"
-#include "screens/settings/battery-edit.h"
+#include "screens/settings/backlight.h"
+#include "screens/settings/battery.h"
 
 static bool isInitScreen[SCREEN_COUNT] = {false};
 
@@ -24,11 +24,11 @@ static void initScreen(ScreenId id) {
         case SCREEN_ENCODER_TEST_TTL:
             initScreenEncoderTTLTest();
             break;
-        case SCREEN_BUTTONS_TEST:
-            initScreenButtonsTest();
+        case SCREEN_BUTTONS_DIAG:
+            initScreenButtonsDiag();
             break;
-        case SCREEN_BATTERY_TEST:
-            initScreenBatteryTest();
+        case SCREEN_BATTERY_DIAG:
+            initScreenBatteryDiag();
             break;
         default:
             break;
@@ -52,10 +52,10 @@ static ScreenId updateScreen(ScreenId id) {
             return updateScreenBatteryEdit();
         case SCREEN_DIAGNOSTICS:
             return updateScreenDiagnostics();
-        case SCREEN_BUTTONS_TEST:
-            return updateScreenButtonsTest();
-        case SCREEN_BATTERY_TEST:
-            return updateScreenBatteryTest();
+        case SCREEN_BUTTONS_DIAG:
+            return updateScreenButtonsDiag();
+        case SCREEN_BATTERY_DIAG:
+            return updateScreenBatteryDiag();
         case SCREEN_ABOUT:
             return updateAboutScreen();
         default:
