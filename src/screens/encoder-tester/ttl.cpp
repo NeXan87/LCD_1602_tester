@@ -11,45 +11,31 @@ static unsigned long lastDrawTime = 0;
 static bool isInitialized = false;
 
 static void drawEncoderTestScreen() {
-    clearLCD();
     setCursorLCD(0, 0);
 
-    char buf[16];
-
     if (displayMode == ENCODER_DISPLAY_DIAGNOSTICS) {
-        // A:OK B:OK R:✓
-        // ERR:0
-        printLCD("A:");
-        printLCD(encoderState.aEverHigh ? "OK" : "NO");
-        printLCD(" B:");
-        printLCD(encoderState.bEverHigh ? "OK" : "NO");
-        printLCD(" R:");
-        printLCD(encoderState.rPresent ? "\x02" : " ");
+        // Строка 0: A:OK B:OK R:✓
+        const char* aStatus = encoderState.aEverHigh ? "OK" : "NO";
+        const char* bStatus = encoderState.bEverHigh ? "OK" : "NO";
+        const char* rStatus = encoderState.rPresent ? "\x02" : " ";
+        printfLCD("A:%s B:%s R:%s", aStatus, bStatus, rStatus);
 
         setCursorLCD(0, 1);
-        printLCD("ERR:");
-        sprintf(buf, "%lu", encoderState.errors);
-        printLCD(buf);
+        // Строка 1: ERR:12345
+        printfLCD("ERR:%lu", encoderState.errors);
     } else if (displayMode == ENCODER_DISPLAY_POSITION_SPEED) {
-        // Pos:12345
-        // Dir:▶ S:100 i/s
-        printLCD("Pos:");
-        sprintf(buf, "%ld", encoderState.position);
-        printLCD(buf);
+        // Строка 0: Pos:12345
+        printfLCD("Pos:%ld", encoderState.position);
 
         setCursorLCD(0, 1);
-        printLCD("Dir:");
+        // Строка 1: Dir:▶ S:100 i/s
+        char dirChar = '-';
         if (encoderState.direction == 1) {
-            writeCharLCD(126);  // right arrow
+            dirChar = 126;  // right arrow
         } else if (encoderState.direction == -1) {
-            writeCharLCD(127);  // left arrow
-        } else {
-            printLCD("-");
+            dirChar = 127;  // left arrow
         }
-        printLCD(" S:");
-        sprintf(buf, "%d", encoderState.speed);
-        printLCD(buf);
-        printLCD(" i/s");
+        printfLCD("Dir:%c S:%d%s", dirChar, encoderState.speed, "i/s");
     }
 }
 
@@ -78,13 +64,13 @@ ScreenId updateScreenEncoderTTLTest() {
     // Переключение режима Up/Down
     if (clickUpButton()) {
         displayMode = (displayMode == ENCODER_DISPLAY_DIAGNOSTICS ? ENCODER_DISPLAY_POSITION_SPEED : ENCODER_DISPLAY_DIAGNOSTICS);
-        Serial.println(displayMode);
+        clearLCD();
         drawEncoderTestScreen();
         lastDrawTime = millis();
     }
     if (clickDownButton()) {
         displayMode = (displayMode == ENCODER_DISPLAY_DIAGNOSTICS ? ENCODER_DISPLAY_POSITION_SPEED : ENCODER_DISPLAY_DIAGNOSTICS);
-        Serial.println(displayMode);
+        clearLCD();
         drawEncoderTestScreen();
         lastDrawTime = millis();
     }

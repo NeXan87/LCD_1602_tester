@@ -12,7 +12,7 @@ struct EncoderState {
     volatile bool bEverHigh;          // Был ли сигнал B высоким
     volatile bool rPresent;           // Наличие сигнала R (индекс)
     volatile unsigned long errors;    // Количество ошибок (пропуски импульсов)
-    volatile uint8_t lastState;       // Последнее состояние A/B
+    volatile int lastState;           // Последнее состояние A/B
 };
 
 // Инициализация драйвера энкодера

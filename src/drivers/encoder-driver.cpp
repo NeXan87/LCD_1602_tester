@@ -4,48 +4,42 @@
 
 #include "config.h"
 
-// Пины энкодера
-static uint8_t pinA, pinB, pinR;
 static EncoderState* encoderState;
 
-// Прерывание для A
-void encoderAInterrupt() {
-    uint8_t a = digitalRead(pinA);
-    uint8_t b = digitalRead(pinB);
-    uint8_t state = (a << 1) | b;
+// Таблица переходов для квадратурного энкодера
+// Индекс: [prevA prevB currA currB] → шаг
+static const int8_t QUADRATURE_TABLE[16] = {
+    // prev=00
+    0, -1, 1, 0,  // curr=00,01,10,11
+    // prev=01
+    1, 0, 0, -1,  // curr=00,01,10,11
+    // prev=10
+    -1, 0, 0, 1,  // curr=00,01,10,11
+    // prev=11
+    0, 1, -1, 0  // curr=00,01,10,11
+};
 
-    if (a) encoderState->aEverHigh = true;
-    if (b) encoderState->bEverHigh = true;
+void encoderInterrupt() {
+    int a = digitalRead(ENCODER_PIN_A);
+    int b = digitalRead(ENCODER_PIN_B);
+    int currentState = (a << 1) | b;
+    int prevState = encoderState->lastState;
 
-    // Определение направления и позиции
-    static uint8_t prevState = 0;
-    if (prevState != state) {
-        // Квадратурная логика
-        if ((prevState == 0b00 && state == 0b01) ||
-            (prevState == 0b01 && state == 0b11) ||
-            (prevState == 0b11 && state == 0b10) ||
-            (prevState == 0b10 && state == 0b00)) {
-            encoderState->position++;
-            encoderState->direction = 1;  // CW
-        } else if ((prevState == 0b00 && state == 0b10) ||
-                   (prevState == 0b10 && state == 0b11) ||
-                   (prevState == 0b11 && state == 0b01) ||
-                   (prevState == 0b01 && state == 0b00)) {
-            encoderState->position--;
-            encoderState->direction = -1;  // CCW
-        } else {
-            // Пропуск импульса
-            encoderState->errors++;
-        }
-        prevState = state;
+    // Формируем индекс: 4 бита = [prev][curr]
+    int index = (prevState << 2) | currentState;
+    int8_t step = QUADRATURE_TABLE[index];
+
+    if (step != 0) {
+        encoderState->position += step;
+        encoderState->direction = (step > 0) ? 1 : -1;
         encoderState->lastTime = millis();
-    }
-}
+        encoderState->lastState = currentState;
 
-// Прерывание для B (опционально, но для полноты)
-void encoderBInterrupt() {
-    // Аналогично, но поскольку A уже обрабатывает, можно оставить пустым или дублировать логику
-    encoderAInterrupt();
+        if (a) encoderState->aEverHigh = true;
+        if (b) encoderState->bEverHigh = true;
+    } else {
+        encoderState->errors++;
+    }
 }
 
 void initEncoder(EncoderState* state) {
@@ -56,21 +50,21 @@ void initEncoder(EncoderState* state) {
     pinMode(ENCODER_PIN_C_R, INPUT);
 
     // Прерывания на rising/falling для A и B
-    attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A), encoderAInterrupt, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B), encoderBInterrupt, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A), encoderInterrupt, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B), encoderInterrupt, CHANGE);
     resetEncoder(state);
 }
 
 void updateEncoder(EncoderState* state) {
     // Проверка R
-    state->rPresent = digitalRead(pinR) == HIGH;
+    state->rPresent = digitalRead(ENCODER_PIN_C_R) == HIGH;
 
     // Расчёт скорости (имп/сек)
     static unsigned long lastPosTime = 0;
     static long lastPos = 0;
     unsigned long now = millis();
     if (now - lastPosTime >= ENCODER_SPEED_TIME_MS) {
-        long deltaPos = abs(state->position - lastPos);
+        int deltaPos = abs(state->position - lastPos);
         state->speed = deltaPos;
         lastPos = state->position;
         lastPosTime = now;
