@@ -29,7 +29,7 @@ void drawMenuItem(uint8_t col, uint8_t row, const char* text, bool isSelected) {
     } else {
         printLCD(" ");
     }
-    printLCD(text);
+    printfLCD("%-15s", text);
 }
 
 void drawOnOff(IsEnableId isEnabled, const char* title) {

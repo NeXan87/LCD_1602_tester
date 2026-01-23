@@ -6,10 +6,6 @@
 #include "utils/lcd-helpers.h"
 
 void drawSubMenu(const char* title, const char* itemText, bool isSelected, uint8_t row = 1) {
-    clearLCD();
-    setCursorLCD(0, 0);
-    printLCD(title);
-
     drawMenuItem(0, row, itemText, isSelected);
 }
 
@@ -38,6 +34,8 @@ ScreenId updateSubMenu(ScreenSubMenu* menu) {
             menu->initFunc();
         }
 
+        setCursorLCD(0, 0);
+        printLCD(menu->title);
         drawSubMenu(menu->title, menu->items[menu->selectedIndex], true);
     }
 

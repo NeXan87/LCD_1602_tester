@@ -24,6 +24,7 @@ bool isScreenMenuMoveUp(ScreenMenu* menu, uint8_t lcdRows) {
         menu->selectedIndex--;
         if (menu->selectedIndex < menu->topIndex) {
             menu->topIndex = menu->selectedIndex;
+            clearLCD();
         }
         return true;
     }
@@ -35,6 +36,7 @@ bool isScreenMenuMoveDown(ScreenMenu* menu, uint8_t lcdRows) {
         menu->selectedIndex++;
         if (menu->selectedIndex >= menu->topIndex + (int)lcdRows) {
             menu->topIndex = menu->selectedIndex - (lcdRows - 1);
+            clearLCD();
         }
         return true;
     }
@@ -72,7 +74,6 @@ ScreenId updateScreenMenu(ScreenMenu* menu) {
     bool isHoldChanged = handleHoldNavigation(isDefaultStepCallback, menu);
 
     if (isChanged || isHoldChanged) {
-        clearLCD();
         drawMenu(menu, LCD_ROWS);
     }
 
