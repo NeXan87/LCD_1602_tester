@@ -69,7 +69,7 @@ ScreenId updateScreenMenu(ScreenMenu* menu) {
         isChanged = isScreenMenuMoveDown(menu, LCD_ROWS);
     }
 
-    bool isHoldChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), isDefaultStepCallback, menu);
+    bool isHoldChanged = handleHoldNavigation(isDefaultStepCallback, menu);
 
     if (isChanged || isHoldChanged) {
         clearLCD();

@@ -54,7 +54,7 @@ ScreenId updateSubMenu(ScreenSubMenu* menu) {
         }
     }
 
-    bool isHoldChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), isSubMenuStepCallback, menu);
+    bool isHoldChanged = handleHoldNavigation(isSubMenuStepCallback, menu);
 
     if (isChanged || isHoldChanged) {
         drawSubMenu(menu->title, menu->items[menu->selectedIndex], true);

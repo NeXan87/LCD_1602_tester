@@ -49,7 +49,7 @@ ScreenId updateParamEditor(ParamEditor* editor) {
         }
     }
 
-    handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), paramEditorStepCallback, editor, STEP_INTERVAL_FAST_MS);
+    handleHoldNavigation(paramEditorStepCallback, editor, STEP_INTERVAL_FAST_MS);
 
     if (clickLeftButton()) {
         applyOriginalValue(editor);

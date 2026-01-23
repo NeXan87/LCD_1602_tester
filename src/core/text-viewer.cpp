@@ -61,11 +61,12 @@ ScreenId updateTextViewer(TextViewer* viewer, ScreenId exitScreen) {
     if (clickUpButton()) {
         isChanged = isTextViewMoveUp(viewer);
     }
+
     if (clickDownButton()) {
         isChanged = isTextViewMoveDown(viewer);
     }
 
-    bool isHoldChanged = handleHoldNavigation(isUpButtonPressed(), isDownButtonPressed(), isDefaultStepCallback, viewer, STEP_INTERVAL_FAST_MS);
+    bool isHoldChanged = handleHoldNavigation(isDefaultStepCallback, viewer, STEP_INTERVAL_FAST_MS);
 
     if (isChanged || isHoldChanged) {
         clearLCD();
