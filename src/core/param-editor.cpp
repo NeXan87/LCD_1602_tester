@@ -11,11 +11,11 @@ static void applyOriginalValue(ParamEditor* editor) {
 
 static bool paramEditorStepCallback(bool isUp, void* userData) {
     ParamEditor* editor = (ParamEditor*)userData;
-    bool res = editor->stepHandler(editor->currentValue, isUp, editor->stepContext);
-    if (res) {
+    bool isChanged = editor->stepHandler(editor->currentValue, isUp, editor->stepContext);
+    if (isChanged) {
         editor->drawHandler(editor->currentValue, editor->title);
     }
-    return res;
+    return isChanged;
 }
 
 ScreenId updateParamEditor(ParamEditor* editor) {
@@ -31,13 +31,20 @@ ScreenId updateParamEditor(ParamEditor* editor) {
         editor->isInitialized = true;
     }
 
+    bool isChanged = false;
+
     if (clickUpButton()) {
-        if (editor->stepHandler(editor->currentValue, true, editor->stepContext)) {
+        isChanged = editor->stepHandler(editor->currentValue, true, editor->stepContext);
+
+        if (isChanged) {
             editor->drawHandler(editor->currentValue, editor->title);
         }
     }
+
     if (clickDownButton()) {
-        if (editor->stepHandler(editor->currentValue, false, editor->stepContext)) {
+        isChanged = editor->stepHandler(editor->currentValue, false, editor->stepContext);
+
+        if (isChanged) {
             editor->drawHandler(editor->currentValue, editor->title);
         }
     }

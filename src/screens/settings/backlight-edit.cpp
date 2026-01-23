@@ -6,13 +6,14 @@
 #include "storage/eeprom2.h"
 #include "utils/lcd-helpers.h"
 
-// Конкретные реализации
 static void getBrightness(void* out) {
     *(int*)out = getBacklightPercentEeprom();
 }
+
 static void saveBrightness(const void* value) {
     setBacklightPercentEeprom(*(const int*)value);
 }
+
 static void applyBrightness(const void* value) {
     setBacklightPercentSmooth(*(const int*)value);
 }
@@ -35,14 +36,12 @@ static bool stepBrightness(void* value, bool isUp, const void* ctx) {
     }
     return false;
 }
+
 static void drawBrightness(const void* value, const char* title) {
     drawNumericEditor(title, *(const int*)value, NUM_WIDTH_3, "%");
 }
 
-// Контекст шага
-static const int BRIGHTNESS_STEP = 10;
-
-// Состояние редактора
+static int BRIGHTNESS_STEP = 10;
 static int g_currentBrightness;
 static int g_originalBrightness;
 

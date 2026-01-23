@@ -3,18 +3,16 @@
 #include "core/param-editor.h"
 #include "storage/eeprom2.h"
 #include "utils/lcd-helpers.h"
+#include "utils/param-helpers.h"
 
 static void getBatteryEnabled(void* out) {
-    *(IsEnableId*)out = getBatteryEnabledEeprom();  // возвращает IsEnableId
+    *(IsEnableId*)out = getBatteryEnabledEeprom();
 }
+
 static void saveBatteryEnabled(const void* value) {
     setBatteryEnabledEeprom(*(const IsEnableId*)value);
 }
-static bool stepBattery(void* value, bool isUp, const void* ctx) {
-    IsEnableId* val = (IsEnableId*)value;
-    *val = (*val == ON) ? OFF : ON;  // переключение
-    return true;
-}
+
 static void drawBattery(const void* value, const char* title) {
     drawOnOff(*(const IsEnableId*)value, title);
 }
@@ -31,7 +29,7 @@ static ParamEditor g_batteryEditor = {
     .valueSize = sizeof(IsEnableId),
     .getFromStorage = getBatteryEnabled,
     .saveToStorage = saveBatteryEnabled,
-    .stepHandler = stepBattery,
+    .stepHandler = toggleIsEnableIdStep,
     .drawHandler = drawBattery,
     .applyFunc = nullptr,
     .initFunc = nullptr,
