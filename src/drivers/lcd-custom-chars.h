@@ -7,13 +7,22 @@
 typedef enum {
     LCD_CHAR_ARROW_UP,
     LCD_CHAR_ARROW_DOWN,
+} LcdCharArrowsScreenId;
+
+typedef enum {
+    LCD_ENCODER_STATE_00,
+    LCD_ENCODER_STATE_01,
+    LCD_ENCODER_STATE_11,
+    LCD_ENCODER_STATE_10,
+    LCD_ENCODER_STATE_BOTH_11,
     LCD_CHAR_CHECKMARK,
-    LCD_CHAR_RIGHT_ARROW,
-    LCD_CHAR_LEFT_ARROW,
-} LcdCharAboutScreenId;
+} LcdCharEncoderScreenId;
 
 extern const uint8_t arrowUp[8];
 extern const uint8_t arrowDown[8];
+extern const uint8_t encoderState_00[8];
+extern const uint8_t encoderState_01[8];
+extern const uint8_t encoderState_11[8];
+extern const uint8_t encoderState_10[8];
+extern const uint8_t encoderState_BOTH_11[8];
 extern const uint8_t checkmark[8];
-extern const uint8_t rightArrow[8];
-extern const uint8_t leftArrow[8];

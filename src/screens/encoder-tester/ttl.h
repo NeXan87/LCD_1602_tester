@@ -4,7 +4,8 @@
 
 typedef enum {
     ENCODER_DISPLAY_DIAGNOSTICS,
-    ENCODER_DISPLAY_POSITION_SPEED
+    ENCODER_DISPLAY_POSITION_SPEED,
+    ENCODER_DISPLAY_WAVEFORM
 } EncoderDisplayMode;
 
 // Обновление экрана TTL тестера энкодера

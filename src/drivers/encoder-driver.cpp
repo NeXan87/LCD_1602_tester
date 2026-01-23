@@ -86,4 +86,7 @@ void resetEncoder(EncoderState* state) {
     state->rPresent = false;
     state->errors = 0;
     state->lastState = 0;
+    state->historyIndex = 0;
+    memset(state->historyA, 0, sizeof(state->historyA));
+    memset(state->historyB, 0, sizeof(state->historyB));
 }

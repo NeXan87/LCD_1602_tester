@@ -1,5 +1,7 @@
 #include "screens/encoder-tester/ttl.h"
 
+#include <string.h>
+
 #include "drivers/buttons.h"
 #include "drivers/encoder-driver.h"
 #include "drivers/lcd-driver.h"
@@ -36,6 +38,20 @@ static void drawEncoderTestScreen() {
             dirChar = 127;  // left arrow
         }
         printfLCD("Dir:%c S:%d%s", dirChar, encoderState.speed, "i/s");
+    } else if (displayMode == ENCODER_DISPLAY_WAVEFORM) {
+        printLCD("A:");
+        for (uint8_t i = 0; i < 14; i++) {
+            int idx = (encoderState.historyIndex + i) % WAVEFORM_HISTORY_SIZE;
+            writeCharLCD(encoderState.historyA[idx] ? 2 : 0);
+        }
+
+        // Строка 1: сигнал B
+        setCursorLCD(0, 1);
+        printLCD("B:");
+        for (uint8_t i = 0; i < 14; i++) {
+            int idx = (encoderState.historyIndex + i) % WAVEFORM_HISTORY_SIZE;
+            writeCharLCD(encoderState.historyB[idx] ? 2 : 0);
+        }
     }
 }
 
@@ -43,7 +59,7 @@ void initScreenEncoderTTLTest() {
     displayMode = ENCODER_DISPLAY_DIAGNOSTICS;
     lastDrawTime = millis();
     isInitialized = true;
-    initArrowsLCD();
+    initEncoderCharLCD();
     drawEncoderTestScreen();
     initEncoder(&encoderState);
 }
@@ -61,21 +77,13 @@ ScreenId updateScreenEncoderTTLTest() {
         lastDrawTime = now;
     }
 
-    // Переключение режима Up/Down
-    if (clickUpButton()) {
-        displayMode = (displayMode == ENCODER_DISPLAY_DIAGNOSTICS ? ENCODER_DISPLAY_POSITION_SPEED : ENCODER_DISPLAY_DIAGNOSTICS);
-        clearLCD();
-        drawEncoderTestScreen();
-        lastDrawTime = millis();
-    }
-    if (clickDownButton()) {
-        displayMode = (displayMode == ENCODER_DISPLAY_DIAGNOSTICS ? ENCODER_DISPLAY_POSITION_SPEED : ENCODER_DISPLAY_DIAGNOSTICS);
+    if (clickUpButton() || clickDownButton()) {
+        displayMode = (EncoderDisplayMode)((displayMode + 1) % 3);
         clearLCD();
         drawEncoderTestScreen();
         lastDrawTime = millis();
     }
 
-    // Select для сброса
     if (clickSelectButton()) {
         isInitialized = false;
         resetEncoder(&encoderState);
@@ -83,7 +91,6 @@ ScreenId updateScreenEncoderTTLTest() {
         lastDrawTime = millis();
     }
 
-    // Left для выхода
     if (clickLeftButton()) {
         clearLCD();
         isInitialized = false;

@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#define WAVEFORM_HISTORY_SIZE 16
+
 // Структура состояния энкодера
 struct EncoderState {
     volatile long position;           // Текущая позиция
@@ -13,6 +15,9 @@ struct EncoderState {
     volatile bool rPresent;           // Наличие сигнала R (индекс)
     volatile unsigned long errors;    // Количество ошибок (пропуски импульсов)
     volatile int lastState;           // Последнее состояние A/B
+    int historyA[WAVEFORM_HISTORY_SIZE];
+    int historyB[WAVEFORM_HISTORY_SIZE];
+    int historyIndex;
 };
 
 // Инициализация драйвера энкодера
