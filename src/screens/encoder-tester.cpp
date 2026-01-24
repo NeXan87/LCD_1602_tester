@@ -7,7 +7,7 @@
 #include "utils/helpers.h"
 
 static const char* const ENCODER_ITEMS[] = {
-    "TTL Encoder",
+    "TTL",
 };
 
 static ScreenId encoderItemToScreen(int index) {
