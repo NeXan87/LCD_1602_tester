@@ -19,7 +19,7 @@ static void drawEncoderTestScreen() {
         // Строка 0: A:OK B:OK R:✓
         const char* aStatus = encoderState.aEverHigh ? "OK" : "NO";
         const char* bStatus = encoderState.bEverHigh ? "OK" : "NO";
-        const char* rStatus = encoderState.rPresent ? "\x02" : " ";
+        const char* rStatus = encoderState.rPresent ? "\x04" : " ";
         printfLCD("A:%s B:%s R:%s", aStatus, bStatus, rStatus);
 
         setCursorLCD(0, 1);
@@ -40,17 +40,16 @@ static void drawEncoderTestScreen() {
         printfLCD("Dir:%c S:%d%s", dirChar, encoderState.speed, "i/s");
     } else if (displayMode == ENCODER_DISPLAY_WAVEFORM) {
         printLCD("A:");
-        for (uint8_t i = 0; i < 14; i++) {
+        for (uint8_t i = 0; i < WAVEFORM_HISTORY_SIZE; i++) {
             int idx = (encoderState.historyIndex + i) % WAVEFORM_HISTORY_SIZE;
-            writeCharLCD(encoderState.historyA[idx] ? 2 : 0);
+            writeCharLCD(encoderState.historyA[idx]);
         }
 
-        // Строка 1: сигнал B
         setCursorLCD(0, 1);
         printLCD("B:");
-        for (uint8_t i = 0; i < 14; i++) {
+        for (uint8_t i = 0; i < WAVEFORM_HISTORY_SIZE; i++) {
             int idx = (encoderState.historyIndex + i) % WAVEFORM_HISTORY_SIZE;
-            writeCharLCD(encoderState.historyB[idx] ? 2 : 0);
+            writeCharLCD(encoderState.historyB[idx]);
         }
     }
 }
@@ -85,15 +84,14 @@ ScreenId updateScreenEncoderTTLTest() {
     }
 
     if (clickSelectButton()) {
-        isInitialized = false;
         resetEncoder(&encoderState);
-        drawEncoderTestScreen();
         lastDrawTime = millis();
     }
 
     if (clickLeftButton()) {
         clearLCD();
         isInitialized = false;
+        resetEncoder(&encoderState);
         return SCREEN_ENCODER_TEST;
     }
 

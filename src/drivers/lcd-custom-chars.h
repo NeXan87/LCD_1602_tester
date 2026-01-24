@@ -14,7 +14,6 @@ typedef enum {
     LCD_ENCODER_STATE_01,
     LCD_ENCODER_STATE_11,
     LCD_ENCODER_STATE_10,
-    LCD_ENCODER_STATE_BOTH_11,
     LCD_CHAR_CHECKMARK,
 } LcdCharEncoderScreenId;
 
@@ -24,5 +23,4 @@ extern const uint8_t encoderState_00[8];
 extern const uint8_t encoderState_01[8];
 extern const uint8_t encoderState_11[8];
 extern const uint8_t encoderState_10[8];
-extern const uint8_t encoderState_BOTH_11[8];
 extern const uint8_t checkmark[8];

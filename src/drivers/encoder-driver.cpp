@@ -3,6 +3,7 @@
 #include <Arduino.h>
 
 #include "config.h"
+#include "drivers/lcd-custom-chars.h"
 
 static EncoderState* encoderState;
 
@@ -28,6 +29,33 @@ void encoderInterrupt() {
     // Формируем индекс: 4 бита = [prev][curr]
     int index = (prevState << 2) | currentState;
     int8_t step = QUADRATURE_TABLE[index];
+
+    encoderState->historyA[encoderState->historyIndex] = a;
+    encoderState->historyB[encoderState->historyIndex] = b;
+    encoderState->historyIndex = (encoderState->historyIndex + 1) % WAVEFORM_HISTORY_SIZE;
+
+    int symbolA;
+    if (a == 0) {
+        symbolA = (encoderState->prevA == 0) ? LCD_ENCODER_STATE_00 : LCD_ENCODER_STATE_10;
+    } else {
+        symbolA = (encoderState->prevA == 0) ? LCD_ENCODER_STATE_01 : LCD_ENCODER_STATE_11;
+    }
+
+    // Определяем символ для B
+    int symbolB;
+    if (b == 0) {
+        symbolB = (encoderState->prevB == 0) ? LCD_ENCODER_STATE_00 : LCD_ENCODER_STATE_10;
+    } else {
+        symbolB = (encoderState->prevB == 0) ? LCD_ENCODER_STATE_01 : LCD_ENCODER_STATE_11;
+    }
+
+    // Сохраняем символы (не уровни!)
+    encoderState->historyA[encoderState->historyIndex] = symbolA;
+    encoderState->historyB[encoderState->historyIndex] = symbolB;
+
+    encoderState->historyIndex = (encoderState->historyIndex + 1) % WAVEFORM_HISTORY_SIZE;
+    encoderState->prevA = a;
+    encoderState->prevB = b;
 
     if (step != 0) {
         encoderState->position += step;
@@ -57,13 +85,16 @@ void initEncoder(EncoderState* state) {
 
 void updateEncoder(EncoderState* state) {
     // Проверка R
-    uint8_t a = digitalRead(ENCODER_PIN_A);
-    uint8_t b = digitalRead(ENCODER_PIN_B);
-    state->rPresent = digitalRead(ENCODER_PIN_C_R) == HIGH;
+    bool isRHigh = (digitalRead(ENCODER_PIN_C_R) == HIGH);
 
-    state->historyA[state->historyIndex] = a;
-    state->historyB[state->historyIndex] = b;
-    state->historyIndex = (state->historyIndex + 1) % WAVEFORM_HISTORY_SIZE;
+    if (isRHigh) {
+        state->rPresent = true;
+        state->lastRHighTime = millis();
+    } else {
+        if (millis() - state->lastRHighTime > ENCODER_LAST_R_HIGH_TIME) {
+            state->rPresent = false;
+        }
+    }
 
     // Расчёт скорости (имп/сек)
     static unsigned long lastPosTime = 0;
@@ -92,7 +123,10 @@ void resetEncoder(EncoderState* state) {
     state->rPresent = false;
     state->errors = 0;
     state->lastState = 0;
+    state->lastRHighTime = 0;
     state->historyIndex = 0;
     memset(state->historyA, 0, sizeof(state->historyA));
     memset(state->historyB, 0, sizeof(state->historyB));
+    state->prevA = 0;
+    state->prevB = 0;
 }

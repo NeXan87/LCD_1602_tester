@@ -2,21 +2,24 @@
 
 #include <Arduino.h>
 
-#define WAVEFORM_HISTORY_SIZE 16
+#define WAVEFORM_HISTORY_SIZE 14
 
 // Структура состояния энкодера
 struct EncoderState {
-    volatile long position;           // Текущая позиция
-    volatile int direction;           // Направление: 1 - CW, -1 - CCW, 0 - стоп
-    volatile unsigned long lastTime;  // Время последнего изменения
-    volatile int speed;               // Скорость в имп/сек
-    volatile bool aEverHigh;          // Был ли сигнал A высоким
-    volatile bool bEverHigh;          // Был ли сигнал B высоким
-    volatile bool rPresent;           // Наличие сигнала R (индекс)
-    volatile unsigned long errors;    // Количество ошибок (пропуски импульсов)
-    volatile int lastState;           // Последнее состояние A/B
-    int historyA[WAVEFORM_HISTORY_SIZE];
-    int historyB[WAVEFORM_HISTORY_SIZE];
+    volatile unsigned long lastRHighTime;  // Сбрасываем rPresent, если прошло >t мс с последнего HIGH
+    volatile long position;                // Текущая позиция
+    volatile int direction;                // Направление: 1 - CW, -1 - CCW, 0 - стоп
+    volatile unsigned long lastTime;       // Время последнего изменения
+    volatile int speed;                    // Скорость в имп/сек
+    volatile bool aEverHigh;               // Был ли сигнал A высоким
+    volatile bool bEverHigh;               // Был ли сигнал B высоким
+    volatile bool rPresent;                // Наличие сигнала R (индекс)
+    volatile unsigned long errors;         // Количество ошибок (пропуски импульсов)
+    volatile int lastState;                // Последнее состояние A/B
+    int historyA[WAVEFORM_HISTORY_SIZE];   // текущие уровни A
+    int historyB[WAVEFORM_HISTORY_SIZE];   // текущие уровни B
+    int prevA;                             // предыдущее значение A
+    int prevB;                             // предыдущее значение B
     int historyIndex;
 };
 

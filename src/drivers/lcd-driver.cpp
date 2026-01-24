@@ -57,11 +57,10 @@ void initArrowsLCD() {
 }
 
 void initEncoderCharLCD() {
-    lcd.createChar(LCD_ENCODER_STATE_00, (uint8_t*)encoderState_00);            // 00 → пусто (нижняя линия)
-    lcd.createChar(LCD_ENCODER_STATE_01, (uint8_t*)encoderState_01);            // 01 → правый импульс
-    lcd.createChar(LCD_ENCODER_STATE_11, (uint8_t*)encoderState_11);            // 11 → верхняя линия
-    lcd.createChar(LCD_ENCODER_STATE_10, (uint8_t*)encoderState_10);            // 10 → левый импульс
-    lcd.createChar(LCD_ENCODER_STATE_BOTH_11, (uint8_t*)encoderState_BOTH_11);  // когда предыдущий и следующий импульсы HIGH
+    lcd.createChar(LCD_ENCODER_STATE_00, (uint8_t*)encoderState_00);  // 00 → пусто (нижняя линия)
+    lcd.createChar(LCD_ENCODER_STATE_01, (uint8_t*)encoderState_01);  // 01 → начало импульса
+    lcd.createChar(LCD_ENCODER_STATE_11, (uint8_t*)encoderState_11);  // 11 → верхняя линия
+    lcd.createChar(LCD_ENCODER_STATE_10, (uint8_t*)encoderState_10);  // 10 → конец импульса
     lcd.createChar(LCD_CHAR_CHECKMARK, (uint8_t*)checkmark);
 }
 
