@@ -27,7 +27,7 @@ static void drawEncoderTestScreen() {
         printfLCD("ERR:%lu", encoderState.errors);
     } else if (displayMode == ENCODER_DISPLAY_POSITION_SPEED) {
         // Строка 0: Pos:12345
-        printfLCD("Pos:%ld", encoderState.position);
+        printfLCD("Pos:%-12ld", encoderState.position);
 
         setCursorLCD(0, 1);
         // Строка 1: Dir:▶ S:100 i/s
@@ -37,19 +37,19 @@ static void drawEncoderTestScreen() {
         } else if (encoderState.direction == -1) {
             dirChar = 127;  // left arrow
         }
-        printfLCD("Dir:%c S:%d%s", dirChar, encoderState.speed, "i/s");
+        printfLCD("Dir:%c S:%di/s     ", dirChar, encoderState.speed);
     } else if (displayMode == ENCODER_DISPLAY_WAVEFORM) {
         printLCD("A:");
         for (uint8_t i = 0; i < WAVEFORM_HISTORY_SIZE; i++) {
             int idx = (encoderState.historyIndex + i) % WAVEFORM_HISTORY_SIZE;
-            writeCharLCD(encoderState.historyA[idx]);
+            writeCharLCD((uint8_t)encoderState.historyA[idx]);
         }
 
         setCursorLCD(0, 1);
         printLCD("B:");
         for (uint8_t i = 0; i < WAVEFORM_HISTORY_SIZE; i++) {
             int idx = (encoderState.historyIndex + i) % WAVEFORM_HISTORY_SIZE;
-            writeCharLCD(encoderState.historyB[idx]);
+            writeCharLCD((uint8_t)encoderState.historyB[idx]);
         }
     }
 }

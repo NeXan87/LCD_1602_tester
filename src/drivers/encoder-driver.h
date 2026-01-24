@@ -10,6 +10,8 @@ struct EncoderState {
     volatile long position;                // Текущая позиция
     volatile int direction;                // Направление: 1 - CW, -1 - CCW, 0 - стоп
     volatile unsigned long lastTime;       // Время последнего изменения
+    volatile unsigned long speedLastTime;  // Время последнего изменения
+    volatile long int speedLastPosition;   // Скорость в имп/сек
     volatile int speed;                    // Скорость в имп/сек
     volatile bool aEverHigh;               // Был ли сигнал A высоким
     volatile bool bEverHigh;               // Был ли сигнал B высоким
