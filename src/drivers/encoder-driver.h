@@ -18,6 +18,12 @@ struct EncoderState {
     volatile bool rPresent;                // Наличие сигнала R (индекс)
     volatile unsigned long errors;         // Количество ошибок (пропуски импульсов)
     volatile int lastState;                // Последнее состояние A/B
+    volatile long indexPulseCount;         // Счётчик импульсов между R-метками
+    volatile bool inIndexCycle;            // Флаг: идёт подсчёт (R был активирован)
+    volatile int indexDirection;           // Направление в начале цикла
+    volatile bool rRisingEdge;             // Флаг: обнаружен фронт R
+    volatile uint8_t lastRState;           // Предыдущее состояние R (0 или 1)
+    volatile long indexLastPosition;       // Позиция в начале цикла
     int historyA[WAVEFORM_HISTORY_SIZE];   // текущие уровни A
     int historyB[WAVEFORM_HISTORY_SIZE];   // текущие уровни B
     int prevA;                             // предыдущее значение A
