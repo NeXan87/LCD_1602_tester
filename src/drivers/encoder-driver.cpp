@@ -20,26 +20,26 @@ static const int8_t QUADRATURE_TABLE[16] = {
     0, 1, -1, 0  // curr=00,01,10,11
 };
 
-static void updateEncoderButtonR(EncoderState* state) {
+static void updateEncoderButtonR(EncoderState* encoder) {
     bool isRHigh = (digitalRead(ENCODER_PIN_R) == HIGH);
 
     if (isRHigh) {
-        state->rPresent = true;
-        state->lastRHighTime = millis();
+        encoder->rPresent = true;
+        encoder->lastRHighTime = millis();
     } else {
-        if (millis() - state->lastRHighTime > ENCODER_LAST_R_HIGH_TIME) {
-            state->rPresent = false;
+        if (millis() - encoder->lastRHighTime > ENCODER_LAST_R_HIGH_TIME) {
+            encoder->rPresent = false;
         }
     }
 }
 
-static void updateEncoderSpeed(EncoderState* state) {
+static void updateEncoderSpeed(EncoderState* encoder) {
     unsigned long now = millis();
-    if (now - state->speedLastTime >= ENCODER_SPEED_TIME_MS) {
-        int deltaPos = abs(state->position - state->speedLastPosition);
-        state->speed = deltaPos;
-        state->speedLastPosition = state->position;
-        state->speedLastTime = now;
+    if (now - encoder->speedLastTime >= ENCODER_SPEED_TIME_MS) {
+        int deltaPos = abs(encoder->position - encoder->speedLastPosition);
+        encoder->speed = deltaPos;
+        encoder->speedLastPosition = encoder->position;
+        encoder->speedLastTime = now;
     }
 }
 
@@ -51,15 +51,15 @@ static int getWaveformSymbol(int current, int prev) {
     }
 }
 
-static void updateWaveformHistory(EncoderState* state, int a, int b) {
-    int symbolA = getWaveformSymbol(a, state->prevA);
-    int symbolB = getWaveformSymbol(b, state->prevB);
+static void updateWaveformHistory(EncoderState* encoder, int a, int b) {
+    int symbolA = getWaveformSymbol(a, encoder->prevA);
+    int symbolB = getWaveformSymbol(b, encoder->prevB);
 
-    state->historyA[state->historyIndex] = symbolA;
-    state->historyB[state->historyIndex] = symbolB;
-    state->historyIndex = (state->historyIndex + 1) % WAVEFORM_HISTORY_SIZE;
-    state->prevA = a;
-    state->prevB = b;
+    encoder->historyA[encoder->historyIndex] = symbolA;
+    encoder->historyB[encoder->historyIndex] = symbolB;
+    encoder->historyIndex = (encoder->historyIndex + 1) % WAVEFORM_HISTORY_SIZE;
+    encoder->prevA = a;
+    encoder->prevB = b;
 }
 
 void encoderInterrupt() {
@@ -85,8 +85,8 @@ void encoderInterrupt() {
     }
 }
 
-void initEncoder(EncoderState* state) {
-    encoderState = state;
+void initEncoder(EncoderState* encoder) {
+    encoderState = encoder;
 
     pinMode(ENCODER_PIN_A, INPUT);
     pinMode(ENCODER_PIN_B, INPUT);
@@ -94,34 +94,34 @@ void initEncoder(EncoderState* state) {
 
     attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A), encoderInterrupt, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B), encoderInterrupt, CHANGE);
-    resetEncoder(state);
+    resetEncoder(encoder);
 }
 
-void updateEncoder(EncoderState* state) {
-    updateEncoderButtonR(state);
-    updateEncoderSpeed(state);
+void updateEncoder(EncoderState* encoder) {
+    updateEncoderButtonR(encoder);
+    updateEncoderSpeed(encoder);
 
-    if (millis() - state->lastTime > ENCODER_NO_CHANGE_TIME_MS) {
-        state->direction = 0;
+    if (millis() - encoder->lastTime > ENCODER_NO_CHANGE_TIME_MS) {
+        encoder->direction = 0;
     }
 }
 
-void resetEncoder(EncoderState* state) {
-    state->position = 0;
-    state->direction = 0;
-    state->lastTime = millis();
-    state->speedLastTime = millis();
-    state->speedLastPosition = 0;
-    state->speed = 0;
-    state->aEverHigh = false;
-    state->bEverHigh = false;
-    state->rPresent = false;
-    state->errors = 0;
-    state->lastState = 0;
-    state->lastRHighTime = 0;
-    state->historyIndex = 0;
-    state->prevA = 0;
-    state->prevB = 0;
+void resetEncoder(EncoderState* encoder) {
+    encoder->position = 0;
+    encoder->direction = 0;
+    encoder->lastTime = millis();
+    encoder->speedLastTime = millis();
+    encoder->speedLastPosition = 0;
+    encoder->speed = 0;
+    encoder->aEverHigh = false;
+    encoder->bEverHigh = false;
+    encoder->rPresent = false;
+    encoder->errors = 0;
+    encoder->lastState = 0;
+    encoder->lastRHighTime = 0;
+    encoder->historyIndex = 0;
+    encoder->prevA = 0;
+    encoder->prevB = 0;
 
     // --- Инициализация осциллограммы ---
     int a = digitalRead(ENCODER_PIN_A);
@@ -130,7 +130,7 @@ void resetEncoder(EncoderState* state) {
     int symbolB = getWaveformSymbol(b, b);
 
     for (uint8_t i = 0; i < WAVEFORM_HISTORY_SIZE; i++) {
-        state->historyA[i] = symbolA;
-        state->historyB[i] = symbolB;
+        encoder->historyA[i] = symbolA;
+        encoder->historyB[i] = symbolB;
     }
 }
