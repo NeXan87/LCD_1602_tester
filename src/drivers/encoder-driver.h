@@ -32,10 +32,13 @@ struct EncoderState {
 };
 
 // Инициализация драйвера энкодера
-void initEncoder(EncoderState* encoder);
+void initEncoder(EncoderState* state);
+
+// Отключение энкодера
+void detachEncoder();
 
 // Обновление состояния энкодера (вызывать в loop)
-void updateEncoder(EncoderState* encoder);
+void updateEncoder(EncoderState* state);
 
 // Сброс состояния
-void resetEncoder(EncoderState* encoder);
+void resetEncoder(EncoderState* state);

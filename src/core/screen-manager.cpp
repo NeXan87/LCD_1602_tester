@@ -45,7 +45,7 @@ static ScreenId updateScreen(ScreenId id) {
 
         // ───────────── Уровень 2: Тесты энкодеров ─────────────
         case SCREEN_ENCODER_TEST_TTL:
-            return updateScreenEncoderTTLTest();
+            return updateScreenEncoderTTL();
 
         default:
             return SCREEN_MAIN_MENU;

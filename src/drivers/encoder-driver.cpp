@@ -20,64 +20,64 @@ static const int8_t QUADRATURE_TABLE[16] = {
     0, 1, -1, 0  // curr=00,01,10,11
 };
 
-static void updateEncoderButtonR(EncoderState* encoder) {
+static void updateEncoderButtonR(EncoderState* state) {
     bool isRHigh = (digitalRead(ENCODER_PIN_R) == HIGH);
 
     if (isRHigh) {
-        encoder->rPresent = true;
-        encoder->lastRHighTime = millis();
+        state->rPresent = true;
+        state->lastRHighTime = millis();
     } else {
-        if (millis() - encoder->lastRHighTime > ENCODER_LAST_R_HIGH_TIME) {
-            encoder->rPresent = false;
+        if (millis() - state->lastRHighTime > ENCODER_LAST_R_HIGH_TIME) {
+            state->rPresent = false;
         }
     }
 
     uint8_t currentR = isRHigh ? 1 : 0;
-    if (currentR == 1 && encoder->lastRState == 0) {
-        encoder->rRisingEdge = true;
+    if (currentR == 1 && state->lastRState == 0) {
+        state->rRisingEdge = true;
     }
-    encoder->lastRState = currentR;
+    state->lastRState = currentR;
 }
 
-static void updateEncoderSpeed(EncoderState* encoder) {
+static void updateEncoderSpeed(EncoderState* state) {
     unsigned long now = millis();
-    if (now - encoder->speedLastTime >= ENCODER_SPEED_TIME_MS) {
-        int deltaPos = abs(encoder->position - encoder->speedLastPosition);
-        encoder->speed = deltaPos;
-        encoder->speedLastPosition = encoder->position;
-        encoder->speedLastTime = now;
+    if (now - state->speedLastTime >= ENCODER_SPEED_TIME_MS) {
+        int deltaPos = abs(state->position - state->speedLastPosition);
+        state->speed = deltaPos;
+        state->speedLastPosition = state->position;
+        state->speedLastTime = now;
     }
 }
 
-static void updateIndexPulseCount(EncoderState* encoder) {
+static void updateIndexPulseCount(EncoderState* state) {
     // Запуск нового цикла по фронту R
-    if (encoder->rRisingEdge) {
-        encoder->rRisingEdge = false;  // сброс флага
+    if (state->rRisingEdge) {
+        state->rRisingEdge = false;  // сброс флага
 
-        if (encoder->inIndexCycle) {
+        if (state->inIndexCycle) {
             // Предыдущий цикл завершён — можно сохранить результат (опционально)
             // Например: encoder->lastIndexPulseCount = encoder->indexPulseCount;
         }
 
         // Начало нового цикла
-        encoder->inIndexCycle = true;
-        encoder->indexDirection = encoder->direction;
-        encoder->indexLastPosition = encoder->position;
-        encoder->indexPulseCount = 0;
+        state->inIndexCycle = true;
+        state->indexDirection = state->direction;
+        state->indexLastPosition = state->position;
+        state->indexPulseCount = 0;
     }
 
     // Сброс при смене направления во время цикла
-    if (encoder->inIndexCycle &&
-        encoder->direction != 0 &&
-        encoder->direction != encoder->indexDirection) {
-        encoder->inIndexCycle = false;
-        encoder->indexPulseCount = 0;
+    if (state->inIndexCycle &&
+        state->direction != 0 &&
+        state->direction != state->indexDirection) {
+        state->inIndexCycle = false;
+        state->indexPulseCount = 0;
     }
 
     // Накопление импульсов
-    if (encoder->inIndexCycle) {
-        encoder->indexPulseCount += abs(encoder->position - encoder->indexLastPosition);
-        encoder->indexLastPosition = encoder->position;
+    if (state->inIndexCycle) {
+        state->indexPulseCount += abs(state->position - state->indexLastPosition);
+        state->indexLastPosition = state->position;
     }
     // Вне цикла — счётчик остаётся последним (или 0), но не сбрасывается автоматически
     // (если нужно сбрасывать — добавьте else { encoder->indexPulseCount = 0; })
@@ -91,15 +91,15 @@ static int getWaveformSymbol(int current, int prev) {
     }
 }
 
-static void updateWaveformHistory(EncoderState* encoder, int a, int b) {
-    int symbolA = getWaveformSymbol(a, encoder->prevA);
-    int symbolB = getWaveformSymbol(b, encoder->prevB);
+static void updateWaveformHistory(EncoderState* state, int a, int b) {
+    int symbolA = getWaveformSymbol(a, state->prevA);
+    int symbolB = getWaveformSymbol(b, state->prevB);
 
-    encoder->historyA[encoder->historyIndex] = symbolA;
-    encoder->historyB[encoder->historyIndex] = symbolB;
-    encoder->historyIndex = (encoder->historyIndex + 1) % WAVEFORM_HISTORY_SIZE;
-    encoder->prevA = a;
-    encoder->prevB = b;
+    state->historyA[state->historyIndex] = symbolA;
+    state->historyB[state->historyIndex] = symbolB;
+    state->historyIndex = (state->historyIndex + 1) % WAVEFORM_HISTORY_SIZE;
+    state->prevA = a;
+    state->prevB = b;
 }
 
 void encoderInterrupt() {
@@ -125,8 +125,8 @@ void encoderInterrupt() {
     }
 }
 
-void initEncoder(EncoderState* encoder) {
-    encoderState = encoder;
+void initEncoder(EncoderState* state) {
+    encoderState = state;
 
     pinMode(ENCODER_PIN_A, INPUT);
     pinMode(ENCODER_PIN_B, INPUT);
@@ -134,41 +134,46 @@ void initEncoder(EncoderState* encoder) {
 
     attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A), encoderInterrupt, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B), encoderInterrupt, CHANGE);
-    resetEncoder(encoder);
+    resetEncoder(state);
 }
 
-void updateEncoder(EncoderState* encoder) {
-    updateEncoderButtonR(encoder);
-    updateEncoderSpeed(encoder);
-    updateIndexPulseCount(encoder);
+void detachEncoder() {
+    detachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A));
+    detachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B));
+}
 
-    if (millis() - encoder->lastTime > ENCODER_NO_CHANGE_TIME_MS) {
-        encoder->direction = 0;
+void updateEncoder(EncoderState* state) {
+    updateEncoderButtonR(state);
+    updateEncoderSpeed(state);
+    updateIndexPulseCount(state);
+
+    if (millis() - state->lastTime > ENCODER_NO_CHANGE_TIME_MS) {
+        state->direction = 0;
     }
 }
 
-void resetEncoder(EncoderState* encoder) {
-    encoder->position = 0;
-    encoder->direction = 0;
-    encoder->lastTime = millis();
-    encoder->speedLastTime = millis();
-    encoder->speedLastPosition = 0;
-    encoder->speed = 0;
-    encoder->aEverHigh = false;
-    encoder->bEverHigh = false;
-    encoder->rPresent = false;
-    encoder->errors = 0;
-    encoder->lastState = 0;
-    encoder->indexPulseCount = 0;
-    encoder->inIndexCycle = false;
-    encoder->indexDirection = 0;
-    encoder->rRisingEdge = false;
-    encoder->lastRState = 0;
-    encoder->indexLastPosition = 0;
-    encoder->lastRHighTime = 0;
-    encoder->historyIndex = 0;
-    encoder->prevA = 0;
-    encoder->prevB = 0;
+void resetEncoder(EncoderState* state) {
+    state->position = 0;
+    state->direction = 0;
+    state->lastTime = millis();
+    state->speedLastTime = millis();
+    state->speedLastPosition = 0;
+    state->speed = 0;
+    state->aEverHigh = false;
+    state->bEverHigh = false;
+    state->rPresent = false;
+    state->errors = 0;
+    state->lastState = 0;
+    state->indexPulseCount = 0;
+    state->inIndexCycle = false;
+    state->indexDirection = 0;
+    state->rRisingEdge = false;
+    state->lastRState = 0;
+    state->indexLastPosition = 0;
+    state->lastRHighTime = 0;
+    state->historyIndex = 0;
+    state->prevA = 0;
+    state->prevB = 0;
 
     // --- Инициализация осциллограммы ---
     int a = digitalRead(ENCODER_PIN_A);
@@ -177,7 +182,7 @@ void resetEncoder(EncoderState* encoder) {
     int symbolB = getWaveformSymbol(b, b);
 
     for (uint8_t i = 0; i < WAVEFORM_HISTORY_SIZE; i++) {
-        encoder->historyA[i] = symbolA;
-        encoder->historyB[i] = symbolB;
+        state->historyA[i] = symbolA;
+        state->historyB[i] = symbolB;
     }
 }
