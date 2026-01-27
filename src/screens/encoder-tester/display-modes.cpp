@@ -22,6 +22,7 @@ void drawDiagnostics(const EncoderState* encoder) {
 }
 
 void drawPositionSpeed(const EncoderState* encoder) {
+    long pulsesPerRev = encoder->indexPulseCount / 4;
     char dirChar = '-';
     if (encoder->direction == 1) {
         dirChar = 126;  // right arrow
@@ -33,7 +34,7 @@ void drawPositionSpeed(const EncoderState* encoder) {
     printfLCD("P:%-6ld D:%c", encoder->position, dirChar);
 
     setCursorLCD(0, 1);
-    printfLCD("I:%-4ld   S:%-4d", encoder->indexPulseCount, encoder->speed);
+    printfLCD("I:%-4ld   S:%-5d", pulsesPerRev, encoder->speed);
 }
 
 void drawWaveform(const EncoderState* encoder) {

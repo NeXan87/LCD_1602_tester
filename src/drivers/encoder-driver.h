@@ -27,6 +27,7 @@ struct EncoderState {
     volatile bool rRisingEdge;             // Обнаружен фронт R
     volatile uint8_t lastRState;           // Предыдущее состояние R (0/1)
     volatile long indexLastPosition;       // Позиция при активации R
+    volatile bool indexPulseCountValid;    // true = подсчёт завершён, значение готово
 
     // === Диагностика TTL-сигналов ===
     volatile bool aEverHigh;        // Был ли A = HIGH

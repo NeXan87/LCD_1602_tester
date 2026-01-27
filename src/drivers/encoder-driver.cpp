@@ -51,23 +51,36 @@ static void updateEncoderSpeed(EncoderState* state) {
 }
 
 static void updateIndexPulseCount(EncoderState* state) {
-    // Запуск нового цикла по фронту R
-    if (state->rRisingEdge) {
-        state->rRisingEdge = false;  // сброс флага
-
-        if (state->inIndexCycle) {
-            // Предыдущий цикл завершён — можно сохранить результат (опционально)
-            // Например: encoder->lastIndexPulseCount = encoder->indexPulseCount;
-        }
-
-        // Начало нового цикла
-        state->inIndexCycle = true;
-        state->indexDirection = state->direction;
-        state->indexLastPosition = state->position;
-        state->indexPulseCount = 0;
+    // Если уже есть валидный результат — ничего не делаем
+    if (state->indexPulseCountValid) {
+        return;
     }
 
-    // Сброс при смене направления во время цикла
+    // Обнаружен фронт R
+    if (state->rRisingEdge) {
+        state->rRisingEdge = false;
+
+        if (!state->inIndexCycle) {
+            // Начало первого цикла
+            state->inIndexCycle = true;
+            state->indexDirection = state->direction;
+            state->indexLastPosition = state->position;
+            state->indexPulseCount = 0;
+        } else {
+            // Завершение цикла: второй фронт R
+            if (state->direction == state->indexDirection && state->direction != 0) {
+                // Успешное завершение
+                state->indexPulseCountValid = true;
+                // indexPulseCount остаётся как есть — это результат
+            } else {
+                // Ошибка: направление изменилось → сброс
+                state->inIndexCycle = false;
+                state->indexPulseCount = 0;
+            }
+        }
+    }
+
+    // Сброс при смене направления
     if (state->inIndexCycle &&
         state->direction != 0 &&
         state->direction != state->indexDirection) {
@@ -75,13 +88,12 @@ static void updateIndexPulseCount(EncoderState* state) {
         state->indexPulseCount = 0;
     }
 
-    // Накопление импульсов
-    if (state->inIndexCycle) {
-        state->indexPulseCount += abs(state->position - state->indexLastPosition);
+    // Накопление импульсов только если цикл активен и результат ещё не получен
+    if (state->inIndexCycle && !state->indexPulseCountValid) {
+        long delta = state->position - state->indexLastPosition;
+        state->indexPulseCount += (delta > 0) ? delta : -delta;
         state->indexLastPosition = state->position;
     }
-    // Вне цикла — счётчик остаётся последним (или 0), но не сбрасывается автоматически
-    // (если нужно сбрасывать — добавьте else { encoder->indexPulseCount = 0; })
 }
 
 static int getWaveformSymbol(int current, int prev) {
@@ -104,8 +116,9 @@ static void updateWaveformHistory(EncoderState* state, int a, int b) {
 }
 
 void encoderInterrupt() {
-    int a = digitalRead(ENCODER_PIN_A);
-    int b = digitalRead(ENCODER_PIN_B);
+    int pins = PIND;
+    int a = (pins >> ENCODER_PIN_A) & 1;
+    int b = (pins >> ENCODER_PIN_B) & 1;
     int currentState = (a << 1) | b;
     int prevState = encoderState->lastState;
     int index = (prevState << 2) | currentState;
@@ -114,7 +127,12 @@ void encoderInterrupt() {
     updateWaveformHistory(encoderState, a, b);
 
     if (step != 0) {
-        encoderState->position += step;
+        long newPos = encoderState->position + step;
+
+        if (newPos > ENCODER_MIN_MAX_POSITION) newPos = ENCODER_MIN_MAX_POSITION;
+        else if (newPos < -ENCODER_MIN_MAX_POSITION) newPos = -ENCODER_MIN_MAX_POSITION;
+
+        encoderState->position = newPos;
         encoderState->direction = (step > 0) ? 1 : -1;
         encoderState->lastTime = millis();
         encoderState->lastState = currentState;
@@ -203,6 +221,7 @@ void resetEncoder(EncoderState* state) {
     state->bDiffEverLow = false;
     state->rDiffEverHigh = false;
     state->rDiffEverLow = false;
+    state->indexPulseCountValid = false;
 
     // --- Инициализация осциллограммы ---
     int a = digitalRead(ENCODER_PIN_A);
