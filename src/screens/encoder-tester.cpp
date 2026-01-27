@@ -8,11 +8,13 @@
 
 static const char* const ENCODER_ITEMS[] = {
     "TTL",
+    "TTL Diff",
 };
 
 static ScreenId encoderItemToScreen(int index) {
     switch (index) {
         case 0: return SCREEN_ENCODER_TEST_TTL;
+        case 1: return SCREEN_ENCODER_TEST_TTL_DIFF;
         default: return SCREEN_ENCODER_TEST;
     }
 }

@@ -6,6 +6,7 @@
 #include "drivers/lcd-custom-chars.h"
 
 static EncoderState* encoderState;
+static EncoderInterfaces encoderInteface;
 
 // Таблица переходов для квадратурного энкодера
 // Индекс: [prevA prevB currA currB] → шаг
@@ -123,10 +124,31 @@ void encoderInterrupt() {
     } else {
         encoderState->errors++;
     }
+
+    if (encoderInteface == TTL_DIFF) {
+        encoderState->aPlusRaw = analogRead(ENC_A_PLUS_PIN);
+        encoderState->aMinusRaw = analogRead(ENC_A_MINUS_PIN);
+        encoderState->bPlusRaw = analogRead(ENC_B_PLUS_PIN);
+        encoderState->bMinusRaw = analogRead(ENC_B_MINUS_PIN);
+        encoderState->rPlusRaw = analogRead(ENC_R_PLUS_PIN);
+        encoderState->rMinusRaw = analogRead(ENC_R_MINUS_PIN);
+
+        int aDiff = encoderState->aPlusRaw - encoderState->aMinusRaw;
+        int bDiff = encoderState->bPlusRaw - encoderState->bMinusRaw;
+        int rDiff = encoderState->rPlusRaw - encoderState->rMinusRaw;
+
+        if (aDiff > ENCODER_DIFF_THRESHOLD) encoderState->aDiffEverHigh = true;
+        if (aDiff < -ENCODER_DIFF_THRESHOLD) encoderState->aDiffEverLow = true;
+        if (bDiff > ENCODER_DIFF_THRESHOLD) encoderState->bDiffEverHigh = true;
+        if (bDiff < -ENCODER_DIFF_THRESHOLD) encoderState->bDiffEverLow = true;
+        if (rDiff > ENCODER_DIFF_THRESHOLD) encoderState->rDiffEverHigh = true;
+        if (rDiff < -ENCODER_DIFF_THRESHOLD) encoderState->rDiffEverLow = true;
+    }
 }
 
-void initEncoder(EncoderState* state) {
+void initEncoder(EncoderState* state, EncoderInterfaces interface) {
     encoderState = state;
+    encoderInteface = interface;
 
     pinMode(ENCODER_PIN_A, INPUT);
     pinMode(ENCODER_PIN_B, INPUT);
@@ -140,6 +162,7 @@ void initEncoder(EncoderState* state) {
 void detachEncoder() {
     detachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A));
     detachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B));
+    encoderState = nullptr;
 }
 
 void updateEncoder(EncoderState* state) {
@@ -174,6 +197,12 @@ void resetEncoder(EncoderState* state) {
     state->historyIndex = 0;
     state->prevA = 0;
     state->prevB = 0;
+    state->aDiffEverHigh = false;
+    state->aDiffEverLow = false;
+    state->bDiffEverHigh = false;
+    state->bDiffEverLow = false;
+    state->rDiffEverHigh = false;
+    state->rDiffEverLow = false;
 
     // --- Инициализация осциллограммы ---
     int a = digitalRead(ENCODER_PIN_A);

@@ -9,13 +9,15 @@
 #include "screens/diagnostics/battery.h"
 #include "screens/diagnostics/buttons.h"
 #include "screens/encoder-tester.h"
+#include "screens/encoder-tester/ttl-diff.h"
 #include "screens/encoder-tester/ttl.h"
 #include "screens/main-menu.h"
 #include "screens/settings.h"
 #include "screens/settings/backlight.h"
 #include "screens/settings/battery.h"
 
-static ScreenId updateScreen(ScreenId id) {
+static ScreenId
+updateScreen(ScreenId id) {
     switch (id) {
         case SCREEN_MAIN_MENU:
             return updateMainMenu();
@@ -46,6 +48,8 @@ static ScreenId updateScreen(ScreenId id) {
         // ───────────── Уровень 2: Тесты энкодеров ─────────────
         case SCREEN_ENCODER_TEST_TTL:
             return updateScreenEncoderTTL();
+        case SCREEN_ENCODER_TEST_TTL_DIFF:
+            return updateScreenEncoderDiff();
 
         default:
             return SCREEN_MAIN_MENU;

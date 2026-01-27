@@ -26,7 +26,7 @@ static void drawEncoderTestScreen(EncoderConfig* encoder) {
 
 ScreenId updateEncoderTestScreen(EncoderConfig* encoder) {
     if (!encoder->isInitialized) {
-        initEncoder(encoder->state);
+        initEncoder(encoder->state, encoder->interface);
         encoder->isInitialized = true;
         encoder->lastDrawTime = millis();
 

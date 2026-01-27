@@ -24,7 +24,8 @@ typedef enum {
     SCREEN_BATTERY_DIAG,  // Диагностика батареи
 
     // ───────────── Уровень 2: Тесты энкодеров ─────────────
-    SCREEN_ENCODER_TEST_TTL,  // Тест TTL энкодера
+    SCREEN_ENCODER_TEST_TTL,       // Тест TTL энкодера
+    SCREEN_ENCODER_TEST_TTL_DIFF,  // Тест дифференциального энкодера
 
     SCREEN_COUNT  // Количество экранов (не использовать как экран)
 } ScreenId;

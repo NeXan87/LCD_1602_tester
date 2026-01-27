@@ -1,13 +1,13 @@
-#include "ttl.h"
-
 #include "core/encoder-test.h"
 #include "drivers/lcd-driver.h"
 
 static EncoderState g_encoderState;
+
+// Конфигурация экрана
 static EncoderConfig g_encoderConfig = {
-    .interface = TTL,
+    .interface = TTL_DIFF,
     .type = ENCODER_TYPE_ROTARY,
-    .screenId = SCREEN_ENCODER_TEST_TTL,
+    .screenId = SCREEN_ENCODER_TEST_TTL_DIFF,
     .exitScreen = SCREEN_ENCODER_TEST,
     .displayMode = ENCODER_DISPLAY_DIAGNOSTICS,
     .displayModeCount = ENCODER_DISPLAY_MODE_COUNT,
@@ -17,6 +17,6 @@ static EncoderConfig g_encoderConfig = {
     .state = &g_encoderState,
 };
 
-ScreenId updateScreenEncoderTTL() {
+ScreenId updateScreenEncoderDiff() {
     return updateEncoderTestScreen(&g_encoderConfig);
 }
