@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор дифференциального усилителя MCP602</title>
+    <title>Калькулятор дифференциального усилителя MCP602 с делителем</title>
     <style>
         * {
             margin: 0;
@@ -27,7 +27,7 @@
             border-radius: 20px;
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
             padding: 35px;
-            max-width: 900px;
+            max-width: 1000px;
             width: 100%;
             position: relative;
             overflow: hidden;
@@ -70,15 +70,19 @@
 
         .formula {
             font-family: 'Courier New', monospace;
-            font-size: 20px;
+            font-size: 18px;
             color: #2c3e50;
             margin: 8px 0;
             letter-spacing: 0.5px;
+            line-height: 1.5;
         }
 
         .formula-highlight {
             color: #667eea;
             font-weight: bold;
+            background: #eef2ff;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         .power-section {
@@ -153,7 +157,7 @@
 
         .inputs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
@@ -190,9 +194,25 @@
             background-color: #fff5f5;
         }
 
+        .divider-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .divider-title {
+            text-align: center;
+            font-weight: bold;
+            color: #c0392b;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             gap: 25px;
             margin-top: 20px;
         }
@@ -204,6 +224,7 @@
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .result-card::before {
@@ -286,6 +307,44 @@
             color: #0d47a1;
         }
 
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 15px;
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #e0e6ed;
+            color: #2c3e50;
+        }
+
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .divider-calc {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .divider-calc.show {
+            display: block;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 25px 20px;
@@ -296,7 +355,7 @@
             }
             
             .formula {
-                font-size: 16px;
+                font-size: 15px;
             }
             
             .power-section {
@@ -312,17 +371,30 @@
             .results-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .mode-toggle {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .mode-btn {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Калькулятор дифференциального усилителя MCP602</h1>
-        <p class="subtitle">Расчёт выходного напряжения и разности сигналов в реальном времени с учётом ограничений входного/выходного диапазона ОУ</p>
+        <p class="subtitle">Расчёт выходного напряжения и разности сигналов с учётом делителя после ОУ</p>
 
         <div class="formula-box">
-            <div class="formula"><span class="formula-highlight">Vout</span> = (Vin+ - Vin-) × <span class="formula-highlight">G</span> + <span class="formula-highlight">Vref</span></div>
-            <div class="formula" style="margin-top: 10px;"><span class="formula-highlight">VΔ</span> = (Vout - <span class="formula-highlight">Vref</span>) / <span class="formula-highlight">G</span></div>
+            <div class="formula"><span class="formula-highlight">Vout_OU</span> = (Vin+ - Vin-) × <span class="formula-highlight">G</span> + <span class="formula-highlight">Vref</span></div>
+            <div class="formula" style="margin-top: 8px;"><span class="formula-highlight">ΔV</span> = (Vout_OU - <span class="formula-highlight">Vref</span>) / <span class="formula-highlight">G</span></div>
+            <div class="formula" style="margin-top: 12px; font-size: 16px; color: #e74c3c;">С учётом делителя после ОУ:</div>
+            <div class="formula"><span class="formula-highlight">Vout_OU</span> = Vout_ADC / <span class="formula-highlight">Kdiv</span></div>
+            <div class="formula"><span class="formula-highlight">ΔV</span> = (Vout_ADC / <span class="formula-highlight">Kdiv</span> - <span class="formula-highlight">Vref</span>) / <span class="formula-highlight">G</span></div>
         </div>
 
         <div class="power-section">
@@ -334,15 +406,25 @@
             <span class="power-value" id="power-value">3.3 В</span>
         </div>
 
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="mode-inputs">Расчёт по входным напряжениям</button>
+            <button class="mode-btn" id="mode-adc">Расчёт по напряжению после делителя</button>
+        </div>
+
         <div class="inputs-grid">
-            <div class="input-group">
+            <div class="input-group" id="vin-plus-group">
                 <label for="vin-plus">Vin+ (В)</label>
                 <input type="number" id="vin-plus" step="0.01" value="3.00">
             </div>
 
-            <div class="input-group">
+            <div class="input-group" id="vin-minus-group">
                 <label for="vin-minus">Vin- (В)</label>
                 <input type="number" id="vin-minus" step="0.01" value="2.00">
+            </div>
+
+            <div class="input-group" id="vout-adc-group" style="display: none;">
+                <label for="vout-adc">Напряжение после делителя (В)</label>
+                <input type="number" id="vout-adc" step="0.01" value="2.00" placeholder="Напряжение на АЦП">
             </div>
 
             <div class="input-group">
@@ -352,14 +434,29 @@
 
             <div class="input-group">
                 <label for="vref">Опорное напряжение <span class="formula-highlight">Vref</span> (В)</label>
-                <input type="number" id="vref" step="0.01" value="1.65">
+                <input type="number" id="vref" step="0.01" value="2.50">
+            </div>
+
+            <div class="input-group">
+                <label for="kdiv">Коэффициент делителя <span class="formula-highlight">Kdiv</span></label>
+                <input type="number" id="kdiv" step="0.0001" value="0.6667" min="0.0001" max="1.0">
+            </div>
+        </div>
+
+        <div class="divider-section">
+            <div class="divider-title">Делитель после ОУ: 5.1 кОм + 10 кОм</div>
+            <div class="formula" style="margin-top: 8px; color: #c0392b;">
+                Kdiv = R<sub>низ</sub> / (R<sub>верх</sub> + R<sub>низ</sub>) = 10 / (5.1 + 10) = 0.662
+            </div>
+            <div class="formula" style="margin-top: 5px;">
+                Vout_ADC = Vout_OU × Kdiv
             </div>
         </div>
 
         <div class="results-grid">
             <div class="result-card valid" id="vout-card">
-                <div class="result-label">Выходное напряжение</div>
-                <div class="result-value" id="vout-value">2.15</div>
+                <div class="result-label">Выходное напряжение ОУ</div>
+                <div class="result-value" id="vout-value">3.00</div>
                 <div class="result-unit">Вольт (В)</div>
                 <div class="status-message" id="vout-status"></div>
             </div>
@@ -370,14 +467,28 @@
                 <div class="result-unit">Вольт (В)</div>
                 <div class="status-message" id="delta-status"></div>
             </div>
+
+            <div class="result-card valid" id="vout-adc-card">
+                <div class="result-label">Напряжение после делителя</div>
+                <div class="result-value" id="vout-adc-calc-value">2.00</div>
+                <div class="result-unit">Вольт (В)</div>
+                <div class="status-message" id="vout-adc-status"></div>
+            </div>
+        </div>
+
+        <div class="divider-calc" id="divider-calc-info">
+            <strong>Расчёт по напряжению после делителя:</strong><br>
+            Vout_OU = Vout_ADC / Kdiv = <span id="calc-vout-ou">2.00 / 0.6667 = 3.00 В</span><br>
+            ΔV = (Vout_OU - Vref) / G = <span id="calc-delta"> (3.00 - 2.50) / 0.50 = 1.00 В</span>
         </div>
 
         <div class="info-box">
             <div class="info-title">ℹ️ Важная информация:</div>
-            <p>• При питании <strong>3.3 В</strong>: входной диапазон –0.3…3.3 В, выходной 0.015…3.3 В</p>
-            <p>• При питании <strong>5.0 В</strong>: входной диапазон –0.3…5.0 В, выходной 0.015…5.0 В</p>
-            <p>• Параметры <strong>G</strong> и <strong>Vref</strong> автоматически сохраняются в браузере</p>
-            <p>• Красный цвет индикации = выход за пределы допустимого диапазона ОУ</p>
+            <p>• При питании <strong>3.3 В</strong>: входной диапазон –0.3…2.1 В, выходной 0.015…3.28 В</p>
+            <p>• При питании <strong>5.0 В</strong>: входной диапазон –0.3…3.8 В, выходной 0.015…4.98 В</p>
+            <p>• Для делителя 5.1к+10к: <strong>Kdiv = 0.662</strong> (выход 5В → 3.31В на АЦП)</p>
+            <p>• Для делителя 5к+10к: <strong>Kdiv = 0.667</strong> (выход 3В → 2.00В на АЦП)</p>
+            <p>• Красный цвет = выход за пределы допустимого диапазона ОУ</p>
         </div>
     </div>
 
@@ -385,26 +496,64 @@
         // DOM элементы
         const vinPlusInput = document.getElementById('vin-plus');
         const vinMinusInput = document.getElementById('vin-minus');
+        const voutAdcInput = document.getElementById('vout-adc');
         const gainInput = document.getElementById('gain');
         const vrefInput = document.getElementById('vref');
+        const kdivInput = document.getElementById('kdiv');
         const powerSwitch = document.getElementById('power-switch');
         const powerValue = document.getElementById('power-value');
         const voutValue = document.getElementById('vout-value');
         const deltaValue = document.getElementById('delta-value');
+        const voutAdcCalcValue = document.getElementById('vout-adc-calc-value');
         const voutCard = document.getElementById('vout-card');
         const deltaCard = document.getElementById('delta-card');
+        const voutAdcCard = document.getElementById('vout-adc-card');
         const voutStatus = document.getElementById('vout-status');
         const deltaStatus = document.getElementById('delta-status');
+        const voutAdcStatus = document.getElementById('vout-adc-status');
+        const modeInputsBtn = document.getElementById('mode-inputs');
+        const modeAdcBtn = document.getElementById('mode-adc');
+        const vinPlusGroup = document.getElementById('vin-plus-group');
+        const vinMinusGroup = document.getElementById('vin-minus-group');
+        const voutAdcGroup = document.getElementById('vout-adc-group');
+        const dividerCalcInfo = document.getElementById('divider-calc-info');
+        const calcVoutOu = document.getElementById('calc-vout-ou');
+        const calcDelta = document.getElementById('calc-delta');
+
+        // Режим работы калькулятора
+        let mode = 'inputs'; // 'inputs' или 'adc'
 
         // Загрузка сохранённых значений
         function loadSavedValues() {
             const savedGain = localStorage.getItem('diff_amp_gain');
             const savedVref = localStorage.getItem('diff_amp_vref');
+            const savedKdiv = localStorage.getItem('diff_amp_kdiv');
             const savedPower = localStorage.getItem('diff_amp_power') === '5v';
+            const savedMode = localStorage.getItem('diff_amp_mode') || 'inputs';
             
             if (savedGain) gainInput.value = savedGain;
             if (savedVref) vrefInput.value = savedVref;
+            if (savedKdiv) kdivInput.value = savedKdiv;
             powerSwitch.checked = savedPower;
+            mode = savedMode;
+            
+            // Установка режима
+            if (mode === 'adc') {
+                modeAdcBtn.classList.add('active');
+                modeInputsBtn.classList.remove('active');
+                vinPlusGroup.style.display = 'none';
+                vinMinusGroup.style.display = 'none';
+                voutAdcGroup.style.display = 'block';
+                dividerCalcInfo.classList.add('show');
+            } else {
+                modeInputsBtn.classList.add('active');
+                modeAdcBtn.classList.remove('active');
+                vinPlusGroup.style.display = 'block';
+                vinMinusGroup.style.display = 'block';
+                voutAdcGroup.style.display = 'none';
+                dividerCalcInfo.classList.remove('show');
+            }
+            
             updatePowerDisplay();
         }
 
@@ -412,7 +561,9 @@
         function saveValues() {
             localStorage.setItem('diff_amp_gain', gainInput.value);
             localStorage.setItem('diff_amp_vref', vrefInput.value);
+            localStorage.setItem('diff_amp_kdiv', kdivInput.value);
             localStorage.setItem('diff_amp_power', powerSwitch.checked ? '5v' : '3v3');
+            localStorage.setItem('diff_amp_mode', mode);
         }
 
         // Обновление отображения питания
@@ -428,11 +579,37 @@
             saveValues();
         }
 
+        // Переключение режимов
+        function switchMode(newMode) {
+            mode = newMode;
+            saveValues();
+            
+            if (mode === 'adc') {
+                modeAdcBtn.classList.add('active');
+                modeInputsBtn.classList.remove('active');
+                vinPlusGroup.style.display = 'none';
+                vinMinusGroup.style.display = 'none';
+                voutAdcGroup.style.display = 'block';
+                dividerCalcInfo.classList.add('show');
+            } else {
+                modeInputsBtn.classList.add('active');
+                modeAdcBtn.classList.remove('active');
+                vinPlusGroup.style.display = 'block';
+                vinMinusGroup.style.display = 'block';
+                voutAdcGroup.style.display = 'none';
+                dividerCalcInfo.classList.remove('show');
+            }
+            
+            calculate();
+        }
+
         // Проверка входного диапазона
         function checkInputRange(vinPlus, vinMinus) {
             const is5V = powerSwitch.checked;
+            // При питании 5В входной диапазон: -0.3В ... 3.8В
+            // При питании 3.3В входной диапазон: -0.3В ... 2.1В
             const minInput = -0.3;
-            const maxInput = is5V ? 5.0 : 3.3;
+            const maxInput = is5V ? 3.8 : 2.1;
             
             let status = { valid: true, message: '' };
             
@@ -450,8 +627,8 @@
         // Проверка выходного диапазона
         function checkOutputRange(vout) {
             const is5V = powerSwitch.checked;
-            const minOutput = 0.0;
-            const maxOutput = is5V ? 5.0 : 3.3;
+            const minOutput = 0.015; // Минимальное выходное напряжение из даташита
+            const maxOutput = is5V ? 4.98 : 3.28; // Максимальное выходное напряжение из даташита
             
             if (vout < minOutput - 0.01) {
                 return { 
@@ -480,39 +657,90 @@
             }
         }
 
+        // Проверка коэффициента делителя
+        function checkKdiv(kdiv) {
+            if (kdiv <= 0 || kdiv > 1) {
+                return {
+                    valid: false,
+                    message: `Kdiv должен быть в диапазоне (0, 1]`
+                };
+            }
+            return { valid: true, message: '' };
+        }
+
         // Расчёт результатов
         function calculate() {
             // Получаем значения
             const vinPlus = parseFloat(vinPlusInput.value) || 0;
             const vinMinus = parseFloat(vinMinusInput.value) || 0;
+            const voutAdc = parseFloat(voutAdcInput.value) || 0;
             const gain = parseFloat(gainInput.value) || 1;
             const vref = parseFloat(vrefInput.value) || 0;
+            const kdiv = parseFloat(kdivInput.value) || 0.6667;
             const is5V = powerSwitch.checked;
             
-            // Проверка входного диапазона
-            const inputCheck = checkInputRange(vinPlus, vinMinus);
-            if (!inputCheck.valid) {
+            // Проверка коэффициента делителя
+            const kdivCheck = checkKdiv(kdiv);
+            if (!kdivCheck.valid) {
                 voutCard.className = 'result-card invalid';
                 voutValue.textContent = '—';
-                voutStatus.textContent = inputCheck.message;
+                voutStatus.textContent = kdivCheck.message;
                 voutStatus.className = 'status-error';
+                
                 deltaCard.className = 'result-card invalid';
                 deltaValue.textContent = '—';
-                deltaStatus.textContent = 'Ошибка входного диапазона';
+                deltaStatus.textContent = kdivCheck.message;
                 deltaStatus.className = 'status-error';
+                
+                voutAdcCard.className = 'result-card invalid';
+                voutAdcCalcValue.textContent = '—';
+                voutAdcStatus.textContent = kdivCheck.message;
+                voutAdcStatus.className = 'status-error';
                 return;
             }
             
-            // Расчёт Vout
-            const vout = (vinPlus - vinMinus) * gain + vref;
+            let vout, delta, voutAdcCalc;
             
-            // Расчёт дельты
-            const delta = (vout - vref) / gain;
+            if (mode === 'adc') {
+                // Расчёт по напряжению после делителя
+                vout = voutAdc / kdiv;
+                delta = (vout - vref) / gain;
+                voutAdcCalc = voutAdc; // Это введённое значение
+                
+                // Обновление информационного блока
+                calcVoutOu.textContent = `${voutAdc.toFixed(2)} / ${kdiv.toFixed(4)} = ${vout.toFixed(2)} В`;
+                calcDelta.textContent = `(${vout.toFixed(2)} - ${vref.toFixed(2)}) / ${gain.toFixed(2)} = ${delta.toFixed(2)} В`;
+            } else {
+                // Расчёт по входным напряжениям
+                // Проверка входного диапазона
+                const inputCheck = checkInputRange(vinPlus, vinMinus);
+                if (!inputCheck.valid) {
+                    voutCard.className = 'result-card invalid';
+                    voutValue.textContent = '—';
+                    voutStatus.textContent = inputCheck.message;
+                    voutStatus.className = 'status-error';
+                    
+                    deltaCard.className = 'result-card invalid';
+                    deltaValue.textContent = '—';
+                    deltaStatus.textContent = 'Ошибка входного диапазона';
+                    deltaStatus.className = 'status-error';
+                    
+                    voutAdcCard.className = 'result-card invalid';
+                    voutAdcCalcValue.textContent = '—';
+                    voutAdcStatus.textContent = 'Ошибка входного диапазона';
+                    voutAdcStatus.className = 'status-error';
+                    return;
+                }
+                
+                vout = (vinPlus - vinMinus) * gain + vref;
+                delta = (vout - vref) / gain;
+                voutAdcCalc = vout * kdiv;
+            }
             
             // Проверка выходного диапазона
             const outputCheck = checkOutputRange(vout);
             
-            // Отображение Vout
+            // Отображение Vout (выход ОУ)
             voutValue.textContent = vout.toFixed(2);
             voutCard.className = `result-card ${outputCheck.class}`;
             voutStatus.textContent = outputCheck.message;
@@ -523,6 +751,12 @@
             deltaCard.className = 'result-card valid';
             deltaStatus.textContent = `ΔV = ${delta.toFixed(2)} В`;
             deltaStatus.className = 'status-ok';
+            
+            // Отображение напряжения после делителя
+            voutAdcCalcValue.textContent = voutAdcCalc.toFixed(2);
+            voutAdcCard.className = 'result-card valid';
+            voutAdcStatus.textContent = `Kdiv = ${kdiv.toFixed(4)}`;
+            voutAdcStatus.className = 'status-ok';
             
             // Автоматическое сохранение при изменении параметров
             saveValues();
@@ -535,9 +769,13 @@
         // Обработчики событий
         vinPlusInput.addEventListener('input', calculate);
         vinMinusInput.addEventListener('input', calculate);
+        voutAdcInput.addEventListener('input', calculate);
         gainInput.addEventListener('input', calculate);
         vrefInput.addEventListener('input', calculate);
+        kdivInput.addEventListener('input', calculate);
         powerSwitch.addEventListener('change', updatePowerDisplay);
+        modeInputsBtn.addEventListener('click', () => switchMode('inputs'));
+        modeAdcBtn.addEventListener('click', () => switchMode('adc'));
 
         // Автоматический расчёт каждые 100 мс для плавности
         setInterval(calculate, 100);
